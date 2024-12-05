@@ -5,6 +5,8 @@ const { isCompleteProfile } = require('../middlewares/completeProfile');
 
 const authController = require('../controllers/auth');
 
+router.get('/check-session', authController.checkSession);
+
 router.get('/fetch/getSpecializations/:id', authController.getSpecializations);
 
 router.get('/register/student', isCompleteProfile, authController.registerStudent);

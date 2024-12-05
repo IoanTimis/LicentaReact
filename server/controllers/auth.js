@@ -7,6 +7,14 @@ const CompleteProfileToken = require('../models/completeProfileToken');
 const axios = require('axios');
 const crypto = require('crypto');
 
+const checkSession = (req, res) => {
+    if (req.session.loggedInUser) {
+        res.json({ user: req.session.loggedInUser });
+    } else {
+        res.json({ user: null });
+    }
+};
+
 const getSpecializations = async (req, res) => {
     const faculty_id = req.params.id;
     
@@ -365,6 +373,7 @@ const logout = (req, res) => {
 };
   
 module.exports = {
+    checkSession,
     getSpecializations,
     registerTeacher,
     registerTeacherPost,
