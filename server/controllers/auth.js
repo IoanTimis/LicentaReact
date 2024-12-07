@@ -132,11 +132,11 @@ const loginPost = async (req, res, next) => {
             };
 
             if (req.session.loggedInUser.type == 'admin') {
-                return res.redirect('/admin');
+                return res.status(200).json({ redirectTo: '/admin' });
             } else if (req.session.loggedInUser.type == 'teacher') {
-                return res.redirect('/teacher');
+                return res.status(200).json({ redirectTo: '/teacher/home' });
             } else {
-                return res.redirect('/student');
+                return res.status(200).json({ redirectTo: '/student' });
             }
 
         } catch (error) {
@@ -367,7 +367,7 @@ const logout = (req, res) => {
         if (err) {
             console.error('Eroare la salvarea sesiunii:', err);
         } else {
-            res.redirect('/');
+            res.status(200).send('Logout successful');
         }
     });
 };
