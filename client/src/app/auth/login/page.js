@@ -50,7 +50,7 @@ const LoginPage = () => {
         onSubmit={handleLogin} // Transmite evenimentul către handleLogin
         className="bg-white shadow-lg rounded-lg p-6 w-11/12 max-w-md"
       >
-        <h1 className="text-2xl font-bold text-center mb-6">Autentificare</h1>
+        <h1 className="text-2xl font-bold text-center mb-6 text-black">Autentificare</h1>
 
         {/* Mesaj de eroare */}
         {error && <p className="text-red-500 text-sm mb-4">{error}</p>}

@@ -3,6 +3,8 @@ import "./globals.css";
 import Navbar from "./components/header";
 import Footer from "./components/footer";
 
+import store from "../store/page";
+
 // Fonturile localizate
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",

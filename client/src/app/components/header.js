@@ -4,8 +4,8 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
-import useSession from "../../hooks/useSession";
-import logout from "../../utils/logout";
+import useSession from "@/hooks/useSession";
+import logout from "@/utils/logout";
 
 const Navbar = () => {
   const router = useRouter();
