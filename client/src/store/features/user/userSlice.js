@@ -4,6 +4,7 @@ const initialState = {
   user: null, // Obiectul utilizatorului conectat
   isLoading: false, // Pentru a monitoriza încărcarea
   error: null, // Pentru erorile legate de user
+  isSessionChecked: false, // Pentru a verifica dacă sesiunea a fost verificată
 };
 
 const userSlice = createSlice({
@@ -12,9 +13,11 @@ const userSlice = createSlice({
   reducers: {
     setUser(state, action) {
       state.user = action.payload;
+      state.isSessionChecked = true;
     },
     clearUser(state) {
       state.user = null;
+      state.isSessionChecked = true;
     },
     setLoading(state, action) {
       state.isLoading = action.payload;

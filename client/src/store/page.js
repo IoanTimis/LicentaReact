@@ -9,6 +9,7 @@ const store = configureStore({
     projects: projectReducer,
     requests: requestReducer,
   },
+  devTools: process.env.NODE_ENV !== "production",
 });
 
 export default store;

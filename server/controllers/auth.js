@@ -132,11 +132,12 @@ const loginPost = async (req, res, next) => {
             };
 
             if (req.session.loggedInUser.type == 'admin') {
-                return res.status(200).json({ redirectTo: '/admin' });
+                return res.status(200).json({ redirectTo: '/admin', user: req.session.loggedInUser });
             } else if (req.session.loggedInUser.type == 'teacher') {
-                return res.status(200).json({ redirectTo: '/teacher/home' });
+                console.log('logged in teacher:', req.session.loggedInUser);
+                return res.status(200).json({ redirectTo: '/teacher/home', user: req.session.loggedInUser });
             } else {
-                return res.status(200).json({ redirectTo: '/student' });
+                return res.status(200).json({ redirectTo: '/student', user: req.session.loggedInUser });
             }
 
         } catch (error) {
@@ -144,6 +145,17 @@ const loginPost = async (req, res, next) => {
             res.status(500).send('Internal Server Error');
         }
     }
+};
+
+const logout = (req, res) => {
+    delete req.session.loggedInUser;
+    req.session.save(function(err) {
+        if (err) {
+            console.error('Eroare la salvarea sesiunii:', err);
+        } else {
+            res.status(200).send('Logout successful');
+        }
+    });
 };
 
 const CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
@@ -361,17 +373,6 @@ const completeProfileTeacherPut = async (req, res) => {
     }
 };
 
-const logout = (req, res) => {
-    delete req.session.loggedInUser;
-    req.session.save(function(err) {
-        if (err) {
-            console.error('Eroare la salvarea sesiunii:', err);
-        } else {
-            res.status(200).send('Logout successful');
-        }
-    });
-};
-  
 module.exports = {
     checkSession,
     getSpecializations,
@@ -381,12 +382,12 @@ module.exports = {
     registerStudentPost,
     login,
     loginPost,
+    logout,
     googleLogin,
     googleCallback,
     completeProfile,
     completeProfileStudent,
     completeProfileStudentPut,
     completeProfileTeacher,
-    completeProfileTeacherPut,
-    logout
+    completeProfileTeacherPut
 };

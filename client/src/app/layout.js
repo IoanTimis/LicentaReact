@@ -1,9 +1,6 @@
 import localFont from "next/font/local";
 import "./globals.css";
-import Navbar from "./components/header";
-import Footer from "./components/footer";
-
-import store from "../store/page";
+import AppProvider from "./appProvider";
 
 // Fonturile localizate
 const geistSans = localFont({
@@ -26,12 +23,8 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col min-h-screen`}
-      >
-        <Navbar /> {/* Bara de navigare */}
-        <main className="flex-grow">{children}</main> {/* Conținutul principal */}
-        <Footer /> {/* Footer */}
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col min-h-screen`}>
+        <AppProvider>{children}</AppProvider>
       </body>
     </html>
   );

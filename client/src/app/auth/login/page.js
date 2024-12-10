@@ -2,12 +2,14 @@
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation"; // Pentru redirecționare
+import { useDispatch } from "react-redux";
 import axios from "axios";
+import { setUser } from "@/store/features/user/userSlice"; // Importă acțiunea Redux
 
 const LoginPage = () => {
   const router = useRouter();
+  const dispatch = useDispatch(); // Pentru a actualiza Redux
   const [error, setError] = useState(null); // Gestionarea erorilor
-  console.log("welcome to the login page");
 
   const handleLogin = async (e) => {
     e.preventDefault(); // Previne comportamentul implicit al formularului
@@ -23,14 +25,21 @@ const LoginPage = () => {
           email,
           password,
         },
-        { withCredentials: true }
+        { withCredentials: true } // Include cookie-urile
       );
 
-      console.log("Răspuns:", response.data);
+      if (response.data.user) {
+        // Actualizează utilizatorul în Redux
+        console.log("Utilizatorul autentificat:", response.data.user);
+        dispatch(setUser(response.data.user));
 
-      if (response.data.redirectTo) {
-        console.log("Redirecționează către:", response.data.redirectTo);
-        router.push(response.data.redirectTo); // Redirecționează pe baza răspunsului
+        // Redirecționează utilizatorul la pagina specificată
+        if (response.data.redirectTo) {
+          router.push(response.data.redirectTo);
+        } else {
+          // Dacă nu există o redirecționare specificată, merge la homepage
+          router.push("/");
+        }
       }
     } catch (error) {
       if (error.response && error.response.data) {

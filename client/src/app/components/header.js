@@ -3,24 +3,27 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useDispatch } from "react-redux";
 
 import useSession from "@/hooks/useSession";
+import { clearUser } from "@/store/features/user/userSlice"; // Acțiunea de resetare a utilizatorului
 import logout from "@/utils/logout";
 
 const Navbar = () => {
   const router = useRouter();
+  const dispatch = useDispatch();
   const [menuOpen, setMenuOpen] = useState(false);
 
-  const { loggedInUser, isLoading, setLoggedInUser } = useSession();
-
+  const { loggedInUser, isLoading } = useSession();
   if (isLoading) {
     return null; // Afișează nimic până când starea este încărcată
   }
 
   const handleLogout = async () => {
-    const success = await logout();
+    const success = await logout(); // Apelează utilitarul de logout
     if (success) {
-      setLoggedInUser(null); // Resetează starea utilizatorului conectat
+      console.log("Deconectat cu succes!");
+      dispatch(clearUser()); // Resetează utilizatorul din Redux
       router.push("/auth/login"); // Redirecționează către pagina de login
     }
   };
@@ -87,7 +90,7 @@ const Navbar = () => {
                 menuOpen ? "block" : "hidden"
               }`}
             >
-              {loggedInUser ? (
+              {loggedInUser.user ? (
                 <li>
                   <button
                     onClick={handleLogout} // Apelează funcția de logout
