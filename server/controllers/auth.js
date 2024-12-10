@@ -131,6 +131,12 @@ const loginPost = async (req, res, next) => {
                 complete_profile: user.complete_profile,
             };
 
+            res.cookie("session", JSON.stringify({ id: user.id, role: user.type }), {
+                httpOnly: true,       // Ascunde cookie-ul de JavaScript
+                secure: process.env.NODE_ENV === "production", // Folosește HTTPS în producție
+                maxAge: 24 * 60 * 60 * 1000, // Valabilitate 1 zi
+            });
+
             if (req.session.loggedInUser.type == 'admin') {
                 return res.status(200).json({ redirectTo: '/admin', user: req.session.loggedInUser });
             } else if (req.session.loggedInUser.type == 'teacher') {
