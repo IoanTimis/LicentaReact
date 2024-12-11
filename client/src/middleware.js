@@ -1,8 +1,8 @@
-import { NextResponse } from "next/server";
-console.log("Middleware încărcat la pornirea serverului");
-
-
+import { NextResponse } from 'next/server'
+console.log("A fost apelat middleware.js");
+ 
 export function middleware(request) {
+  console.log("A fost apelat fucntia middleware");
   const { pathname } = request.nextUrl; // Obține URL-ul curent
   console.log("Middleware apelat pentru ruta:", pathname);
 
@@ -35,12 +35,7 @@ export function middleware(request) {
   console.log("Acces permis");
   return NextResponse.next(); // Permite accesul
 }
-
+ 
 export const config = {
-  matcher: [
-    "/admin/:path*",    // Middleware-ul se aplică pe toate rutele care încep cu `/admin`
-    "/teacher/:path*",  // Middleware-ul se aplică pe toate rutele care încep cu `/teacher`
-    "/student/:path*",  // Middleware-ul se aplică pe toate rutele care încep cu `/student`
-    "/auth/login",      // Middleware-ul se aplică și pe pagina de login (dacă vrei să redirecționezi utilizatorii logați)
-  ],
-};
+  matcher: '/teacher/:path*',
+}

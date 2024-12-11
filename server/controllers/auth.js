@@ -6,6 +6,7 @@ const Specialization = require('../models/specialization');
 const CompleteProfileToken = require('../models/completeProfileToken');
 const axios = require('axios');
 const crypto = require('crypto');
+const { clear } = require('console');
 
 const checkSession = (req, res) => {
     if (req.session.loggedInUser) {
@@ -154,15 +155,21 @@ const loginPost = async (req, res, next) => {
 };
 
 const logout = (req, res) => {
+    console.log('Logout request');
     delete req.session.loggedInUser;
-    req.session.save(function(err) {
+    res.clearCookie("session");
+    console.log(res.cookie);
+    req.session.save((err) => {
         if (err) {
             console.error('Eroare la salvarea sesiunii:', err);
-        } else {
-            res.status(200).send('Logout successful');
+            return res.status(500).json({ error: 'Logout failed' });
         }
+
+        // Trimitere răspuns final către client
+        res.status(200).json({ message: 'Logout successful' });
     });
 };
+
 
 const CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
 const CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
