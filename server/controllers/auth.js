@@ -132,7 +132,7 @@ const loginPost = async (req, res, next) => {
                 complete_profile: user.complete_profile,
             };
 
-            res.cookie("session", JSON.stringify({ id: user.id, role: user.type }), {
+            res.cookie("session", JSON.stringify({ id: user.id, role: user.type, complete_profile: user.complete_profile }), {
                 httpOnly: true,       // Ascunde cookie-ul de JavaScript
                 secure: process.env.NODE_ENV === "production", // Folosește HTTPS în producție
                 maxAge: 24 * 60 * 60 * 1000, // Valabilitate 1 zi
@@ -266,16 +266,16 @@ const googleCallback = async (req, res) => {
             };
             
             if (req.session.loggedInUser.type == 'student') {
-                return res.redirect('/student');
+                return res.status(200).json({ redirectTo: '/student' });
             } else {
-                return res.redirect('/teacher');
+                return res.status(200).json({ redirectTo: '/teacher/home' });
             }
         } else {
             const id = createdUser.id;
 
             const token = await generateTokenAndScheduleDeletion(id);
             
-            return res.redirect(`http://localhost:8080/choose-profile/${token}`);
+            return res.status(200).json({ redirectTo: `/auth/complete-profile/${token}` });
         }
 
     } catch (error) {
