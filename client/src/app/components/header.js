@@ -24,6 +24,7 @@ const Navbar = () => {
     if (success) {
       console.log("Deconectat cu succes!");
       dispatch(clearUser()); // Resetează utilizatorul din Redux
+      localStorage.removeItem("accessToken"); // Șterge token-ul din localStorage
       router.push("/auth/login"); // Redirecționează către pagina de login
     }
   };

@@ -6,15 +6,24 @@ const Specialization = require('../models/specialization');
 const CompleteProfileToken = require('../models/completeProfileToken');
 const axios = require('axios');
 const crypto = require('crypto');
-const { clear } = require('console');
+const jwt = require("jsonwebtoken");
 
 const checkSession = (req, res) => {
-    if (req.session.loggedInUser) {
-        res.json({ user: req.session.loggedInUser });
-    } else {
-        res.json({ user: null });
+    const authHeader = req.headers["authorization"];
+    const token = authHeader && authHeader.split(" ")[1];
+
+    if (!token) {
+        return res.json({ user: null });
     }
+
+    jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+        if (err) {
+            return res.json({ user: null });
+        }
+        res.json({ user: decoded });
+    });
 };
+
 
 const getSpecializations = async (req, res) => {
     const faculty_id = req.params.id;
@@ -105,70 +114,74 @@ const login = (req, res, next) => {
     }
 };
 
-const loginPost = async (req, res, next) => {
+const generateTokens = (user) => {
+    // Payload-ul pentru token
+    const payload = { id: user.id, email: user.email, role: user.type, complete_profile: user.complete_profile };
+
+    // Access Token - valabilitate scurtă (15 minute)
+    const accessToken = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: "15m" });
+
+    // Refresh Token - valabilitate lungă (7 zile)
+    const refreshToken = jwt.sign(payload, process.env.JWT_REFRESH_SECRET, { expiresIn: "30d" });
+
+    return { accessToken, refreshToken };
+};
+
+// În loginPost
+const loginPost = async (req, res) => {
     const { email, password } = req.body;
-    
-    if (email && password) {
-        try {
-            const user = await User.findOne({ where: { email } });
-            if (!user) {
-                return res.render('pages/auth/login', { error: 'Invalid email' });
-            }
-            const isPasswordValid = await bcrypt.compare(password, user.password);
-            if (!isPasswordValid) {
-                return res.render('pages/auth/login', { error: 'Invalid password' });
-            }
 
-            req.session.loggedInUser = {
-                id: user.id,
-                first_name: user.first_name,
-                name: user.name,
-                email: user.email,
-                title: user.title,
-                specialization_id: user.specialization_id,
-                education_level: user.education_level,
-                faculty_id: user.faculty_id,
-                type: user.type,
-                complete_profile: user.complete_profile,
-            };
-
-            res.cookie("session", JSON.stringify({ id: user.id, role: user.type, complete_profile: user.complete_profile }), {
-                httpOnly: true,       // Ascunde cookie-ul de JavaScript
-                secure: process.env.NODE_ENV === "production", // Folosește HTTPS în producție
-                maxAge: 24 * 60 * 60 * 1000, // Valabilitate 1 zi
-            });
-
-            if (req.session.loggedInUser.type == 'admin') {
-                return res.status(200).json({ redirectTo: '/admin/home', user: req.session.loggedInUser });
-            } else if (req.session.loggedInUser.type == 'teacher') {
-                console.log('logged in teacher:', req.session.loggedInUser);
-                return res.status(200).json({ redirectTo: '/teacher/home', user: req.session.loggedInUser });
-            } else {
-                return res.status(200).json({ redirectTo: '/student/home', user: req.session.loggedInUser });
-            }
-
-        } catch (error) {
-            console.error('Error logging in user:', error);
-            res.status(500).send('Internal Server Error');
+    try {
+        const user = await User.findOne({ where: { email } });
+        if (!user || !(await bcrypt.compare(password, user.password))) {
+            return res.status(401).json({ error: "Invalid email or password" });
         }
+
+        // Generează Access și Refresh Tokens
+        const { accessToken, refreshToken } = generateTokens(user);
+
+        // Trimite token-urile către client
+        res.cookie("refreshToken", refreshToken, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            maxAge: 30 * 24 * 60 * 60 * 1000, // 30 zile
+        });
+        
+        console.log("User logat =============================",user);
+
+        return res.status(200).json({ accessToken, message: "Login successful"});
+    } catch (error) {
+        console.error("Login error:", error);
+        return res.status(500).json({ error: "Internal Server Error" });
     }
 };
 
-const logout = (req, res) => {
-    console.log('Logout request');
-    delete req.session.loggedInUser;
-    res.clearCookie("session");
-    console.log(res.cookie);
-    req.session.save((err) => {
-        if (err) {
-            console.error('Eroare la salvarea sesiunii:', err);
-            return res.status(500).json({ error: 'Logout failed' });
-        }
+const refresh = async (req, res) => {
+    const refreshToken = req.cookies.refreshToken;
+    if (!refreshToken) return res.status(401).json({ error: 'No refresh token' });
 
-        // Trimitere răspuns final către client
-        res.status(200).json({ message: 'Logout successful' });
+    jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET, async (err, user) => {
+        if (err) return res.status(403).json({ error: 'Invalid refresh token' });
+
+        const { accessToken, refreshToken: newRefreshToken } = generateTokens(user);
+        res.cookie('refreshToken', newRefreshToken, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            maxAge: 30 * 24 * 60 * 60 * 1000,
+        });
+
+        res.status(200).json({ accessToken });
     });
 };
+
+const logout = (req, res) => {
+    res.clearCookie("refreshToken", {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+    });
+    return res.status(200).json({ message: "Logout successful" });
+};
+
 
 
 const CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
