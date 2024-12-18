@@ -139,12 +139,12 @@ const loginPost = async (req, res, next) => {
             });
 
             if (req.session.loggedInUser.type == 'admin') {
-                return res.status(200).json({ redirectTo: '/admin', user: req.session.loggedInUser });
+                return res.status(200).json({ redirectTo: '/admin/home', user: req.session.loggedInUser });
             } else if (req.session.loggedInUser.type == 'teacher') {
                 console.log('logged in teacher:', req.session.loggedInUser);
                 return res.status(200).json({ redirectTo: '/teacher/home', user: req.session.loggedInUser });
             } else {
-                return res.status(200).json({ redirectTo: '/student', user: req.session.loggedInUser });
+                return res.status(200).json({ redirectTo: '/student/home', user: req.session.loggedInUser });
             }
 
         } catch (error) {
@@ -220,71 +220,49 @@ async function generateTokenAndScheduleDeletion(userId) {
 
 const googleCallback = async (req, res) => {
     const { code } = req.query;
-    
+  
     try {
-        const { data } = await axios.post('https://oauth2.googleapis.com/token', {
-            client_id: CLIENT_ID,
-            client_secret: CLIENT_SECRET,
-            code,
-            redirect_uri: REDIRECT_URI,
-            grant_type: 'authorization_code',
-        });
-
-        const { access_token } = data;
-        const { data: profile } = await axios.get('https://www.googleapis.com/oauth2/v1/userinfo', {
-            headers: { Authorization: `Bearer ${access_token}` },
-        });
-
-        const randomPassword = generateRandomPassword();
-        const hashedPassword = await bcrypt.hash(randomPassword, 8);
-
-        const user = await User.findOrCreate({
-            where: { email: profile.email },
-            defaults: {
-                first_name: profile.given_name,
-                name: profile.family_name,
-                email: profile.email,
-                password: hashedPassword,
-                complete_profile: false,
-            }
-        });
-
-        const [createdUser, created] = user;
-        
-        if (!created && createdUser.complete_profile) {
-            req.session.loggedInUser = {
-                id: createdUser.id,
-                first_name: createdUser.first_name,
-                name: createdUser.name,
-                email: createdUser.email,
-                title: createdUser.title,
-                specialization_id: createdUser.specialization_id,
-                education_level: createdUser.education_level,
-                faculty_id: createdUser.faculty_id,
-                type: createdUser.type,
-                complete_profile: createdUser.complete_profile,
-            };
-            
-            if (req.session.loggedInUser.type == 'student') {
-                return res.status(200).json({ redirectTo: '/student' });
-            } else {
-                return res.status(200).json({ redirectTo: '/teacher/home' });
-            }
-        } else {
-            const id = createdUser.id;
-
-            const token = await generateTokenAndScheduleDeletion(id);
-            
-            return res.status(200).json({ redirectTo: `/auth/complete-profile/${token}` });
-        }
-
+      const { data } = await axios.post("https://oauth2.googleapis.com/token", {
+        client_id: CLIENT_ID,
+        client_secret: CLIENT_SECRET,
+        code,
+        redirect_uri: REDIRECT_URI,
+        grant_type: "authorization_code",
+      });
+  
+      const { access_token } = data;
+  
+      const { data: profile } = await axios.get("https://www.googleapis.com/oauth2/v1/userinfo", {
+        headers: { Authorization: `Bearer ${access_token}` },
+      });
+  
+      const [user, created] = await User.findOrCreate({
+        where: { email: profile.email },
+        defaults: {
+          first_name: profile.given_name,
+          name: profile.family_name,
+          email: profile.email,
+          complete_profile: false,
+        },
+      });
+  
+      if (!created && user.complete_profile) {
+        // Utilizator existent și profil complet
+        const redirectTo = user.type === "student" ? "/student/home" : "/teacher/home";
+        return res.redirect(`http://localhost:3000${redirectTo}`);
+      }
+  
+      // Utilizator nou sau profil incomplet
+      const token = generateTokenAndScheduleDeletion(user.id);
+      res.redirect(`http://localhost:3000/google-auth/complete-profile/${token}`);
     } catch (error) {
-        console.error('Error in Google Callback:', error.message);
-        res.status(500).send('Google callback error');
+      console.error("Error during Google callback:", error);
+      res.status(500).send("Eroare la autentificarea cu Google");
     }
-};
+  };
+  
 
-const completeProfile = async (req, res) => {
+const findUserByToken = async (req, res) => {
     const token = req.params.token;
 
     try {
@@ -292,7 +270,7 @@ const completeProfile = async (req, res) => {
 
         if (!completeProfileToken) {
             req.session.loggedInUser = null;
-            return res.render('pages/general/errorPage', { message: 'Invalid token' });
+            return res.status(404).json({ error: 'Token not found', redirectTo: '/auth/login' });
         }
 
         const id = completeProfileToken.user_id;
@@ -300,7 +278,7 @@ const completeProfile = async (req, res) => {
         const user = await User.findByPk(id);
         
         if (!user) {
-            return res.status(404).send('User not found');
+            return res.status(404).json({ error: 'User not found', redirectTo: '/auth/login' });
         }
 
         req.session.loggedInUser = {
@@ -314,9 +292,10 @@ const completeProfile = async (req, res) => {
         
     } catch (error) {
         console.error('Error completing profile:', error);
-        res.status(500).send('Internal Server Error');
+        res.status(500).json({ error: 'Internal Server Error' });
     }
-    res.render('pages/auth/completeProfile');
+    res.status(200).json({ message: 'User found' });
+
 };
 
 const completeProfileStudent = async (req, res) => {
@@ -398,7 +377,7 @@ module.exports = {
     logout,
     googleLogin,
     googleCallback,
-    completeProfile,
+    findUserByToken,
     completeProfileStudent,
     completeProfileStudentPut,
     completeProfileTeacher,
