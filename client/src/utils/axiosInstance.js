@@ -1,6 +1,7 @@
 import axios from "axios";
 import { store } from "@/store"; // Importă Redux store
 import { setUser, clearAuth } from "@/store/features/authSlice"; // Actions din Redux
+import { clearUser } from "@/store/features/user/userSlice";
 
 const axiosInstance = axios.create({
   baseURL: "http://localhost:8080", // URL-ul API-ului tău backend
@@ -54,28 +55,37 @@ axiosInstance.interceptors.response.use(
           {},
           { withCredentials: true }
         );
-
-        const { accessToken } = response.data;
-
+      
+        const { accessToken } = response.data.accessToken;
+        const user = jwtDecode(accessToken);
+      
         // Actualizează token-ul în Redux și Axios
-        store.dispatch(setUser({ accessToken }));
+        store.dispatch(setUser({ user }));
         localStorage.setItem("accessToken", accessToken);
         axiosInstance.defaults.headers["Authorization"] = `Bearer ${accessToken}`;
-
+      
         processQueue(null, accessToken); // Reprocesăm cererile din coadă
         isRefreshing = false;
-
+      
         // Retrimite cererea originală cu noul token
         originalRequest.headers["Authorization"] = `Bearer ${accessToken}`;
         return axiosInstance(originalRequest);
       } catch (err) {
-        processQueue(err, null); // Respinge cererile din coadă
         isRefreshing = false;
-
-        store.dispatch(clearAuth()); // Deconectează utilizatorul
-        document.localStorage.removeItem("accessToken");
+      
+        // Dacă serverul returnează 403, deconectează utilizatorul
+        if (err.response && err.response.status === 403) {
+          console.warn("Refresh Token expirat sau invalid. Utilizator deconectat.");
+          processQueue(err, null);
+          store.dispatch(clearUser()); // Șterge datele utilizatorului
+          localStorage.removeItem("accessToken");
+          return Promise.reject(err);
+        }
+      
+        // Pentru alte erori, tratează normal
+        processQueue(err, null);
         return Promise.reject(err);
-      }
+      }      
     }
 
     return Promise.reject(error); // Alte erori continuă

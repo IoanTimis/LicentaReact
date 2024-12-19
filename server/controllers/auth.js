@@ -142,12 +142,9 @@ const refreshAccessToken = (req, res) => {
 };
 
 const generateTokens = (user) => {
-    // Payload-ul pentru token
     
-    // Access Token - valabilitate scurtă (15 minute)
     const accessToken = jwt.sign(user, process.env.JWT_SECRET, { expiresIn: "15m" });
 
-    // Refresh Token - valabilitate lungă (7 zile)
     const refreshToken = jwt.sign(user, process.env.JWT_REFRESH_SECRET, { expiresIn: "30d" });
 
     return { accessToken, refreshToken };

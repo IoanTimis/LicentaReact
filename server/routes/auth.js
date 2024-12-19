@@ -15,7 +15,7 @@ router.post('/register/student', isCompleteProfile, authController.registerStude
 router.get('/register/teacher', isCompleteProfile, authController.registerTeacher);
 router.post('/register/teacher', isCompleteProfile, authController.registerTeacherPost);
 
-router.get('/refresh', authController.refreshAccessToken);
+router.post('/refresh', authController.refreshAccessToken);
 
 router.get('/login', isCompleteProfile, authController.login);
 router.post('/login', isCompleteProfile, authController.loginPost);
