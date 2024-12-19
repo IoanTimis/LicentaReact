@@ -36,13 +36,14 @@ const LoginPage = () => {
       // Salvează token-ul și user-ul în Redux
       dispatch(setUser({ user, accessToken }));
 
-      // Salvează token-ul în localStorage pentru persistență
       localStorage.setItem("accessToken", accessToken);
+
       console.log("user.role", user.role);
+
       if (user.role === "admin") {
         router.push("/admin/home");
-      } else if (accessToken.role === "teacher") {
-        console.log("accessToken.role", accessToken.role);
+      } else if (user.role === "teacher") {
+        console.log("accessToken.role", user.role);
         router.push("/teacher/home");
       } else {
         router.push("/student/home");

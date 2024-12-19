@@ -15,12 +15,15 @@ router.post('/register/student', isCompleteProfile, authController.registerStude
 router.get('/register/teacher', isCompleteProfile, authController.registerTeacher);
 router.post('/register/teacher', isCompleteProfile, authController.registerTeacherPost);
 
+router.get('/refresh', authController.refreshAccessToken);
+
 router.get('/login', isCompleteProfile, authController.login);
 router.post('/login', isCompleteProfile, authController.loginPost);
 router.get('/logout', authController.logout);
 
 router.get('/auth/google', authController.googleLogin);
 router.get('/auth/google/callback', authController.googleCallback);
+
 
 router.get('/find-user-by-token/:token', authController.findUserByToken );
 

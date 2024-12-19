@@ -114,15 +114,41 @@ const login = (req, res, next) => {
     }
 };
 
+const refreshAccessToken = (req, res) => {
+  const refreshToken = req.cookies.refreshToken;
+
+  if (!refreshToken) {
+    return res.status(401).json({ error: "No refresh token provided" });
+  }
+
+  try {
+    // Verifică Refresh Token-ul
+    const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
+
+    const date = new Date();
+
+    // Generează un nou Access Token
+    const newAccessToken = jwt.sign(
+      { id: decoded.id, email: decoded.email, role: decoded.role, complete_profile: decoded.complete_profile },
+      process.env.JWT_SECRET,
+      { expiresIn: "15m" } // Access Token valabil 15 minute
+    );
+
+    return res.status(200).json({ accessToken: newAccessToken });
+  } catch (error) {
+    console.error("Invalid or expired refresh token:", error);
+    return res.status(403).json({ error: "Refresh Token invalid or expired" });
+  }
+};
+
 const generateTokens = (user) => {
     // Payload-ul pentru token
-    const payload = { id: user.id, email: user.email, role: user.type, complete_profile: user.complete_profile };
-
+    
     // Access Token - valabilitate scurtă (15 minute)
-    const accessToken = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: "15m" });
+    const accessToken = jwt.sign(user, process.env.JWT_SECRET, { expiresIn: "15m" });
 
     // Refresh Token - valabilitate lungă (7 zile)
-    const refreshToken = jwt.sign(payload, process.env.JWT_REFRESH_SECRET, { expiresIn: "30d" });
+    const refreshToken = jwt.sign(user, process.env.JWT_REFRESH_SECRET, { expiresIn: "30d" });
 
     return { accessToken, refreshToken };
 };
@@ -137,8 +163,10 @@ const loginPost = async (req, res) => {
             return res.status(401).json({ error: "Invalid email or password" });
         }
 
+        const payload = { id: user.id, email: user.email, role: user.type, complete_profile: user.complete_profile };
+
         // Generează Access și Refresh Tokens
-        const { accessToken, refreshToken } = generateTokens(user);
+        const { accessToken, refreshToken } = generateTokens(payload);
 
         // Trimite token-urile către client
         res.cookie("refreshToken", refreshToken, {
@@ -156,24 +184,6 @@ const loginPost = async (req, res) => {
     }
 };
 
-const refresh = async (req, res) => {
-    const refreshToken = req.cookies.refreshToken;
-    if (!refreshToken) return res.status(401).json({ error: 'No refresh token' });
-
-    jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET, async (err, user) => {
-        if (err) return res.status(403).json({ error: 'Invalid refresh token' });
-
-        const { accessToken, refreshToken: newRefreshToken } = generateTokens(user);
-        res.cookie('refreshToken', newRefreshToken, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
-            maxAge: 30 * 24 * 60 * 60 * 1000,
-        });
-
-        res.status(200).json({ accessToken });
-    });
-};
-
 const logout = (req, res) => {
     res.clearCookie("refreshToken", {
         httpOnly: true,
@@ -183,6 +193,7 @@ const logout = (req, res) => {
 };
 
 
+// Google OAuth functions--------------------------------------------
 
 const CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
 const CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
@@ -385,6 +396,7 @@ module.exports = {
     registerTeacherPost,
     registerStudent,
     registerStudentPost,
+    refreshAccessToken,
     login,
     loginPost,
     logout,
