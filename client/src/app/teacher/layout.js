@@ -1,36 +1,36 @@
-"use client"; 
+"use client";
 
-import { useEffect } from "react";
+import { useLayoutEffect } from "react";
 import { useRouter } from "next/navigation";
-import { jwtDecode } from "jwt-decode";
+import { jwtDecode } from "jwt-decode"; // Fără "{" deoarece e un export default
+import { verify } from "jsonwebtoken";
 
 export default function TeacherLayout({ children }) {
   const router = useRouter();
-  console.log("Middleware TeacherLayout");
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const accessToken = localStorage.getItem("accessToken");
 
     // Verifică dacă token-ul lipsește sau este invalid
     if (!accessToken) {
       router.push("/auth/login"); // Redirecționează la pagina de login
-    } else {
-      try {
-        // Decodează și verifică token-ul, dacă este necesar
-        const decoded = jwtDecode(accessToken);
-        if (decoded.role !== "teacher") {
-          router.push("/auth/login"); // Redirecționează dacă rolul nu este teacher
-        }
-      } catch (error) {
-        console.error("Invalid token:", error);
-        router.push("/auth/login");
+      return;
+    }
+
+    try {
+      const decoded = jwtDecode(accessToken);
+      if (decoded.role !== "teacher") {
+        localStorage.removeItem("accessToken");
+        router.push("/auth/login"); // Redirecționează dacă rolul nu este "teacher"
       }
+    } catch (error) {
+      console.error("Invalid token:", error);
+      router.push("/auth/login"); // Redirecționează în caz de eroare la token
     }
   }, [router]);
 
   return (
     <div>
-      {/* Layout global va rămâne, iar acest layout adaugă un wrapper specific pentru teacher */}
       <div className="teacher-container">{children}</div>
     </div>
   );

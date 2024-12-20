@@ -2,6 +2,7 @@ import axios from "axios";
 import { store } from "@/store"; // Importă Redux store
 import { setUser, clearAuth } from "@/store/features/authSlice"; // Actions din Redux
 import { clearUser } from "@/store/features/user/userSlice";
+import { Router, useRouter } from "next/router";
 
 const axiosInstance = axios.create({
   baseURL: "http://localhost:8080", // URL-ul API-ului tău backend
@@ -79,6 +80,7 @@ axiosInstance.interceptors.response.use(
           processQueue(err, null);
           store.dispatch(clearUser()); // Șterge datele utilizatorului
           localStorage.removeItem("accessToken");
+          Router.push("/auth/login"); // Redirecționează utilizatorul la pagina de autentificare
           return Promise.reject(err);
         }
       

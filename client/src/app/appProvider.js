@@ -6,6 +6,7 @@ import Navbar from "./components/header";
 import Footer from "./components/footer";
 import store from "@/store/page";
 
+
 export default function AppProvider({ children }) {
   return (
     <Provider store={store}>
