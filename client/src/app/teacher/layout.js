@@ -1,4 +1,4 @@
-"use client"; // Este necesar pentru utilizarea `localStorage` și `useEffect`
+"use client"; 
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";

@@ -9,18 +9,31 @@ import axios from "axios";
 const useSession = () => {
   const dispatch = useDispatch();
 
-  // Accesează datele din Redux
-  const loggedInUser = useSelector((state) => state.user);
-  const isLoading = useSelector((state) => state.user.isLoading);
-
   useEffect(() => {
     const validateAccessToken = async () => {
       dispatch(setLoading(true));
 
-      //Todo: mai trb aici un if care sa verifice daca tokenul din localstorage este valid si daca e valid sa nu mai faca request la server
+      const accessToken = localStorage.getItem("accessToken");
+      if (!accessToken ) {
+        console.warn("Nu există Access Token în localStorage.");
+        dispatch(clearUser());
+        dispatch(setLoading(false));
+        localStorage.removeItem("accessToken");
+        return;
+      } 
+
+      const decoded = jwtDecode(accessToken);
+      if(!decoded || decoded.exp < Date.now() / 1000) {
+        console.warn("Token expirat sau invalid.");
+        dispatch(clearUser());
+        dispatch(setLoading(false));
+        localStorage.removeItem("accessToken");
+        return;
+      } else {
+        
+      }
 
       try {
-        // Extrage Access Token-ul din localStorage
         const response = axios.post(
           "http://localhost:8080/refresh",
           {},
@@ -62,10 +75,14 @@ const useSession = () => {
       } finally {
         dispatch(setLoading(false));
       }
+
     };
 
-    validateToken();
+    validateAccessToken();
   }, [dispatch]);
+
+  const loggedInUser = useSelector((state) => state.user);
+  const isLoading = useSelector((state) => state.user.isLoading);
 
   return { loggedInUser, isLoading };
 };
