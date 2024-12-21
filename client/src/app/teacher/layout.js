@@ -3,13 +3,14 @@
 import { useLayoutEffect } from "react";
 import { useRouter } from "next/navigation";
 import { jwtDecode } from "jwt-decode"; // Fără "{" deoarece e un export default
-import { verify } from "jsonwebtoken";
+console.log("middleware teacher layout.js");
 
 export default function TeacherLayout({ children }) {
   const router = useRouter();
 
   useLayoutEffect(() => {
     const accessToken = localStorage.getItem("accessToken");
+    console.log("accessToken", accessToken);
 
     // Verifică dacă token-ul lipsește sau este invalid
     if (!accessToken) {

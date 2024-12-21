@@ -9,7 +9,7 @@ import useSession from "@/hooks/useSession";
 import { clearUser } from "@/store/features/user/userSlice"; // Acțiunea de resetare a utilizatorului
 import logout from "@/utils/logout";
 
-const Navbar = () => {
+const studentNavbar = () => {
   const router = useRouter();
   const dispatch = useDispatch();
   const [menuOpen, setMenuOpen] = useState(false);
@@ -136,4 +136,4 @@ const Navbar = () => {
   );
 };
 
-export default Navbar;
+export default studentNavbar;

@@ -41,11 +41,11 @@ const LoginPage = () => {
       console.log("user.role", user.role);
 
       if (user.role === "admin") {
-        router.push("/admin/home");
+        router.push("/admin");
       } else if (user.role === "teacher") {
-        router.push("/teacher/home");
+        router.push("/teacher");
       } else {
-        router.push("/student/home");
+        router.push("/student");
       }
     } catch (error) {
       setError(error.response?.data?.error || "Autentificare eșuată");
