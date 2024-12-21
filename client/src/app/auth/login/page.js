@@ -52,7 +52,7 @@ const LoginPage = () => {
     }
   };
 
-  const handleGoogleLogin = () => {
+  const handleGoogleLogin = (e) => {
     e.preventDefault();
     window.location.href = "http://localhost:8080/auth/google";
   };

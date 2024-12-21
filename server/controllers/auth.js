@@ -256,6 +256,9 @@ const googleCallback = async (req, res) => {
       const { data: profile } = await axios.get("https://www.googleapis.com/oauth2/v1/userinfo", {
         headers: { Authorization: `Bearer ${access_token}` },
       });
+
+      const password = generateRandomPassword();
+      const hashedPassword = await bcrypt.hash(password, 8);
   
       const [user, created] = await User.findOrCreate({
         where: { email: profile.email },
@@ -263,19 +266,23 @@ const googleCallback = async (req, res) => {
           first_name: profile.given_name,
           name: profile.family_name,
           email: profile.email,
+          password: hashedPassword,
           complete_profile: false,
         },
       });
   
       if (!created && user.complete_profile) {
         // Utilizator existent și profil complet
-        const redirectTo = user.type === "student" ? "/student/home" : "/teacher/home";
+        const redirectTo = user.type === "student" ? "/student" : "/teacher";
         return res.redirect(`http://localhost:3000${redirectTo}`);
       }
   
       // Utilizator nou sau profil incomplet
-      const token = generateTokenAndScheduleDeletion(user.id);
-      res.redirect(`http://localhost:3000/google-auth/complete-profile/${token}`);
+      const token = await generateTokenAndScheduleDeletion(user.id);
+      if (!token) {
+        throw new Error('Failed to generate token Google callback');
+      }
+      res.redirect(`http://localhost:3000/google-auth/choose-profile/${token}`);
     } catch (error) {
       console.error("Error during Google callback:", error);
       res.status(500).send("Eroare la autentificarea cu Google");
