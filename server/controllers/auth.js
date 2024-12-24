@@ -281,7 +281,7 @@ const googleCallback = async (req, res) => {
       const token = await generateTokenAndScheduleDeletion(user.id);
       if (!token) {
         throw new Error('Failed to generate token Google callback');
-      }
+      } 
       res.redirect(`http://localhost:3000/google-auth/choose-profile/${token}`);
     } catch (error) {
       console.error("Error during Google callback:", error);
