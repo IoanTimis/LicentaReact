@@ -7,18 +7,15 @@ const authController = require('../controllers/auth');
 
 router.get('/check-session', authController.checkSession);
 
-router.get('/fetch/getSpecializations/:id', authController.getSpecializations);
+router.get('/fetch/faculties', authController.getFaculties);
+router.get('/fetch/specializations/:id', authController.getSpecializations);
 
-router.get('/register/student', isCompleteProfile, authController.registerStudent);
-router.post('/register/student', isCompleteProfile, authController.registerStudentPost);
-
-router.get('/register/teacher', isCompleteProfile, authController.registerTeacher);
-router.post('/register/teacher', isCompleteProfile, authController.registerTeacherPost);
+router.post('/register/student', isCompleteProfile, authController.registerStudent);
+router.post('/register/teacher', isCompleteProfile, authController.registerTeacher);
 
 router.post('/refresh', authController.refreshAccessToken);
 
-router.get('/login', isCompleteProfile, authController.login);
-router.post('/login', isCompleteProfile, authController.loginPost);
+router.post('/login', isCompleteProfile, authController.login);
 router.get('/logout', authController.logout);
 
 router.get('/auth/google', authController.googleLogin);
@@ -27,10 +24,8 @@ router.get('/auth/google/callback', authController.googleCallback);
 
 router.get('/find-user-by-token/:token', authController.findUserByToken );
 
-router.get('/complete-profile/as-teacher', authController.completeProfileTeacher);
-router.put('/complete-profile/as-teacher', authController.completeProfileTeacherPut);
+router.put('/complete-profile/as-teacher', authController.completeProfileTeacher);
 
-router.get('/complete-profile/as-student', authController.completeProfileStudent);
-router.put('/complete-profile/as-student', authController.completeProfileStudentPut);
+router.put('/complete-profile/as-student', authController.completeProfileStudent);
 
 module.exports = router;

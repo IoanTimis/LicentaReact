@@ -4,6 +4,7 @@ const User = require('../models/user');
 const Faculty = require('../models/faculty');
 const Specialization = require('../models/specialization');
 const CompleteProfileToken = require('../models/completeProfileToken');
+const teacherEmail = require('../models/teacherEmail');
 const axios = require('axios');
 const crypto = require('crypto');
 const jwt = require("jsonwebtoken");
@@ -24,6 +25,20 @@ const checkSession = (req, res) => {
     });
 };
 
+const getFaculties = async (req, res) => {
+    try {
+        const faculties = await Faculty.findAll();
+        if (faculties.length === 0) {
+            return res.status(404).send('Faculties not found');
+        }
+        
+        res.json(faculties);
+    } catch (error) {
+        console.error('Error fetching faculties:', error);
+        res.status(500).send('Internal Server Error');
+    }
+};
+
 
 const getSpecializations = async (req, res) => {
     const faculty_id = req.params.id;
@@ -42,16 +57,6 @@ const getSpecializations = async (req, res) => {
 };
 
 const registerStudent = async (req, res) => {
-    try {
-        const faculties = await Faculty.findAll();
-        return res.render('pages/auth/registerStudent', { faculties: faculties });
-    } catch (error) {
-        console.error('Error registering user:', error);
-        res.status(500).send('Internal Server Error');
-    }
-};
-
-const registerStudentPost = async (req, res) => {
     const { first_name, name, email, password, faculty_id, specialization_id, education_level } = req.body;
     sanitizeHtml(first_name);
     sanitizeHtml(name);
@@ -76,11 +81,7 @@ const registerStudentPost = async (req, res) => {
     }
 };
 
-const registerTeacher = (req, res) => {
-    res.render('pages/auth/registerTeacher');
-};
-
-const registerTeacherPost = async (req, res) => {
+const registerTeacher = async (req, res) => {
     const { first_name, name, email, password, title } = req.body;
     sanitizeHtml(first_name);
     sanitizeHtml(name);
@@ -102,15 +103,6 @@ const registerTeacherPost = async (req, res) => {
     } catch (error) {
         console.error('Error registering user:', error);
         res.status(500).send('Internal Server Error');
-    }
-};
-
-const login = (req, res, next) => {
-    if (req.session.loggedInUser) {
-        console.log("esti logat deja:", req.session.loggedInUser);
-        return res.redirect('/');
-    } else {
-        res.render('pages/auth/login');
     }
 };
 
@@ -150,8 +142,7 @@ const generateTokens = (user) => {
     return { accessToken, refreshToken };
 };
 
-// În loginPost
-const loginPost = async (req, res) => {
+const login = async (req, res) => {
     const { email, password } = req.body;
 
     try {
@@ -273,76 +264,63 @@ const googleCallback = async (req, res) => {
   
       if (!created && user.complete_profile) {
         // Utilizator existent și profil complet
-        const redirectTo = user.type === "student" ? "/student" : "/teacher";
-        return res.redirect(`http://localhost:3000${redirectTo}`);
+        const redirectTo = user.type === "admin" ? "student" : "teacher";
+        return res.redirect(`http://localhost:3000/${redirectTo}`);
       }
   
       // Utilizator nou sau profil incomplet
       const token = await generateTokenAndScheduleDeletion(user.id);
       if (!token) {
         throw new Error('Failed to generate token Google callback');
-      } 
-      res.redirect(`http://localhost:3000/google-auth/choose-profile/${token}`);
+      }
+      
+      const userEmail = user.email;
+      const verifyEmail = await teacherEmail.findOne({ where: { email: userEmail } });
+
+        if (verifyEmail) {
+            res.redirect(`http://localhost:3000/google-auth/complete-profile-teacher/${token}`);
+        } else {
+            res.redirect(`http://localhost:3000/google-auth/complete-profile-student/${token}`);
+        }
+
     } catch (error) {
       console.error("Error during Google callback:", error);
       res.status(500).send("Eroare la autentificarea cu Google");
     }
   };
-  
 
-const findUserByToken = async (req, res) => {
-    const token = req.params.token;
 
+const findUserByToken = async (token) => {
     try {
         const completeProfileToken = await CompleteProfileToken.findOne({ where: { token } });
 
         if (!completeProfileToken) {
-            req.session.loggedInUser = null;
-            return res.status(404).json({ error: 'Token not found', redirectTo: '/auth/login' });
+            return null;
         }
 
         const id = completeProfileToken.user_id;
-
         const user = await User.findByPk(id);
-        
+
         if (!user) {
-            return res.status(404).json({ error: 'User not found', redirectTo: '/auth/login' });
+            return null;
         }
 
-        req.session.loggedInUser = {
-            id: user.id,
-            first_name: user.first_name,
-            name: user.name,
-            email: user.email,
-            complete_profile: user.complete_profile,
-            complete_profile_token: token,
-        };
-        
+        return user;
     } catch (error) {
-        console.error('Error completing profile:', error);
-        res.status(500).json({ error: 'Internal Server Error' });
+        console.error('Error finding user by token:', error);
+        return null;
     }
-    res.status(200).json({ message: 'User found' });
-
 };
 
 const completeProfileStudent = async (req, res) => {
-    try {
-        const faculties = await Faculty.findAll();
-        res.render('pages/auth/completeProfileStudent', { faculties: faculties });
-    }
-    catch (error) {
-        console.error('Error registering user:', error);
-        res.status(500).send('Internal Server Error');
-    };
-};
+    const token = req.params.token;
 
-const completeProfileStudentPut = async (req, res) => {
-    const id = req.session.loggedInUser.id;
+    const userToken = await findUserByToken(token);
+
     const { faculty_id, specialization_id, education_level } = req.body;
 
     try {
-        const user = await User.findByPk(id);
+        const user = await User.findByPk(userToken.id);
         user.faculty_id = faculty_id;
         user.specialization_id = specialization_id;
         user.education_level = education_level;
@@ -350,16 +328,18 @@ const completeProfileStudentPut = async (req, res) => {
         user.complete_profile = true;
         await user.save();
 
-        req.session.loggedInUser.faculty_id = faculty_id;
-        req.session.loggedInUser.specialization_id = specialization_id;
-        req.session.loggedInUser.education_level = education_level
-        req.session.loggedInUser.type = 'student';
-        req.session.loggedInUser.complete_profile = true;
-        req.session.loggedInUser.complete_profile_token = null;
 
-        console.log('req.session.loggedInUser dupa completare profil:', req.session.loggedInUser);
+        const { accessToken, refreshToken } = generateTokens(user);
 
-        res.status(200).send('Profile updated successfully!');
+        res.cookie("refreshToken", refreshToken, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            maxAge: 30 * 24 * 60 * 60 * 1000, // 30 zile
+        });
+
+        console.log('user dupa completare profil:', user);
+
+        res.status(200).json({ accessToken, message: 'Profile updated successfully!' });
     } catch (error) {
         console.error('Error completing profile:', error);
         res.status(500).send('Internal Server Error');
@@ -367,26 +347,30 @@ const completeProfileStudentPut = async (req, res) => {
 };
 
 const completeProfileTeacher = async (req, res) => {
-    res.render('pages/auth/completeProfileTeacher');
-};
+    const token = req.params.token;
 
-const completeProfileTeacherPut = async (req, res) => {
-    const id = req.session.loggedInUser.id;
+    const userToken = await findUserByToken(token);
+
     const { title } = req.body;
 
     try {
-        const user = await User.findByPk(id);
+        const user = await User.findByPk(userToken.id);
         user.title = title;
         user.type = 'teacher';
         user.complete_profile = true;
         await user.save();
 
-        req.session.loggedInUser.title = title;
-        req.session.loggedInUser.type = 'teacher';
-        req.session.loggedInUser.complete_profile = true;
-        req.session.loggedInUser.complete_profile_token = null;
+        const { accessToken, refreshToken } = generateTokens(user);
 
-        res.status(200).send('Profile updated successfully!');
+        res.cookie("refreshToken", refreshToken, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            maxAge: 30 * 24 * 60 * 60 * 1000, // 30 zile
+        });
+
+        console.log('user dupa completare profil:', user);
+
+        res.status(200).json({ accessToken, message: 'Profile updated successfully!' });
     } catch (error) {
         console.error('Error completing profile:', error);
         res.status(500).send('Internal Server Error');
@@ -395,20 +379,16 @@ const completeProfileTeacherPut = async (req, res) => {
 
 module.exports = {
     checkSession,
+    getFaculties,
     getSpecializations,
     registerTeacher,
-    registerTeacherPost,
     registerStudent,
-    registerStudentPost,
     refreshAccessToken,
     login,
-    loginPost,
     logout,
     googleLogin,
     googleCallback,
     findUserByToken,
     completeProfileStudent,
-    completeProfileStudentPut,
     completeProfileTeacher,
-    completeProfileTeacherPut
 };
