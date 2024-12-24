@@ -9,6 +9,7 @@ router.get('/check-session', authController.checkSession);
 
 router.get('/fetch/faculties', authController.getFaculties);
 router.get('/fetch/specializations/:id', authController.getSpecializations);
+router.get('/fetch/faculties-specializations', authController.getFacultiesSpecializations);
 
 router.post('/register/student', isCompleteProfile, authController.registerStudent);
 router.post('/register/teacher', isCompleteProfile, authController.registerTeacher);
@@ -21,11 +22,8 @@ router.get('/logout', authController.logout);
 router.get('/auth/google', authController.googleLogin);
 router.get('/auth/google/callback', authController.googleCallback);
 
+router.put('/complete-profile/as-teacher/:token', authController.completeProfileTeacher);
 
-router.get('/find-user-by-token/:token', authController.findUserByToken );
-
-router.put('/complete-profile/as-teacher', authController.completeProfileTeacher);
-
-router.put('/complete-profile/as-student', authController.completeProfileStudent);
+router.put('/complete-profile/as-student/:token', authController.completeProfileStudent);
 
 module.exports = router;

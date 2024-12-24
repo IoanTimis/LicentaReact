@@ -1,14 +1,30 @@
 import Link from "next/link";
 import { useState } from "react";
-
+import axios from "axios";
+import { clearUser } from "@/store/features/user/userSlice";
+import { useDispatch } from "react-redux";
+import router from "next/router";
 export default function NavBar() {
+  const dispatch = useDispatch();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
-  const handleLogout = () => {
-    // Aici implementezi funcția de logout (ștergi token-ul și redirecționezi utilizatorul)
-    console.log("Deconectare...");
-  };
+  const handleLogout = async () => {
+    try {
+      const response = await axios.get("http://localhost:8080/logout", null, {
+        withCredentials: true,
+      });
+
+      if (response.status === 200) {
+        console.log("Deconectare...");
+        localStorage.removeItem("accessToken");
+        dispatch(clearUser());
+        router.push("/auth/login");
+      }
+    } catch (error) {
+      console.error("Eroare la deconectare:", error);
+    };
+  }
 
   return (
     <nav className="bg-gray-800 shadow-md">

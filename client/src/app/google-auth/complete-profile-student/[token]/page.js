@@ -1,15 +1,31 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import axios from "axios";
 
-export default function CompleteProfileStudent({ faculties }) {
+export default function CompleteProfileStudent() {
+  const [faculties, setFaculties] = useState([]);
   const [specializations, setSpecializations] = useState([]);
+
+  // Funcție pentru a obține facultățile de la server
+  useEffect(() => {
+    const fetchFaculties = async () => {
+      try {
+        const response = await axios.get("http://localhost:8080/fetch/faculties-specializations"); // Endpoint-ul API
+        setFaculties(response.data); // Populăm facultățile
+      } catch (error) {
+        console.error("Eroare la obținerea facultăților:", error);
+      }
+    };
+
+    fetchFaculties();
+  }, []);
 
   const handleFacultyChange = (e) => {
     const facultyId = e.target.value;
-    // Exemplu simplu pentru a popula specializările în funcție de facultate
+    // Găsim facultatea selectată și setăm specializările
     setSpecializations(
-      faculties.find((f) => f.id === facultyId)?.specializations || []
+      faculties.find((f) => f.id === parseInt(facultyId))?.specializations || []
     );
   };
 

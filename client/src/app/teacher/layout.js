@@ -9,8 +9,16 @@ export default function TeacherLayout({ children }) {
   const router = useRouter();
 
   useLayoutEffect(() => {
-    const accessToken = localStorage.getItem("accessToken");
-    console.log("accessToken", accessToken);
+    if (localStorage.getItem("accessToken")) {
+      const accessToken = localStorage.getItem("accessToken");
+      console.log("accessToken", accessToken);
+    } else if (req.body.accessToken) {
+      const accessToken = req.body.accessToken;
+      console.log("accessToken", accessToken);
+    } else {
+      const accessToken = null;
+      console.log("accessToken is missing");
+    }
 
     // Verifică dacă token-ul lipsește sau este invalid
     if (!accessToken) {

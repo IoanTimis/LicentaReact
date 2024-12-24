@@ -39,7 +39,6 @@ const getFaculties = async (req, res) => {
     }
 };
 
-
 const getSpecializations = async (req, res) => {
     const faculty_id = req.params.id;
     
@@ -52,6 +51,22 @@ const getSpecializations = async (req, res) => {
         res.json(specializations);
     } catch (error) {
         console.error('Error fetching specializations:', error);
+        res.status(500).send('Internal Server Error');
+    }
+};
+
+const getFacultiesSpecializations = async (req, res) => {
+    try {
+        const faculties = await Faculty.findAll({
+            include: Specialization
+        });
+        if (faculties.length === 0) {
+            return res.status(404).send('Faculties not found');
+        }
+        
+        res.json(faculties);
+    } catch (error) {
+        console.error('Error fetching faculties:', error);
         res.status(500).send('Internal Server Error');
     }
 };
@@ -265,7 +280,16 @@ const googleCallback = async (req, res) => {
       if (!created && user.complete_profile) {
         // Utilizator existent și profil complet
         const redirectTo = user.type === "admin" ? "student" : "teacher";
-        return res.redirect(`http://localhost:3000/${redirectTo}`);
+        const payload = { id: user.id, email: user.email, role: user.type, complete_profile: user.complete_profile };
+        const { accessToken, refreshToken } = generateTokens(payload);
+
+        res.cookie("refreshToken", refreshToken, {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === "production",
+          maxAge: 30 * 24 * 60 * 60 * 1000, // 30 zile
+        });
+
+        return res.status(200).redirect(`http://localhost:3000/${redirectTo}`);
       }
   
       // Utilizator nou sau profil incomplet
@@ -348,10 +372,16 @@ const completeProfileStudent = async (req, res) => {
 
 const completeProfileTeacher = async (req, res) => {
     const token = req.params.token;
+    console.log("body", req.body);
+    console.log("type", typeof req.body);
 
     const userToken = await findUserByToken(token);
 
-    const { title } = req.body;
+    if(!userToken) {
+        return res.status(404).send('user-token not found');
+    }
+
+    const title = req.body.title;
 
     try {
         const user = await User.findByPk(userToken.id);
@@ -360,7 +390,9 @@ const completeProfileTeacher = async (req, res) => {
         user.complete_profile = true;
         await user.save();
 
-        const { accessToken, refreshToken } = generateTokens(user);
+        const payload = { id: user.id, email: user.email, role: user.type, complete_profile: user.complete_profile };
+
+        const { accessToken, refreshToken } = generateTokens(payload);
 
         res.cookie("refreshToken", refreshToken, {
             httpOnly: true,
@@ -381,6 +413,7 @@ module.exports = {
     checkSession,
     getFaculties,
     getSpecializations,
+    getFacultiesSpecializations,
     registerTeacher,
     registerStudent,
     refreshAccessToken,
@@ -388,7 +421,6 @@ module.exports = {
     logout,
     googleLogin,
     googleCallback,
-    findUserByToken,
     completeProfileStudent,
     completeProfileTeacher,
 };
