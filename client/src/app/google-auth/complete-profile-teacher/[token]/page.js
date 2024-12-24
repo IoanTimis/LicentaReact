@@ -59,7 +59,7 @@ export default function CompleteProfileTeacher() {
             id="title"
             name="title"
             placeholder="Introdu titlul"
-            className="w-full border-gray-300 rounded-md p-2 focus:ring focus:ring-blue-500"
+            className="w-full border-gray-300 text-black rounded-md p-2 focus:ring focus:ring-blue-500"
           />
         </div>
 

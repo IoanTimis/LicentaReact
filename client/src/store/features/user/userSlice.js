@@ -1,9 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  user: null, // Obiectul utilizatorului conectat
+  user: null, 
   isLoading: false, // Pentru a monitoriza încărcarea
-  error: null, // Pentru erorile legate de user
+  error: null, 
 };
 
 const userSlice = createSlice({
@@ -24,7 +24,6 @@ const userSlice = createSlice({
     },
   },
 });
-console.log("userSlice", userSlice);
 
 export const { setUser, clearUser, setLoading, setError } = userSlice.actions;
 

@@ -2,39 +2,30 @@
 
 import { useLayoutEffect } from "react";
 import { useRouter } from "next/navigation";
-import { jwtDecode } from "jwt-decode"; // Fără "{" deoarece e un export default
+import { jwtDecode } from "jwt-decode";
 console.log("middleware teacher layout.js");
 
 export default function TeacherLayout({ children }) {
   const router = useRouter();
 
   useLayoutEffect(() => {
-    if (localStorage.getItem("accessToken")) {
-      const accessToken = localStorage.getItem("accessToken");
-      console.log("accessToken", accessToken);
-    } else if (req.body.accessToken) {
-      const accessToken = req.body.accessToken;
-      console.log("accessToken", accessToken);
-    } else {
-      const accessToken = null;
-      console.log("accessToken is missing");
-    }
+    const accessToken = localStorage.getItem("accessToken");
 
-    // Verifică dacă token-ul lipsește sau este invalid
     if (!accessToken) {
-      router.push("/auth/login"); // Redirecționează la pagina de login
+      router.push("/auth/login"); 
       return;
     }
 
     try {
       const decoded = jwtDecode(accessToken);
+      console.log("decoded", decoded);
       if (decoded.role !== "teacher") {
         localStorage.removeItem("accessToken");
-        router.push("/auth/login"); // Redirecționează dacă rolul nu este "teacher"
+        router.push("/auth/login"); 
       }
     } catch (error) {
       console.error("Invalid token:", error);
-      router.push("/auth/login"); // Redirecționează în caz de eroare la token
+      router.push("/auth/login"); 
     }
   }, [router]);
 

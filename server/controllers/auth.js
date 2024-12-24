@@ -279,7 +279,6 @@ const googleCallback = async (req, res) => {
   
       if (!created && user.complete_profile) {
         // Utilizator existent și profil complet
-        const redirectTo = user.type === "admin" ? "student" : "teacher";
         const payload = { id: user.id, email: user.email, role: user.type, complete_profile: user.complete_profile };
         const { accessToken, refreshToken } = generateTokens(payload);
 
@@ -289,7 +288,7 @@ const googleCallback = async (req, res) => {
           maxAge: 30 * 24 * 60 * 60 * 1000, // 30 zile
         });
 
-        return res.status(200).redirect(`http://localhost:3000/${redirectTo}`);
+        return res.status(200).redirect(`http://localhost:3000/set-access-token/${accessToken}`);
       }
   
       // Utilizator nou sau profil incomplet
