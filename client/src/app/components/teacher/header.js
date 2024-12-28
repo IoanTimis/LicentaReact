@@ -6,7 +6,7 @@ import { useDispatch } from "react-redux";
 import { clearUser } from "@/store/features/user/userSlice";
 import logout  from "@/utils/logout";
 
-export default function NavBar() {
+export default function teacherNavBar() {
   const dispatch = useDispatch();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);

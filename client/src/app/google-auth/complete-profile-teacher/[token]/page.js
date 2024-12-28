@@ -3,13 +3,15 @@ import { useParams } from "next/navigation";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { setUser } from "@/store/features/user/userSlice";
+import { setError } from "@/store/features/user/userSlice";
 import { useDispatch } from "react-redux";
 import { jwtDecode } from "jwt-decode";
 
 export default function CompleteProfileTeacher() {
-  const { token } = useParams();
   const router = useRouter();
   const dispatch = useDispatch();
+
+  const { token } = useParams();
 
   const handleCompleteProfile = async (e) => {
     e.preventDefault();
@@ -35,7 +37,15 @@ export default function CompleteProfileTeacher() {
 
       console.log("response", response);
     } catch (error) {
-      console.error("Eroare la completarea profilului:", error);
+      if (error.response && error.response.status === 404) {
+        console.log("Tokenul este invalid sau expirat");
+        dispatch(setError({ message: "Tokenul este invalid sau expirat" }));
+        router.push("/error");
+      } else {
+        console.error("Eroare la completarea profilului:", error);
+        dispatch(setError({ message: "Eroare necunoscută" }));
+        router.push("/error");
+      }
     }
   };
 

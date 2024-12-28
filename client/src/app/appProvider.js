@@ -3,8 +3,8 @@
 import React from "react";
 import { Provider } from "react-redux";
 import Navbar from "./components/general/header";
-import StudentNavbar from "./components/student/header";
-import TeacherNavbar from "./components/teacher/header";
+import StudentNavBar from "./components/student/header";
+import TeacherNavBar from "./components/teacher/header";
 import Footer from "./components/general/footer";
 import store from "@/store/page";
 import { usePathname } from "next/navigation";
@@ -16,9 +16,9 @@ export default function AppProvider({ children }) {
     if (pathname.startsWith("/admin")) {
       return null;
     } else if (pathname.startsWith("/teacher")) {
-      return <TeacherNavbar />;
+      return <TeacherNavBar />;
     } else if (pathname.startsWith("/student")) {
-      return <StudentNavbar />;
+      return <StudentNavBar />;
     } else {
       return <Navbar />;
     }

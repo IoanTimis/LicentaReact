@@ -20,8 +20,8 @@ export default function TeacherLayout({ children }) {
       const decoded = jwtDecode(accessToken);
       console.log("decoded", decoded);
       if (decoded.role !== "teacher") {
-        localStorage.removeItem("accessToken");
-        router.push("/auth/login"); 
+        console.log("Nu ai acces la aceasta pagina", decoded.role);
+        //router.push("/auth/login"); 
       }
     } catch (error) {
       console.error("Invalid token:", error);

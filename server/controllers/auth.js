@@ -39,10 +39,9 @@ const getFaculties = async (req, res) => {
     }
 };
 
-const getSpecializations = async (req, res) => {
-    const faculty_id = req.params.id;
-    
+const getSpecializations = async (req, res) => { 
     try {
+        const faculty_id = req.params.id;
         const specializations = await Specialization.findAll({ where: { faculty_id: faculty_id } });
         if (specializations.length === 0) {
             return res.status(404).send('Specializations not found');
@@ -72,12 +71,12 @@ const getFacultiesSpecializations = async (req, res) => {
 };
 
 const registerStudent = async (req, res) => {
-    const { first_name, name, email, password, faculty_id, specialization_id, education_level } = req.body;
-    sanitizeHtml(first_name);
-    sanitizeHtml(name);
-    sanitizeHtml(email);
-
     try {
+        const { first_name, name, email, password, faculty_id, specialization_id, education_level } = req.body;
+        sanitizeHtml(first_name);
+        sanitizeHtml(name);
+        sanitizeHtml(email);
+
         const hashedPassword = await bcrypt.hash(password, 8);
         
         const userInstance = await User.create({
@@ -97,13 +96,13 @@ const registerStudent = async (req, res) => {
 };
 
 const registerTeacher = async (req, res) => {
-    const { first_name, name, email, password, title } = req.body;
-    sanitizeHtml(first_name);
-    sanitizeHtml(name);
-    sanitizeHtml(email);
-    sanitizeHtml(title);
-
     try {
+        const { first_name, name, email, password, title } = req.body;
+        sanitizeHtml(first_name);
+        sanitizeHtml(name);
+        sanitizeHtml(email);
+        sanitizeHtml(title);
+
         const hashedPassword = await bcrypt.hash(password, 8);
         
         const userInstance = await User.create({
@@ -122,14 +121,12 @@ const registerTeacher = async (req, res) => {
 };
 
 const refreshAccessToken = (req, res) => {
-  const refreshToken = req.cookies.refreshToken;
-
-  if (!refreshToken) {
-    return res.status(401).json({ error: "No refresh token provided" });
-  }
-
   try {
-    // Verifică Refresh Token-ul
+    const refreshToken = req.cookies.refreshToken;
+
+    if (!refreshToken) {
+        return res.status(401).json({ error: "No refresh token provided" });
+    }
     const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
 
     const date = new Date();
@@ -158,9 +155,9 @@ const generateTokens = (user) => {
 };
 
 const login = async (req, res) => {
-    const { email, password } = req.body;
-
     try {
+        const { email, password } = req.body;
+
         const user = await User.findOne({ where: { email } });
         if (!user || !(await bcrypt.compare(password, user.password))) {
             return res.status(401).json({ error: "Invalid email or password" });
@@ -246,9 +243,9 @@ async function generateTokenAndScheduleDeletion(userId) {
 }
 
 const googleCallback = async (req, res) => {
-    const { code } = req.query;
-  
     try {
+      const { code } = req.query;
+
       const { data } = await axios.post("https://oauth2.googleapis.com/token", {
         client_id: CLIENT_ID,
         client_secret: CLIENT_SECRET,
@@ -336,13 +333,18 @@ const findUserByToken = async (token) => {
 };
 
 const completeProfileStudent = async (req, res) => {
-    const token = req.params.token;
-
-    const userToken = await findUserByToken(token);
-
-    const { faculty_id, specialization_id, education_level } = req.body;
-
     try {
+        const token = req.params.token;
+
+        const userToken = await findUserByToken(token);
+
+        if(!userToken) {
+            console.log('userToken not found trimit 404');
+            return res.status(404).send('user-token not found');
+        }
+
+        const { faculty_id, specialization_id, education_level } = req.body;
+
         const user = await User.findByPk(userToken.id);
         user.faculty_id = faculty_id;
         user.specialization_id = specialization_id;
@@ -351,8 +353,10 @@ const completeProfileStudent = async (req, res) => {
         user.complete_profile = true;
         await user.save();
 
+        const payload = { id: user.id, email: user.email, role: user.type, complete_profile: user.complete_profile };
 
-        const { accessToken, refreshToken } = generateTokens(user);
+
+        const { accessToken, refreshToken } = generateTokens(payload);
 
         res.cookie("refreshToken", refreshToken, {
             httpOnly: true,
@@ -370,19 +374,17 @@ const completeProfileStudent = async (req, res) => {
 };
 
 const completeProfileTeacher = async (req, res) => {
-    const token = req.params.token;
-    console.log("body", req.body);
-    console.log("type", typeof req.body);
-
-    const userToken = await findUserByToken(token);
-
-    if(!userToken) {
-        return res.status(404).send('user-token not found');
-    }
-
-    const title = req.body.title;
-
     try {
+        const token = req.params.token;
+
+        const userToken = await findUserByToken(token);
+
+        if(!userToken) {
+            return res.status(404).send('user-token not found');
+        }
+
+        const title = req.body.title;
+
         const user = await User.findByPk(userToken.id);
         user.title = title;
         user.type = 'teacher';
