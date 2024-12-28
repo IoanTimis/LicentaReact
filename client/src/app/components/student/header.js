@@ -4,20 +4,29 @@ import Link from "next/link";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { clearUser } from "@/store/features/user/userSlice";
-import logout  from "@/utils/logout";
+import { useRouter } from "next/navigation";
+import axios from "axios";
 
 export default function studentNavBar() {
-  const dispatch = useDispatch();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
-  const handleLogout = async () => {
-    if(logout()) {
+  const dispatch = useDispatch();
+  const router = useRouter();
+
+  const logout = async () => {
+    try {
+      await axios.get("http://localhost:8080/logout", { withCredentials: true });
+
       dispatch(clearUser());
       localStorage.removeItem("accessToken");
-      console.log("Deconectare cu succes");
+      console.log("Logout reusit");
+      
+      router.push("/auth/login");
+    } catch (error) {
+      console.error("Eroare la logout:", error);
     }
-  }
+  };
 
   return (
     <nav className="bg-gray-800 shadow-md">
@@ -110,7 +119,7 @@ export default function studentNavBar() {
                   Profil
                 </Link>
                 <button
-                  onClick={handleLogout}
+                  onClick={logout}
                   className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
                 >
                   Deconectare
