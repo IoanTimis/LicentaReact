@@ -57,7 +57,7 @@ export default function teacherNavBar() {
 
             {/* Logo for desktop */}
             <div className="hidden md:flex flex-shrink-0">
-              <Link href="/" className="text-white text-xl font-bold">
+              <Link href="/teacher" className="text-white text-xl font-bold">
                 Logo
               </Link>
             </div>
@@ -67,7 +67,7 @@ export default function teacherNavBar() {
           <div className="hidden md:flex">
             <div className="ml-10 flex items-baseline space-x-4">
               <Link
-                href="/"
+                href="/teacher"
                 className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
               >
                 Acasa
@@ -126,7 +126,7 @@ export default function teacherNavBar() {
         <div className="md:hidden" id="mobile-menu">
           <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
             <Link
-              href="/"
+              href="/teacher"
               className="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
             >
               Acasa

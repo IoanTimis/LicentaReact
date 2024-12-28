@@ -19,9 +19,9 @@ export default function StudentLayout({ children }) {
     try {
       const decoded = jwtDecode(accessToken);
       console.log("decoded", decoded);
-      if (decoded.role !== "student") {
-        console.log("Nu ai acces la aceasta pagina", decoded.role);
-        //router.push("/auth/login"); 
+      if (decoded.role !== "student") { //Solutie temporara
+        console.log("Nu ai acces la aceasta pagina, rolul tau este: ", decoded.role);
+        router.push(`/${decoded.role}`); 
       }
     } catch (error) {
       console.error("Invalid token:", error);
