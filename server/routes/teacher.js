@@ -4,16 +4,11 @@ const router  = express.Router();
 const { isCompleteProfile } = require('../middlewares/completeProfile');
 const { isTeacher } = require('../middlewares/teacher');
 
-router.use([isCompleteProfile]);
 router.use([isTeacher]);
 
 const teacherController = require('../controllers/teacher'); 
 
-router.get('/', teacherController.home);
-router.get('/about', teacherController.about);
-router.get('/logout', teacherController.logout);
-
-router.get('/topics', teacherController.teacherTopics);
+router.get('/fetch/topics', teacherController.teacherTopics);
 router.get('/topic/:id', teacherController.teacherTopic);
 router.get('/fetch/topic/:id', teacherController.apiTeacherTopic);
 router.get('/fetch/getSpecializations/:id', teacherController.getSpecializations);

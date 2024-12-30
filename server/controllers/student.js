@@ -2,7 +2,6 @@ const Topic = require('../models/topic');
 const Specialization = require('../models/specialization');
 const SpecializationTopic = require('../models/specializationTopic');
 const User = require('../models/user');
-const { truncateText } = require('../helpers/utils');
 const { Op } = require('sequelize');
 const topicRequest = require('../models/topicRequest');
 const sanitizeHtml = require('sanitize-html');
@@ -54,7 +53,7 @@ const getStudentTopics = async (req, res) => {
       return res.status(404).json({ message: 'Topics not found' });
     };
 
-   return res.render('pages/student/topics', { topics: topics, truncateText: truncateText });
+   return res.render('pages/student/topics', { topics: topics});
 
   }
   catch (error) {
@@ -130,7 +129,7 @@ const getRequestTopics = async (req, res) => {
       delete req.session.loggedInUser;
       res.redirect('/');
     };
-    return res.render('pages/student/requests', { requests: requests, truncateText: truncateText });
+    return res.render('pages/student/requests', { requests: requests});
   }
   catch (error) {
     console.error('Error getting requests:', error);

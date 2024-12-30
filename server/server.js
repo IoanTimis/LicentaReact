@@ -3,7 +3,6 @@ const app = express();
 
 const cors = require('cors');
 
-// Configurează CORS
 app.use(cors({
     origin: 'http://localhost:3000',
     methods: ['GET', 'POST', 'PUT', 'DELETE'], 
@@ -18,26 +17,6 @@ app.use(express.json());
 var dotenv = require('dotenv');
 dotenv.config();
 
-var session = require('express-session');
-var FileStore = require('session-file-store')(session);
-
-app.use(session({
-    secret: process.env.SESSION_SECRET,
-    resave: false,
-    saveUninitialized: false,
-    store: new FileStore(),
-    cookie: { maxAge: 999999999, secure: false, httpOnly: true }
-}));
-
-app.use((req, res, next) => {
-    if (req.session.loggedInUser) {
-        res.locals.loggedInUser = req.session.loggedInUser;
-    } else {
-        res.locals.loggedInUser = null;
-    }
-    next();
-});
-
 const bcrypt = require('bcryptjs');
 
 const cookieParser = require('cookie-parser');
@@ -51,6 +30,7 @@ const specialization = require('./models/specialization');
 const topic = require('./models/topic');
 const specializationTopic = require('./models/specializationTopic');
 const topicRequest = require('./models/topicRequest');
+
 
 sequelize.sync({ force: false, logging: console.log })
     .then(() => {

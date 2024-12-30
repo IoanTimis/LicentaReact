@@ -1,40 +1,32 @@
 const User = require('../models/user');
 const topicRequest = require('../models/topicRequest');
 const Topic = require('../models/topic');
-const { truncateText } = require('../helpers/utils');
 const Faculty = require('../models/faculty');
 const Specialization = require('../models/specialization');
 const specializationTopic = require('../models/specializationTopic');
 const sanitizeHtml = require('sanitize-html');
-const session = require('express-session');
-
-const home = (req, res) => {
-  res.render('pages/teacher/index');
-};
-
-const about = (req, res) => {
-  res.render('pages/teacher/about');
-};
-
-const logout = (req, res) => {
-  delete req.session.loggedInUser;
-  req.session.save(function(err) {
-    if (err) {
-      console.error('Eroare la salvarea sesiunii:', err);
-    } else {
-      res.redirect('/');
-    }
-  });
-};
+const jwt = require('jsonwebtoken');
 
 const teacherTopics = async (req, res) => {
-  const teacherId = req.session.loggedInUser.id;
-
   try{
-    const faculties = await Faculty.findAll();
+    const refreshToken = req.cookies.refreshToken;
+    const user = jwt.decode(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+    console.log(user);
+    const teacherId = user.id;
+
+    const faculties = await Faculty.findAll(
+      {
+        include: [
+          {
+            model: Specialization,
+            as: 'specializations',
+          }
+        ]
+      }
+    );
 
     if(faculties.length === 0){
-      return res.status(404).send('Faculties not found');
+      return res.status(404).json({ message: 'Faculties not found' });
     }
 
     const teacher = await User.findByPk(teacherId, {
@@ -47,14 +39,14 @@ const teacherTopics = async (req, res) => {
     });
     
     if (!teacher) {
-      return res.status(404).send('Teacher not found' );
+      return res.status(404).json({ message: 'Teacher not found' });
     }
 
-    res.render('pages/teacher/topics', { user: teacher, faculties: faculties, truncateText: truncateText });
+    res.json({ teacher: teacher, faculties: faculties });
   }
   catch (error) {
     console.error('Error getting topics:', error);
-    res.status(500).send('Internal Server Error');
+    res.status(500).json({ message: 'Internal Server Error' });
   }
 };
 
@@ -253,7 +245,7 @@ const studentRequests = async (req, res) => {
       return res.status(404).send('Requests not found');
     }
 
-    res.render('pages/teacher/studentRequests', { studentRequests: requests, truncateText: truncateText });
+    res.render('pages/teacher/studentRequests', { studentRequests: requests});
   }
   catch (error) {
     console.error('Error getting requests:', error);
@@ -358,9 +350,6 @@ const deleteRequest = async (req, res) => {
 
 
 module.exports = {
-  home,
-  about,
-  logout,
   teacherTopics,
   teacherTopic,
   apiTeacherTopic,

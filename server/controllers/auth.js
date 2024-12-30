@@ -25,51 +25,6 @@ const checkSession = (req, res) => {
     });
 };
 
-const getFaculties = async (req, res) => {
-    try {
-        const faculties = await Faculty.findAll();
-        if (faculties.length === 0) {
-            return res.status(404).send('Faculties not found');
-        }
-        
-        res.json(faculties);
-    } catch (error) {
-        console.error('Error fetching faculties:', error);
-        res.status(500).send('Internal Server Error');
-    }
-};
-
-const getSpecializations = async (req, res) => { 
-    try {
-        const faculty_id = req.params.id;
-        const specializations = await Specialization.findAll({ where: { faculty_id: faculty_id } });
-        if (specializations.length === 0) {
-            return res.status(404).send('Specializations not found');
-        }
-        
-        res.json(specializations);
-    } catch (error) {
-        console.error('Error fetching specializations:', error);
-        res.status(500).send('Internal Server Error');
-    }
-};
-
-const getFacultiesSpecializations = async (req, res) => {
-    try {
-        const faculties = await Faculty.findAll({
-            include: Specialization
-        });
-        if (faculties.length === 0) {
-            return res.status(404).send('Faculties not found');
-        }
-        
-        res.json(faculties);
-    } catch (error) {
-        console.error('Error fetching faculties:', error);
-        res.status(500).send('Internal Server Error');
-    }
-};
-
 const registerStudent = async (req, res) => {
     try {
         const { first_name, name, email, password, faculty_id, specialization_id, education_level } = req.body;
@@ -412,9 +367,6 @@ const completeProfileTeacher = async (req, res) => {
 
 module.exports = {
     checkSession,
-    getFaculties,
-    getSpecializations,
-    getFacultiesSpecializations,
     registerTeacher,
     registerStudent,
     refreshAccessToken,

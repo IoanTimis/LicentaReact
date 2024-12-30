@@ -2,11 +2,12 @@ const express = require('express');
 const router  = express.Router();
 
 const { isCompleteProfile } = require('../middlewares/completeProfile');
-router.use([isCompleteProfile]);
 
 const generalController = require('../controllers/general');
 
-router.get('/', generalController.home);
-router.get('/about', generalController.about);
+router.get('/fetch/faculties', generalController.getFaculties);
+router.get('/fetch/specializations/:id', generalController.getSpecializations);
+router.get('/fetch/faculties-specializations', generalController.getFacultiesSpecializations);
+router.get('/fetch/faculty-specializations/:id', generalController.getFacultySpecializations);
 
 module.exports = router;
