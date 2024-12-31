@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import axiosInstance from "@/utils/axiosInstance";
-import { PlusIcon } from "@heroicons/react/24/solid";
+import { PlusCircleIcon } from "@heroicons/react/24/solid";
 
 export default function TeacherTopics() {
   const [faculties, setFaculties] = useState([]);
@@ -92,9 +92,10 @@ export default function TeacherTopics() {
     
       {/* Topics */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-white shadow rounded p-4 hover:shadow-lg transition">
-          <h2 className="text-lg text-gray-700 font-semibold ">Adaugă un topic</h2>
-            <PlusIcon className="h-6 w-6 text-blue-500 mx-auto cursor-pointer" onClick={toggleModal} />
+        <div className="bg-white shadow rounded p-4 hover:shadow-lg transition cursor-pointer" onClick={toggleModal}>
+          <h2 className="text-lg text-gray-700 font-semibold ">Adaugă un topic nou</h2>
+          <p className="text-gray-600">Click pe un card pentru a vedea pagina dedicata lui</p>
+            <PlusCircleIcon className="h-9 w-9 text-gray-300 mx-auto"/>
         </div>
         {topics.map((topic) => (
           <div key={topic.id} className="bg-white shadow rounded p-4 hover:shadow-lg transition">
