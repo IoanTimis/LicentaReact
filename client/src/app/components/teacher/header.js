@@ -7,6 +7,8 @@ import axios from "axios";
 import { clearUser } from "@/store/features/user/userSlice";
 import { useDispatch } from "react-redux";
 
+import { HomeIcon, AcademicCapIcon, UserIcon, UserGroupIcon, NewspaperIcon } from '@heroicons/react/24/solid';
+
 export default function teacherNavBar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -29,7 +31,7 @@ export default function teacherNavBar() {
   };
   
   return (
-    <nav className="bg-gray-800 shadow-md">
+    <nav className="bg-gray-800 shadow-md sticky top-0 z-50">
       <div className="w-full px-4">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center">
@@ -67,7 +69,7 @@ export default function teacherNavBar() {
             {/* Logo for desktop */}
             <div className="hidden md:flex flex-shrink-0">
               <Link href="/teacher" className="text-white text-xl font-bold">
-                Logo
+                <img src="/logo.png" alt="Logo" className="h-10" />
               </Link>
             </div>
           </div>
@@ -79,25 +81,37 @@ export default function teacherNavBar() {
                 href="/teacher"
                 className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
               >
-                Acasa
+                <div className="flex items-center space-x-2">
+                  <span className="h-6 w-6"><HomeIcon/></span>
+                  <span>Acasa</span>
+                </div>
               </Link>
               <Link
                 href="/teacher/my-topics"
                 className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
               >
-                Temele mele
+                <div className="flex items-center space-x-2">
+                  <span className="h-6 w-6"><AcademicCapIcon/></span>
+                  <span>Temele Mele</span>
+                </div>
               </Link>
               <Link
                 href="/student-requests"
                 className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
               >
-                Cereri Studenti
+                <div className="flex items-center space-x-2  hover:bg-gray-700">
+                  <span className="h-6 w-6"><NewspaperIcon/></span>
+                  <span>Cereri Studenti</span>
+                </div>
               </Link>
               <Link
                 href="/my-students"
                 className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
               >
-                Studentii mei
+                <div className="flex items-center space-x-2  hover:bg-gray-700">
+                  <span className="h-6 w-6"><UserGroupIcon/></span>
+                  <span>Studentii Mei</span>
+                </div>
               </Link>
             </div>
           </div>
@@ -108,7 +122,10 @@ export default function teacherNavBar() {
               onClick={() => setIsDropdownOpen(!isDropdownOpen)}
               className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium focus:outline-none"
             >
-              Cont
+             <div className="flex items-center space-x-2  hover:bg-gray-700">
+                <span className="h-6 w-6"><UserIcon/></span>
+                <span>Cont</span>
+              </div>
             </button>
             {isDropdownOpen && (
               <div className="absolute right-0 mt-2 w-48 bg-white border rounded-md shadow-lg">

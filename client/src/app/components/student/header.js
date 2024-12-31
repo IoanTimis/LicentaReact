@@ -7,6 +7,8 @@ import { clearUser } from "@/store/features/user/userSlice";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 
+import { HomeIcon, AcademicCapIcon, IdentificationIcon, UserGroupIcon, NewspaperIcon } from '@heroicons/react/24/solid';
+
 export default function studentNavBar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -29,7 +31,7 @@ export default function studentNavBar() {
   };
 
   return (
-    <nav className="bg-gray-800 shadow-md">
+    <nav className="bg-gray-800 shadow-md sticky top-0 z-50">
       <div className="w-full px-4">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center">
@@ -67,7 +69,7 @@ export default function studentNavBar() {
             {/* Logo for desktop */}
             <div className="hidden md:flex flex-shrink-0">
               <Link href="/student" className="text-white text-xl font-bold">
-                Logo
+                <img src="/logo.png" alt="Logo" className="h-10" />
               </Link>
             </div>
           </div>
@@ -79,7 +81,10 @@ export default function studentNavBar() {
                 href="/student"
                 className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
               >
-                Acasa
+               <div className="flex items-center space-x-2">
+                  <span className="h-6 w-6"><HomeIcon/></span>
+                  <span>Acasa</span>
+                </div>
               </Link>
               <Link
                 href=""

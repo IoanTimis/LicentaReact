@@ -27,7 +27,11 @@ export default function AppProvider({ children }) {
   return (
     <Provider store={store}>
       {getNavbar()} {/* Afișăm navbar-ul corespunzător */}
-      <main className="flex-grow">{children}</main>
+      <main className="flex-grow bg-gray-500">
+        <div className="lg:mx-24 xl:mx-32 2xl:mx-64">
+          {children}
+        </div>
+      </main>
       <Footer />
     </Provider>
   );

@@ -10,6 +10,10 @@ module.exports = {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
+        "footer-color": "#084371"
+      },
+      backgroundImage: {
+        'navbar-gradient': '-webkit-linear-gradient(0deg, #084371 0%, #3471B8 100%)',
       },
     },
   },

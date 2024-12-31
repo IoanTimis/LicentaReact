@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import axiosInstance from "@/utils/axiosInstance";
+import { PlusIcon } from "@heroicons/react/24/solid";
 
 export default function TeacherTopics() {
   const [faculties, setFaculties] = useState([]);
@@ -82,28 +83,22 @@ export default function TeacherTopics() {
 
   return (
     <div className="container mx-auto py-8">
-      <header className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">Teme de licență</h1>
-        <button
-          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-          onClick={toggleModal}
-        >
-          Adăugare temă de licență
-        </button>
-      </header>
-
       {/* Error Message */}
       {errorMessage && (
         <div className="bg-red-100 text-red-800 p-4 rounded mb-4">
           {errorMessage}
         </div>
       )}
-
+    
       {/* Topics */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="bg-white shadow rounded p-4 hover:shadow-lg transition">
+          <h2 className="text-lg text-gray-700 font-semibold ">Adaugă un topic</h2>
+            <PlusIcon className="h-6 w-6 text-blue-500 mx-auto cursor-pointer" onClick={toggleModal} />
+        </div>
         {topics.map((topic) => (
           <div key={topic.id} className="bg-white shadow rounded p-4 hover:shadow-lg transition">
-            <h2 className="text-lg font-semibold">{topic.title}</h2>
+            <h2 className="text-lg font-semibold text-gray-700">{topic.title}</h2>
             <p className="text-gray-600">{topic.description}</p>
             <p className="text-sm text-gray-500">Cuvinte cheie: {topic.keywords}</p>
             <p className="text-sm text-gray-500">Locuri: {topic.slots}</p>
