@@ -121,8 +121,12 @@ const getSpecializations = async (req, res) => {
 };
 
 const addTopic = async (req, res) => {
-  const teacherId = req.session.loggedInUser.id;
+  const refreshToken = req.cookies.refreshToken;
+  const user = jwt.decode(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+  const teacherId = user.id;
+
   const { title, description, keywords, slots, education_level, specialization_ids } = req.body;
+  console.log(title, description, keywords, slots, education_level, specialization_ids);
   sanitizeHtml(title);
   sanitizeHtml(description);
   sanitizeHtml(keywords);
@@ -153,7 +157,7 @@ const addTopic = async (req, res) => {
       }
     }
 
-    res.json({ topic: topic });
+    res.status(201).json({ topic: topic });
   }
   catch (error) {
     console.error('Error adding topic:', error);

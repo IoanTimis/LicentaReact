@@ -2,8 +2,6 @@ const jwt = require("jsonwebtoken");
 
 function isTeacher(req, res, next) {
   const authHeader = req.headers["authorization"];
-  console.log("req.headers:", req.headers);
-  console.log("authHeader:", authHeader);
   const token = authHeader && authHeader.split(" ")[1];
   console.log("token:", token);
 

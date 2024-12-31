@@ -12,6 +12,7 @@ router.get('/fetch/topics', teacherController.teacherTopics);
 router.get('/topic/:id', teacherController.teacherTopic);
 router.get('/fetch/topic/:id', teacherController.apiTeacherTopic);
 router.get('/fetch/getSpecializations/:id', teacherController.getSpecializations);
+
 router.post('/topic/add', teacherController.addTopic);
 router.put('/topic/edit/:id', teacherController.editTopic);
 router.delete('/topic/delete/:id', teacherController.deleteTopic);

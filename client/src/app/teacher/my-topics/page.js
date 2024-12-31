@@ -60,20 +60,20 @@ export default function TeacherTopics() {
       description: formData.get("description"),
       keywords: formData.get("keywords"),
       slots: formData.get("slots"),
-      educationLevel: formData.get("education_level"),
-      facultyId: selectedFacultyId,
-      specializations: selectedSpecializations.filter((id) => id !== null), // Filtrăm valorile null
+      education_level: formData.get("education_level"),
+      specialization_ids: selectedSpecializations.filter((id) => id !== null), // Filtrăm valorile null
     };
+    console.log(newTopic);
 
     try {
-      const response = await axiosInstance.post("/teacher/topics", newTopic, {
+      const response = await axiosInstance.post("/teacher/topic/add", newTopic, {
         withCredentials: true,
       });
-      if (response.status === 201) {
-        setTopics((prev) => [...prev, response.data]);
-        toggleModal();
-        console.log("Temă adăugată cu succes!");
-      }
+      
+      setTopics((prev) => [...prev, response.data]);
+      toggleModal();
+      console.log("Temă adăugată cu succes!");
+      
     } catch (error) {
       console.error("Eroare la adăugarea temei:", error);
       setErrorMessage("A apărut o eroare la adăugarea temei.");
