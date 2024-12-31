@@ -1,9 +1,17 @@
+'use client';
+
 import Link from 'next/link';
 import { useState } from 'react';
 import { HomeIcon, InformationCircleIcon, PhoneIcon, IdentificationIcon } from '@heroicons/react/24/solid';
+import { useLanguage } from "@/context/Languagecontext";
 
 export default function NavBar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { language, setLanguage, translate } = useLanguage();
+
+  const handleLanguageChange = (e) => {
+    setLanguage(e.target.value);
+  };
 
   return (
     <nav className="bg-navbar-gradient shadow-md sticky top-0 z-50">
@@ -50,31 +58,42 @@ export default function NavBar() {
             <div className="ml-10 flex items-baseline space-x-4">
               <Link href="/" className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">
                 <div className="flex items-center space-x-2">
-                  <span className="h-6 w-6"><HomeIcon/></span>
-                  <span>Acasa</span>
+                  <span className="h-6 w-6"><HomeIcon /></span>
+                  <span>{translate("Home")}</span>
                 </div>
               </Link>
               <Link href="/about" className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">
                 <div className="flex items-center space-x-2">
-                  <span className="h-6 w-6"><InformationCircleIcon/></span>
-                  <span>Despre</span>
+                  <span className="h-6 w-6"><InformationCircleIcon /></span>
+                  <span>{translate("About Us")}</span>
                 </div>
               </Link>
               <Link href="/contact" className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">
                 <div className="flex items-center space-x-2">
-                  <span className="h-6 w-6"><PhoneIcon/></span>
-                  <span>Contact</span>
+                  <span className="h-6 w-6"><PhoneIcon /></span>
+                  <span>{translate("Contact Us")}</span>
                 </div>
               </Link>
             </div>
           </div>
 
-          {/* Conectare link */}
-          <div>
+          {/* Conectare link + Language Selector */}
+          <div className="flex items-center space-x-4">
+            {/* Language Selector */}
+            <select
+              value={language}
+              onChange={handleLanguageChange}
+              className="bg-navbar-gradient text-gray-300 border border-gray-700 rounded px-2 py-1 text-sm focus:ring-blue-500 focus:border-blue-500"
+            >
+              <option value="ro">RO</option>
+              <option value="en">EN</option>
+            </select>
+
+            {/* Conectare */}
             <Link href="/auth/login" className="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium">
-              <div className="flex items-center space-x-2  hover:bg-gray-700">
-                <span className="h-6 w-6"><IdentificationIcon/></span>
-                <span>Conectare</span>
+              <div className="flex items-center space-x-2 hover:bg-gray-700">
+                <span className="h-6 w-6"><IdentificationIcon /></span>
+                <span>{translate("Login")}</span>
               </div>
             </Link>
           </div>
@@ -87,20 +106,20 @@ export default function NavBar() {
           <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
             <Link href="/" className="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">
               <div className="flex items-center space-x-2">
-                <span className="h-6 w-6"><HomeIcon/></span>
-                <span>Acasa</span>
+                <span className="h-6 w-6"><HomeIcon /></span>
+                <span>{translate("Home")}</span>
               </div>
             </Link>
             <Link href="/about" className="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">
               <div className="flex items-center space-x-2">
-                <span className="h-6 w-6"><InformationCircleIcon/></span>
-                <span>Despre</span>
+                <span className="h-6 w-6"><InformationCircleIcon /></span>
+                <span>{translate("About Us")}</span>
               </div>
             </Link>
             <Link href="/contact" className="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">
               <div className="flex items-center space-x-2">
-                <span className="h-6 w-6"><PhoneIcon/></span>
-                <span>Contact</span>
+                <span className="h-6 w-6"><PhoneIcon /></span>
+                <span>{translate("Contact Us")}</span>
               </div>
             </Link>
           </div>
