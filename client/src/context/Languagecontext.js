@@ -6,7 +6,7 @@ import translations from "@/locales/translations.json";
 const LanguageContext = createContext();
 
 export function LanguageProvider({ children }) {
-  const [language, setLanguage] = useState("en"); // Limba implicită setată la română
+  const [language, setLanguage] = useState("ro"); // Limba implicită setată la română
   console.log("translations", translations);
 
   const translate = (text) => {

@@ -77,7 +77,7 @@ export default function NavBar() {
             </div>
           </div>
 
-          {/* Conectare link + Language Selector */}
+          {/* Login Link + Language Selector */}
           <div className="flex items-center space-x-4">
             {/* Language Selector */}
             <select
@@ -89,7 +89,7 @@ export default function NavBar() {
               <option value="en">EN</option>
             </select>
 
-            {/* Conectare */}
+            {/* Login Link */}
             <Link href="/auth/login" className="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium">
               <div className="flex items-center space-x-2 hover:bg-gray-700">
                 <span className="h-6 w-6"><IdentificationIcon /></span>

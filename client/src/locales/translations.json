@@ -1,4 +1,5 @@
 {
+    "_comment1": "Translations for general pages and general components",
     "Welcome!": "Bine ai venit!",
     "Home": "Acasă",
     "About Us": "Despre noi",
@@ -7,6 +8,22 @@
     "Aplicație online pentru selectarea temelor de licență/master. Toate drepturile rezervate.",
     "Login": "Autentificare",
     "Password": "Parolă",
-    "Google Login": "Autentificare cu Google"
+    "Google Login": "Autentificare cu Google",
+    "Logout": "Deconectare",
+    "Profile": "Profil",
+    "Account": "Cont",
+    "Options": "Opțiuni",
+    "_comment2": "Translations for teacher pages",
+    "Welcome Teacher!": "Bine ai venit Profesore!",
+    "My Themes": "Temele mele",
+    "Add a new theme": "Adaugă o temă nouă",
+    "Click here to add a new theme": "Apasă aici pentru a adăuga o temă nouă",
+    "Actions": "Acțiuni",
+    "Theme Title": "Titlu temă",
+    "Description": "Descriere",
+    "Keywords": "Cuvinte cheie",
+    "Student Reqests": "Cereri studenți",
+    "My Students": "Studenții mei"
+    
 }
   

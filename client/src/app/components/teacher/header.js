@@ -6,13 +6,18 @@ import { useRouter } from "next/navigation";
 import axios from "axios";
 import { clearUser } from "@/store/features/user/userSlice";
 import { useDispatch } from "react-redux";
+import { useLanguage } from "@/context/Languagecontext";
+import { HomeIcon, AcademicCapIcon, UserIcon, UserGroupIcon, NewspaperIcon } from "@heroicons/react/24/solid";
 
-import { HomeIcon, AcademicCapIcon, UserIcon, UserGroupIcon, NewspaperIcon } from '@heroicons/react/24/solid';
-
-export default function teacherNavBar() {
+export default function TeacherNavBar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  
+  const { language, setLanguage, translate } = useLanguage();
+
+  const handleLanguageChange = (e) => {
+    setLanguage(e.target.value);
+  };
+
   const router = useRouter();
   const dispatch = useDispatch();
 
@@ -22,16 +27,16 @@ export default function teacherNavBar() {
 
       dispatch(clearUser());
       localStorage.removeItem("accessToken");
-      console.log("Logout reusit");
+      console.log("Logout successful");
 
       router.push("/auth/login");
     } catch (error) {
-      console.error("Eroare la logout:", error);
+      console.error("Error at logout:", error);
     }
   };
-  
+
   return (
-    <nav className="bg-gray-800 shadow-md sticky top-0 z-50">
+    <nav className="bg-navbar-gradient shadow-md sticky top-0 z-50">
       <div className="w-full px-4">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center">
@@ -82,8 +87,10 @@ export default function teacherNavBar() {
                 className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
               >
                 <div className="flex items-center space-x-2">
-                  <span className="h-6 w-6"><HomeIcon/></span>
-                  <span>Acasa</span>
+                  <span className="h-6 w-6">
+                    <HomeIcon />
+                  </span>
+                  <span>{translate("Home")}</span>
                 </div>
               </Link>
               <Link
@@ -91,58 +98,83 @@ export default function teacherNavBar() {
                 className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
               >
                 <div className="flex items-center space-x-2">
-                  <span className="h-6 w-6"><AcademicCapIcon/></span>
-                  <span>Temele Mele</span>
+                  <span className="h-6 w-6">
+                    <AcademicCapIcon />
+                  </span>
+                  <span>{translate("My Themes")}</span>
                 </div>
               </Link>
               <Link
                 href="/student-requests"
                 className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
               >
-                <div className="flex items-center space-x-2  hover:bg-gray-700">
-                  <span className="h-6 w-6"><NewspaperIcon/></span>
-                  <span>Cereri Studenti</span>
+                <div className="flex items-center space-x-2 hover:bg-gray-700">
+                  <span className="h-6 w-6">
+                    <NewspaperIcon />
+                  </span>
+                  <span>{translate("Student Requests")}</span>
                 </div>
               </Link>
               <Link
                 href="/my-students"
                 className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
               >
-                <div className="flex items-center space-x-2  hover:bg-gray-700">
-                  <span className="h-6 w-6"><UserGroupIcon/></span>
-                  <span>Studentii Mei</span>
+                <div className="flex items-center space-x-2 hover:bg-gray-700">
+                  <span className="h-6 w-6">
+                    <UserGroupIcon />
+                  </span>
+                  <span>{translate("My Students")}</span>
                 </div>
               </Link>
             </div>
           </div>
 
-          {/* Dropdown menu for "Cont" */}
-          <div className="relative">
-            <button
-              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-              className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium focus:outline-none"
+          {/* Dropdown menu for "Profile" + Language Selector */}
+          <div className="flex items-center space-x-4">
+            {/* Language Selector */}
+            <select
+              value={language}
+              onChange={handleLanguageChange}
+              className="bg-navbar-gradient text-gray-300 border border-gray-700 rounded px-2 py-1 text-sm focus:ring-blue-500 focus:border-blue-500"
             >
-             <div className="flex items-center space-x-2  hover:bg-gray-700">
-                <span className="h-6 w-6"><UserIcon/></span>
-                <span>Cont</span>
-              </div>
-            </button>
-            {isDropdownOpen && (
-              <div className="absolute right-0 mt-2 w-48 bg-white border rounded-md shadow-lg">
-                <Link
-                  href="/profile"
-                  className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+              <option value="ro">RO</option>
+              <option value="en">EN</option>
+            </select>
+
+            {/* Profile dropdown */}
+            <div className="relative">
+              <button
+                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium focus:outline-none"
+              >
+                <div className="flex items-center space-x-2 hover:bg-gray-700">
+                  <span className="h-6 w-6">
+                    <UserIcon />
+                  </span>
+                  <span>{translate("Account")}</span>
+                </div>
+              </button>
+
+              {isDropdownOpen && (
+                <div
+                  className="absolute right-0 top-12 w-48 bg-white border rounded-md shadow-lg"
+                  style={{ zIndex: 50 }}
                 >
-                  Profil
-                </Link>
-                <button
-                  onClick={logout}
-                  className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
-                >
-                  Deconectare
-                </button>
-              </div>
-            )}
+                  <Link
+                    href="/profile"
+                    className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+                  >
+                    {translate("Profile")}
+                  </Link>
+                  <button
+                    onClick={logout}
+                    className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
+                  >
+                    {translate("Logout")}
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>
@@ -153,27 +185,47 @@ export default function teacherNavBar() {
           <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
             <Link
               href="/teacher"
-              className="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
+              className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
             >
-              Acasa
+              <div className="flex items-center space-x-2">
+                <span className="h-6 w-6">
+                  <HomeIcon />
+                </span>
+                <span>{translate("Home")}</span>
+              </div>
             </Link>
             <Link
-              href="/my-tasks"
-              className="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
+              href="/teacher/my-topics"
+              className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
             >
-              Temele mele
+              <div className="flex items-center space-x-2">
+                <span className="h-6 w-6">
+                  <AcademicCapIcon />
+                </span>
+                <span>{translate("My Themes")}</span>
+              </div>
             </Link>
             <Link
               href="/student-requests"
-              className="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
+              className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
             >
-              Cereri Studenti
+              <div className="flex items-center space-x-2 hover:bg-gray-700">
+                <span className="h-6 w-6">
+                  <NewspaperIcon />
+                </span>
+                <span>{translate("Student Requests")}</span>
+              </div>
             </Link>
             <Link
               href="/my-students"
-              className="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
+              className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
             >
-              Studentii mei
+              <div className="flex items-center space-x-2 hover:bg-gray-700">
+                <span className="h-6 w-6">
+                  <UserGroupIcon />
+                </span>
+                <span>{translate("My Students")}</span>
+              </div>
             </Link>
           </div>
         </div>

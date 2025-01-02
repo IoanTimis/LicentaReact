@@ -2,9 +2,14 @@
 
 import { useState, useEffect } from "react";
 import axiosInstance from "@/utils/axiosInstance";
-import { PlusCircleIcon } from "@heroicons/react/24/solid";
+import { PlusCircleIcon, ChevronDownIcon } from "@heroicons/react/24/solid";
+import { useLanguage } from "@/context/Languagecontext";
+import Link from "next/link";
+import TopicCard from "@/app/components/teacher/topic-card";
 
 export default function TeacherTopics() {
+  const { translate } = useLanguage();
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [faculties, setFaculties] = useState([]);
   const [specializations, setSpecializations] = useState([]);
   const [selectedFacultyId, setSelectedFacultyId] = useState(null);
@@ -82,7 +87,7 @@ export default function TeacherTopics() {
   };
 
   return (
-    <div className="container mx-auto py-8">
+    <div className="py-8 bg-gray-100">
       {/* Error Message */}
       {errorMessage && (
         <div className="bg-red-100 text-red-800 p-4 rounded mb-4">
@@ -91,20 +96,21 @@ export default function TeacherTopics() {
       )}
     
       {/* Topics */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-white shadow rounded p-4 hover:shadow-lg transition cursor-pointer" onClick={toggleModal}>
-          <h2 className="text-lg text-gray-700 font-semibold ">Adaugă un topic nou</h2>
-          <p className="text-gray-600">Click pe un card pentru a vedea pagina dedicata lui</p>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 px-4">
+        {/* Add Topic Card */}
+        <div className="bg-white shadow rounded hover:shadow-lg transition cursor-pointer" onClick={toggleModal}>
+          <div className="bg-navbar-gradient flex justify-between items-center py-2 px-4 rounded-t">
+            <h2 className="text-lg text-white font-semibold ">{translate("Add a new theme")}</h2>
+          </div>
+          <div className="p-4 py-4">
+            <p className="text-gray-700">{translate("Click here to add a new theme")}</p>
+          </div>
+          <div className="pb-4">
             <PlusCircleIcon className="h-9 w-9 text-gray-300 mx-auto"/>
+          </div>
         </div>
         {topics.map((topic) => (
-          <div key={topic.id} className="bg-white shadow rounded p-4 hover:shadow-lg transition">
-            <h2 className="text-lg font-semibold text-gray-700">{topic.title}</h2>
-            <p className="text-gray-600">{topic.description}</p>
-            <p className="text-sm text-gray-500">Cuvinte cheie: {topic.keywords}</p>
-            <p className="text-sm text-gray-500">Locuri: {topic.slots}</p>
-            <p className="text-sm text-gray-500">Tip: {topic.education_level}</p>
-          </div>
+          <TopicCard key={topic.id} topic={topic} translate={translate} />
         ))}
       </div>
 
