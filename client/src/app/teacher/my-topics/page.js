@@ -9,7 +9,6 @@ import TopicCard from "@/app/components/teacher/topic-card";
 
 export default function TeacherTopics() {
   const { translate } = useLanguage();
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [faculties, setFaculties] = useState([]);
   const [specializations, setSpecializations] = useState([]);
   const [selectedFacultyId, setSelectedFacultyId] = useState(null);
@@ -87,6 +86,7 @@ export default function TeacherTopics() {
   };
 
   return (
+    <div className="flex flex-col min-h-screen bg-gray-100">
     <div className="py-8 bg-gray-100">
       {/* Error Message */}
       {errorMessage && (
@@ -124,7 +124,7 @@ export default function TeacherTopics() {
                 <label className="block text-gray-700">Titlu</label>
                 <input
                   type="text"
-                  className="border border-gray-300 rounded w-full p-2"
+                  className="border border-gray-300 text-gray-700 rounded w-full p-2"
                   name="title"
                   required
                 />
@@ -132,7 +132,7 @@ export default function TeacherTopics() {
               <div className="mb-4">
                 <label className="block text-gray-700">Descriere</label>
                 <textarea
-                  className="border border-gray-300 rounded w-full p-2"
+                  className="border border-gray-300 text-gray-700 rounded w-full p-2"
                   name="description"
                   required
                 />
@@ -141,7 +141,7 @@ export default function TeacherTopics() {
                 <label className="block text-gray-700">Cuvinte cheie</label>
                 <input
                   type="text"
-                  className="border border-gray-300 rounded w-full p-2"
+                  className="border border-gray-300 text-gray-700 rounded w-full p-2"
                   name="keywords"
                   required
                 />
@@ -151,7 +151,7 @@ export default function TeacherTopics() {
                 <label className="block text-gray-700">Locuri</label>
                 <input
                   type="number"
-                  className="border border-gray-300 rounded w-full p-2"
+                  className="border border-gray-300 text-gray-700 rounded w-full p-2"
                   name="slots"
                   required
                 />
@@ -226,6 +226,7 @@ export default function TeacherTopics() {
           </div>
         </div>
       )}
+    </div>
     </div>
   );
 }

@@ -139,7 +139,6 @@ const addTopic = async (req, res) => {
       slots: slots,
       user_id: teacherId,
       education_level: education_level,
-      userId: teacherId
     });
 
     if (!topic) {
@@ -156,6 +155,8 @@ const addTopic = async (req, res) => {
         return res.status(404).json({ message: 'Specialization not found' });
       }
     }
+
+    console.log('Topic added:', topic);
 
     res.status(201).json({ topic: topic });
   }

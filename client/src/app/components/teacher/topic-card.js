@@ -4,6 +4,7 @@ import { useState } from "react";
 
 export default function TopicCard({ topic, translate }) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  console.log(topic);
 
   return (
     <div className="bg-white shadow rounded hover:shadow-lg transition">
