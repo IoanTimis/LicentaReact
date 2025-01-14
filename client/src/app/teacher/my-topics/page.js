@@ -102,11 +102,14 @@ export default function TeacherTopics() {
           <div className="bg-navbar-gradient flex justify-between items-center py-2 px-4 rounded-t">
             <h2 className="text-lg text-white font-semibold ">{translate("Add a new theme")}</h2>
           </div>
-          <div className="p-4 py-4">
+          <div className="px-4 py-2">
             <p className="text-gray-700">{translate("Click here to add a new theme")}</p>
           </div>
+          <div className="px-4 py-2">
+            <p className="text-gray-700">{translate("Click on any other card to view its dedicated page.")}</p>
+          </div>
           <div className="pb-4">
-            <PlusCircleIcon className="h-9 w-9 text-gray-300 mx-auto"/>
+            <PlusCircleIcon className="h-9 w-9 text-gray-400 mx-auto"/>
           </div>
         </div>
         {topics.map((topic) => (
