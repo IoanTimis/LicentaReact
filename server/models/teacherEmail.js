@@ -15,6 +15,14 @@ const TeacherEmail = sequelize.define("teacher_emails", {
       isEmail: true, // Verifică dacă este un email valid
     },
   },
+  createdAt: {
+    type: DataTypes.DATE,
+    defaultValue: DataTypes.NOW,
+  },
+  updatedAt: {
+    type: DataTypes.DATE,
+    defaultValue: DataTypes.NOW,
+  },
 });
 
 module.exports = TeacherEmail;

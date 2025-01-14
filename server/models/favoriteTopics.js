@@ -22,9 +22,15 @@ const FavoriteTopics = sequelize.define('Favorite_topics', {
         },
         onDelete: 'CASCADE',
     },
-}, {
-    timestamps: true, 
-    tableName: 'favorite_topics', 
+    createdAt: {
+        type: DataTypes.DATE,
+        defaultValue: DataTypes.NOW,
+      },
+    updatedAt: {
+    type: DataTypes.DATE,
+    defaultValue: DataTypes.NOW,
+    },
+
 });
 
 FavoriteTopics.belongsTo(User, { foreignKey: 'user_id', as: 'user' }, { onDelete: 'CASCADE' });
