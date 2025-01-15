@@ -35,8 +35,6 @@ export default function TeacherTopics() {
     fetchData();
   }, []);
 
-  
-
   // Handle faculty change
   const handleFacultyChange = (facultyId) => {
     setSelectedFacultyId(facultyId);
@@ -92,6 +90,35 @@ export default function TeacherTopics() {
     }
   };
 
+  const handleEdit = async (topicId) => {
+    try {
+      const response = await axiosInstance.put(`/teacher/topic/edit/${topicId}`, { withCredentials: true });
+      console.log("Tema a fost editată cu succes!");
+      const updatedTopic = response.data.topic;
+
+      setTopics((prevTopics) =>
+      prevTopics.map((topic) =>
+        topic.id === topicId ? { ...topic, ...updatedTopic } : topic
+      )
+    );
+    } catch (error) {
+      console.error("Eroare la editarea temei:", error);
+      setErrorMessage("A apărut o eroare la editarea temei.");
+  };
+}
+
+  //Edit, Duplicate, Delete topics
+  const handleDelete = async (topicId) => {
+    try {
+      const response = await axiosInstance.delete(`/teacher/topic/delete/${topicId}`, { withCredentials: true });
+      setTopics((prev) => prev.filter((topic) => topic.id !== topicId));
+      console.log("Tema a fost ștearsă cu succes!");
+    } catch (error) {
+      console.error("Eroare la ștergerea temei:", error);
+      setErrorMessage("A apărut o eroare la ștergerea temei.");
+    };
+  }
+
   return (
     <div className="flex flex-col min-h-screen bg-gray-100">
     <div className="py-8 bg-gray-100">
@@ -120,7 +147,7 @@ export default function TeacherTopics() {
           </div>
         </div>
         {topics.map((topic) => (
-          <TopicCard key={topic.id} topic={topic} translate={translate} />
+          <TopicCard key={topic.id} topic={topic} translate={translate} onEdit={handleEdit} onDelete={handleDelete} />
         ))}
       </div>
 

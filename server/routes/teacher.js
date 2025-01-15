@@ -9,8 +9,7 @@ router.use([isTeacher]);
 const teacherController = require('../controllers/teacher'); 
 
 router.get('/fetch/topics', teacherController.teacherTopics);
-router.get('/topic/:id', teacherController.teacherTopic);
-router.get('/fetch/topic/:id', teacherController.apiTeacherTopic);
+router.get('/fetch/topic/:id', teacherController.teacherTopic);
 router.get('/fetch/getSpecializations/:id', teacherController.getSpecializations);
 
 router.post('/topic/add', teacherController.addTopic);

@@ -52,33 +52,9 @@ const teacherTopics = async (req, res) => {
 };
 
 const teacherTopic = async (req, res) => {
-  const topicId = req.params.id;
-
   try{
-    const topic = await Topic.findByPk(topicId, {
-      include: {
-        model: User,
-        as: 'user'
-      }
-    }
-    );
+    const topicId = req.params.id;
 
-    if (!topic) {
-      return res.status(404).send('Topic not found');
-    }
-
-    return res.render('pages/teacher/topic', { topic: topic });
-  }
-  catch (error) {
-    console.error('Error getting topic:', error);
-    res.status(500).send('Internal Server Error');
-  }
-};
-
-const apiTeacherTopic = async (req, res) => {
-  const topicId = req.params.id;
-
-  try{
     const topic = await Topic.findByPk(topicId, {
       include: {
         model: User,
@@ -100,9 +76,9 @@ const apiTeacherTopic = async (req, res) => {
 };
 
 const getSpecializations = async (req, res) => {
-  const faculty_id = req.params.id;
-  
   try{
+    const faculty_id = req.params.id;
+
     const specializations = await Specialization.findAll({
         where: {
             faculty_id: faculty_id
@@ -122,17 +98,17 @@ const getSpecializations = async (req, res) => {
 };
 
 const addTopic = async (req, res) => {
-  const refreshToken = req.cookies.refreshToken;
-  const user = jwt.decode(refreshToken, process.env.REFRESH_TOKEN_SECRET);
-  const teacherId = user.id;
-
-  const { title, description, keywords, slots, education_level, specialization_ids } = req.body;
-  console.log(title, description, keywords, slots, education_level, specialization_ids);
-  sanitizeHtml(title);
-  sanitizeHtml(description);
-  sanitizeHtml(keywords);
-
   try{
+    const refreshToken = req.cookies.refreshToken;
+    const user = jwt.decode(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+    const teacherId = user.id;
+
+    const { title, description, keywords, slots, education_level, specialization_ids } = req.body;
+    console.log(title, description, keywords, slots, education_level, specialization_ids);
+    sanitizeHtml(title);
+    sanitizeHtml(description);
+    sanitizeHtml(keywords);
+
     const topic = await Topic.create({
       title: title,
       description: description,
@@ -168,14 +144,16 @@ const addTopic = async (req, res) => {
 };
 
 const editTopic = async (req, res) => {
-  const topicId = req.params.id;
-  const user = req.session.loggedInUser;
-  const { title, description, keywords, slots, education_level } = req.body;
-  sanitizeHtml(title);
-  sanitizeHtml(description);
-  sanitizeHtml(keywords);
-
   try{
+    const topicId = req.params.id;
+    const refreshToken = req.cookies.refreshToken;
+    const user = jwt.decode(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+    
+    const { title, description, keywords, slots, education_level } = req.body;
+    sanitizeHtml(title);
+    sanitizeHtml(description);
+    sanitizeHtml(keywords);
+
     const topic = await Topic.findByPk(topicId);
 
     if (!topic) {
@@ -183,7 +161,7 @@ const editTopic = async (req, res) => {
     }
 
     if(user !== null && user.id !== topic.user_id){
-      return res.status(403).send('Forbidden');
+      return res.status(403).json({ message: 'Forbidden' });
     }
 
     topic.title = title;
@@ -198,13 +176,14 @@ const editTopic = async (req, res) => {
   }
   catch (error) {
     console.error('Error editing topic:', error);
-    res.status(500).send('Internal Server Error');
+    res.status(500).json({ message: 'Internal Server Error' });
   }
 };
 
 const deleteTopic = async (req, res) => {
   const topicId = req.params.id;
-  const user = req.session.loggedInUser;
+  const refreshToken = req.cookies.refreshToken;
+  const user = jwt.decode(refreshToken, process.env.REFRESH_TOKEN_SECRET);
   
   try{
     const topic = await Topic.findByPk(topicId);
@@ -214,16 +193,16 @@ const deleteTopic = async (req, res) => {
     }
 
     if(user !== null && user.id !== topic.user_id){
-      return res.status(403).send('Forbidden');
+      return res.status(403).json({ message: 'Forbidden' });
     }
 
     await topic.destroy();
 
-    res.json({ message: 'Topic deleted' });
+    res.status(204).json({ message: 'Topic deleted' });
   }
   catch (error) {
     console.error('Error deleting topic:', error);
-    res.status(500).send('Internal Server Error');
+    res.status(500).json({ message: 'Internal Server Error' });
   }
 };
 
@@ -358,7 +337,6 @@ const deleteRequest = async (req, res) => {
 module.exports = {
   teacherTopics,
   teacherTopic,
-  apiTeacherTopic,
   getSpecializations,
   addTopic,
   editTopic,
