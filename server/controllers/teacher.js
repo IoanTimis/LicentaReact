@@ -7,6 +7,7 @@ const specializationTopic = require('../models/specializationTopic');
 const sanitizeHtml = require('sanitize-html');
 const jwt = require('jsonwebtoken');
 
+
 const teacherTopics = async (req, res) => {
   try{
     const refreshToken = req.cookies.refreshToken;

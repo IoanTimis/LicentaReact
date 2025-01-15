@@ -135,10 +135,10 @@ export default function TeacherNavBar() {
             <select
               value={language}
               onChange={handleLanguageChange}
-              className="bg-navbar-gradient text-gray-300 border border-gray-700 rounded px-2 py-1 text-sm focus:ring-blue-500 focus:border-blue-500"
+              className="bg-navbar-gradient border border-gray-700 rounded px-2 py-1 text-sm focus:ring-blue-500 focus:border-blue-500"
             >
-              <option value="ro">RO</option>
-              <option value="en">EN</option>
+              <option className="text-black" value="ro">RO</option>
+              <option className="text-black" value="en">EN</option>
             </select>
 
             {/* Profile dropdown */}
@@ -185,7 +185,7 @@ export default function TeacherNavBar() {
           <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
             <Link
               href="/teacher"
-              className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+              className="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
             >
               <div className="flex items-center space-x-2">
                 <span className="h-6 w-6">
@@ -196,7 +196,7 @@ export default function TeacherNavBar() {
             </Link>
             <Link
               href="/teacher/my-topics"
-              className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+              className="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
             >
               <div className="flex items-center space-x-2">
                 <span className="h-6 w-6">
@@ -207,9 +207,9 @@ export default function TeacherNavBar() {
             </Link>
             <Link
               href="/student-requests"
-              className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+              className="text-gray-300  hover:text-white px-3 py-2 rounded-md text-sm font-medium"
             >
-              <div className="flex items-center space-x-2 hover:bg-gray-700">
+              <div className="flex items-center space-x-2">
                 <span className="h-6 w-6">
                   <NewspaperIcon />
                 </span>
@@ -218,9 +218,9 @@ export default function TeacherNavBar() {
             </Link>
             <Link
               href="/my-students"
-              className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+              className="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
             >
-              <div className="flex items-center space-x-2 hover:bg-gray-700">
+              <div className="flex items-center space-x-2">
                 <span className="h-6 w-6">
                   <UserGroupIcon />
                 </span>

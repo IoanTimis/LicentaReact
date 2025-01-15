@@ -6,6 +6,7 @@ import { PlusCircleIcon, ChevronDownIcon } from "@heroicons/react/24/solid";
 import { useLanguage } from "@/context/Languagecontext";
 import Link from "next/link";
 import TopicCard from "@/app/components/teacher/topic-card";
+import { checkForDuplicates } from "@/utils/checkForDublicates";
 
 export default function TeacherTopics() {
   const { translate } = useLanguage();
@@ -21,6 +22,7 @@ export default function TeacherTopics() {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        console.log("fetching data-------------------------------");
         const response = await axiosInstance.get("/teacher/fetch/topics", { withCredentials: true });
         setFaculties(response.data.faculties);
         setTopics(response.data.teacher.topics);
@@ -32,6 +34,8 @@ export default function TeacherTopics() {
 
     fetchData();
   }, []);
+
+  
 
   // Handle faculty change
   const handleFacultyChange = (facultyId) => {
@@ -59,26 +63,29 @@ export default function TeacherTopics() {
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const formData = new FormData(e.target);
-    const newTopic = {
-      title: formData.get("title"),
-      description: formData.get("description"),
-      keywords: formData.get("keywords"),
-      slots: formData.get("slots"),
-      education_level: formData.get("education_level"),
-      specialization_ids: selectedSpecializations.filter((id) => id !== null), // Filtrăm valorile null
-    };
-    console.log(newTopic);
 
     try {
+      checkForDuplicates(selectedSpecializations);
+    
+      const formData = new FormData(e.target);
+      const newTopic = {
+        title: formData.get("title"),
+        description: formData.get("description"),
+        keywords: formData.get("keywords"),
+        slots: formData.get("slots"),
+        education_level: formData.get("education_level"),
+        specialization_ids: selectedSpecializations.filter((id) => id !== null),
+      };
+      console.log(newTopic);
+    
       const response = await axiosInstance.post("/teacher/topic/add", newTopic, {
         withCredentials: true,
       });
+
+      setTopics((prev) => [...prev, response.data.topic]);
       
-      setTopics((prev) => [...prev, response.data]);
       toggleModal();
       console.log("Temă adăugată cu succes!");
-      
     } catch (error) {
       console.error("Eroare la adăugarea temei:", error);
       setErrorMessage("A apărut o eroare la adăugarea temei.");
@@ -230,6 +237,6 @@ export default function TeacherTopics() {
         </div>
       )}
     </div>
-    </div>
+  </div>
   );
 }
