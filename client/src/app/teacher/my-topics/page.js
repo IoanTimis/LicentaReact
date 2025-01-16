@@ -10,13 +10,23 @@ import { checkForDuplicates } from "@/utils/checkForDublicates";
 
 export default function TeacherTopics() {
   const { translate } = useLanguage();
-  const [faculties, setFaculties] = useState([]);
-  const [specializations, setSpecializations] = useState([]);
-  const [selectedFacultyId, setSelectedFacultyId] = useState(null);
-  const [topics, setTopics] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState(null);
+
+  const [topics, setTopics] = useState([]);
+
+  const [ formMode , setFormMode ] = useState("add");
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [keywords, setKeywords] = useState("");
+  const [slots, setSlots] = useState("");
+  const [educationLevel, setEducationLevel] = useState("");
+  
+  const [faculties, setFaculties] = useState([]);
+  const [selectedFacultyId, setSelectedFacultyId] = useState(null);
+  const [specializations, setSpecializations] = useState([]);
   const [selectedSpecializations, setSelectedSpecializations] = useState([null]); // Array pentru specializări
+
 
   // Fetch data from the server
   useEffect(() => {
@@ -34,6 +44,28 @@ export default function TeacherTopics() {
 
     fetchData();
   }, []);
+
+  const handleAddData = () => {
+    setTitle("");
+    setDescription("");
+    setKeywords("");
+    setSlots("");
+    setEducationLevel("");
+    setSelectedFacultyId(null);
+    setSpecializations([]);
+    setSelectedSpecializations([null]);
+    toggleModal();
+  };
+
+  const handleEditData = (id) => {
+    const topic = topics.find((topic) => topic.id === id);
+    setTitle(topic.title);
+    setDescription(topic.description);
+    setKeywords(topic.keywords);
+    setSlots(topic.slots);
+    setEducationLevel(topic.education_level);
+    toggleModal();
+  };
 
   // Handle faculty change
   const handleFacultyChange = (facultyId) => {
@@ -132,7 +164,7 @@ export default function TeacherTopics() {
       {/* Topics */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 px-4">
         {/* Add Topic Card */}
-        <div className="bg-white shadow rounded hover:shadow-lg transition cursor-pointer" onClick={toggleModal}>
+        <div className="bg-white shadow rounded hover:shadow-lg transition cursor-pointer border border-gray-950" onClick={toggleModal}>
           <div className="bg-navbar-gradient flex justify-between items-center py-2 px-4 rounded-t">
             <h2 className="text-lg text-white font-semibold ">{translate("Add a new theme")}</h2>
           </div>
@@ -140,7 +172,7 @@ export default function TeacherTopics() {
             <p className="text-gray-700">{translate("Click here to add a new theme")}</p>
           </div>
           <div className="px-4 py-2">
-            <p className="text-gray-700">{translate("Click on any other card to view its dedicated page.")}</p>
+            {/* <p className="text-gray-700">{translate("Click on any other card to view its dedicated page.")}</p> */}
           </div>
           <div className="pb-4">
             <PlusCircleIcon className="h-9 w-9 text-gray-400 mx-auto"/>
@@ -155,10 +187,12 @@ export default function TeacherTopics() {
       {isModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg shadow-lg w-full max-w-md p-6">
-            <h2 className="text-xl font-bold text-gray-700 mb-4">Adăugare temă de licență</h2>
+            <h2 className="text-xl font-bold text-gray-700 mb-4">
+              { formMode === "add" ? translate("Add Theme") : translate("Edit Theme") }
+            </h2>
             <form onSubmit={handleSubmit}>
               <div className="mb-4">
-                <label className="block text-gray-700">Titlu</label>
+                <label className="block text-gray-700">{ translate("Title") }</label>
                 <input
                   type="text"
                   className="border border-gray-300 text-gray-700 rounded w-full p-2"
@@ -167,7 +201,7 @@ export default function TeacherTopics() {
                 />
               </div>
               <div className="mb-4">
-                <label className="block text-gray-700">Descriere</label>
+                <label className="block text-gray-700">{ translate("Description") }</label>
                 <textarea
                   className="border border-gray-300 text-gray-700 rounded w-full p-2"
                   name="description"
@@ -175,17 +209,17 @@ export default function TeacherTopics() {
                 />
               </div>
               <div className="mb-4">
-                <label className="block text-gray-700">Cuvinte cheie</label>
+                <label className="block text-gray-700">{ translate("Keywords") }</label>
                 <input
                   type="text"
                   className="border border-gray-300 text-gray-700 rounded w-full p-2"
                   name="keywords"
                   required
                 />
-                <small className="text-gray-500">Cuvintele cheie trebuie separate prin spațiu.</small>
+                <small className="text-gray-500">{ translate("Keywords must be separated by commas.") }</small>
               </div>
               <div className="mb-4">
-                <label className="block text-gray-700">Locuri</label>
+                <label className="block text-gray-700">{ translate("Slots") }</label>
                 <input
                   type="number"
                   className="border border-gray-300 text-gray-700 rounded w-full p-2"
@@ -194,25 +228,25 @@ export default function TeacherTopics() {
                 />
               </div>
               <div className="mb-4">
-                <label className="block text-gray-700">Nivel educație</label>
+                <label className="block text-gray-700">{ translate("Education Level") }</label>
                 <select
                   className="border border-gray-300 text-gray-700 rounded w-full p-2"
                   name="education_level"
                   required
                 >
-                  <option value="">Selectează nivelul de educație</option>
-                  <option value="bsc">Licență</option>
-                  <option value="msc">Master</option>
+                  <option value="">{translate("Select education level")}</option>
+                  <option value="bsc">{ translate("Bachelor") }</option>
+                  <option value="msc">{ translate("Master") }</option>
                 </select>
               </div>
               <div className="mb-4">
-                <label className="block text-gray-700">Facultate</label>
+                <label className="block text-gray-700">{ translate("Faculty") }</label>
                 <select
                   className="border border-gray-300 text-gray-700 rounded w-full p-2"
                   onChange={(e) => handleFacultyChange(e.target.value)}
                   required
                 >
-                  <option value="">Selectează facultatea</option>
+                  <option value="">{ translate("Select Faculty") }</option>
                   {faculties.map((faculty) => (
                     <option key={faculty.id} value={faculty.id}>
                       {faculty.name}
@@ -221,7 +255,7 @@ export default function TeacherTopics() {
                 </select>
               </div>
               <div className="mb-4">
-                <label className="block text-gray-700">Specializări</label>
+                <label className="block text-gray-700">{ translate("Specializations") }</label>
                 {selectedSpecializations.map((specialization, index) => (
                   <div key={index} className="flex mb-2">
                     <select
@@ -230,7 +264,7 @@ export default function TeacherTopics() {
                       onChange={(e) => handleSpecializationChange(index, e.target.value)}
                       required
                     >
-                      <option value="">Selectează specializarea</option>
+                      <option value="">{ translate("Select Specialization") }</option>
                       {specializations.map((spec) => (
                         <option key={spec.id} value={spec.id}>
                           {spec.name}
@@ -244,7 +278,7 @@ export default function TeacherTopics() {
                   className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 mt-2"
                   onClick={addSpecializationField}
                 >
-                  Adaugă specializare
+                  {translate("Add Specialization")}
                 </button>
               </div>
               <div className="mb-4 flex justify-end">
@@ -253,10 +287,10 @@ export default function TeacherTopics() {
                   className="bg-gray-500 text-white px-4 py-2 rounded mr-2"
                   onClick={toggleModal}
                 >
-                  Anulează
+                  { translate("Cancel") }
                 </button>
                 <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded">
-                  Salvează
+                  { formMode === "add" ? translate("Add") : translate("Edit") }
                 </button>
               </div>
             </form>
