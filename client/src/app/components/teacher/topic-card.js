@@ -8,7 +8,7 @@ export default function TopicCard({ topic, translate, onEdit, onDuplicate, onDel
 
   return (
     <div className="bg-white shadow rounded hover:shadow-lg transition border border-gray-950">
-      <Link href={`/teacher/topic/${topic.id}`}>
+      <Link href={`/teacher/my-topic/${topic.id}`}>
         <div className="bg-navbar-gradient flex justify-between items-center py-2 px-4 rounded-t">
           <h2 className="text-lg font-semibold text-white">{topic.title}</h2>
         </div>

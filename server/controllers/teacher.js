@@ -53,9 +53,9 @@ const teacherTopics = async (req, res) => {
 
 const teacherTopic = async (req, res) => {
   try{
-    const topicId = req.params.id;
+    const topic_id = req.params.id;
 
-    const topic = await Topic.findByPk(topicId, {
+    const topic = await Topic.findByPk(topic_id, {
       include: {
         model: User,
         as: 'user'
@@ -67,11 +67,11 @@ const teacherTopic = async (req, res) => {
       return res.status(404).json({ message: 'Topic not found' });
     }
 
-    res.json(topic);
+    res.json({ topic: topic });
   }
   catch (error) {
     console.error('Error getting topic:', error);
-    res.status(500).send('Internal Server Error');
+    res.status(500).json({ message: 'Internal Server Error' });
   }
 };
 
