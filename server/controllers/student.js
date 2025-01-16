@@ -6,25 +6,6 @@ const { Op } = require('sequelize');
 const topicRequest = require('../models/topicRequest');
 const sanitizeHtml = require('sanitize-html');
 
-const home = (req, res) => {
-  res.render('pages/student/index');
-};
-
-const about = (req, res) => {
-  res.render('pages/student/about');
-};
-
-const logout = (req, res) => {
-  delete req.session.loggedInUser;
-  req.session.save(function(err) {
-    if (err) {
-      console.error('Eroare la salvarea sesiunii:', err);
-    } else {
-      res.redirect('/');
-    }
-  });
-};
-
 const getStudentTopics = async (req, res) => {
   const specialization_id = req.session.loggedInUser.specialization_id;
   const education_level = req.session.loggedInUser.education_level;
@@ -214,9 +195,6 @@ const deleteRequest = async (req, res) => {
 };
 
 module.exports = {
-  home,
-  about,
-  logout,
   getStudentTopics,
   topicPage,
   getRequestTopics,

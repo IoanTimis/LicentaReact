@@ -1,3 +1,6 @@
+const Faculty = require('../models/faculty');
+const Specialization = require('../models/specialization');
+
 const getFaculties = async (req, res) => {
   try {
       const faculties = await Faculty.findAll();

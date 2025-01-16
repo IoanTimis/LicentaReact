@@ -6,15 +6,23 @@ import { useDispatch } from "react-redux";
 import { clearUser } from "@/store/features/user/userSlice";
 import { useRouter } from "next/navigation";
 import axios from "axios";
+import { useLanguage } from "@/context/Languagecontext";
 
-import { HomeIcon, AcademicCapIcon, IdentificationIcon, UserGroupIcon, NewspaperIcon } from '@heroicons/react/24/solid';
+import { HomeIcon, AcademicCapIcon, HeartIcon, UserIcon, NewspaperIcon } from '@heroicons/react/24/solid';
 
 export default function studentNavBar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const { language, setLanguage, translate } = useLanguage();
 
   const dispatch = useDispatch();
   const router = useRouter();
+
+  const handleLanguageChange = (selectedLanguage) => {
+    setLanguage(selectedLanguage); // Actualizează starea
+    // Orice logică suplimentară pentru schimbarea limbii
+  };
+  
 
   const logout = async () => {
     try {
@@ -31,7 +39,7 @@ export default function studentNavBar() {
   };
 
   return (
-    <nav className="bg-gray-800 shadow-md sticky top-0 z-50">
+    <nav className="bg-navbar-gradient shadow-md sticky top-0 z-50">
       <div className="w-full px-4">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center">
@@ -83,54 +91,95 @@ export default function studentNavBar() {
               >
                <div className="flex items-center space-x-2">
                   <span className="h-6 w-6"><HomeIcon/></span>
-                  <span>Acasa</span>
+                  <span>{ translate("Home") }</span>
+               </div>
+              </Link>
+              <Link
+                href=""
+                className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+              >
+                <div className="flex items-center space-x-2">
+                  <span className="h-6 w-6"><AcademicCapIcon/></span>
+                  <span>{ translate("Themes") }</span>
                 </div>
               </Link>
               <Link
                 href=""
                 className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
               >
-                Teme
+                <div className="flex items-center space-x-2">
+                  <span className="h-6 w-6"><HeartIcon/></span>
+                  <span>{ translate("Favorites") }</span>
+                </div>
               </Link>
               <Link
                 href=""
                 className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
               >
-                Teme Favorite
-              </Link>
-              <Link
-                href=""
-                className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
-              >
-                Cereri Teme
+                <div className="flex items-center space-x-2">
+                  <span className="h-6 w-6"><NewspaperIcon/></span>
+                  <span>{ translate("My Requests") }</span>
+                </div>
               </Link>
             </div>
           </div>
 
-          {/* Dropdown menu for "Cont" */}
-          <div className="relative">
-            <button
-              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-              className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium focus:outline-none"
-            >
-              Cont
-            </button>
-            {isDropdownOpen && (
-              <div className="absolute right-0 mt-2 w-48 bg-white border rounded-md shadow-lg">
-                <Link
-                  href="/profile"
-                  className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+          {/* Dropdown menu for "Profile" + Language Selector */}
+          <div className="flex items-center space-x-4">
+            {/* Language Selector */}
+            <div className="flex">
+              <button
+                onClick={() => handleLanguageChange("ro")}
+                className={`px-1 rounded-tl rounded-bl text-sm font-medium ${
+                  language === "ro" ? "bg-gray-300 text-black" : "bg-blue-500 text-white"
+                }`}
+              >
+                RO
+              </button>
+              <button
+                onClick={() => handleLanguageChange("en")}
+                className={`px-1 rounded-tr rounded-br text-sm font-medium ${
+                  language === "en" ? "bg-gray-300 text-black" : "bg-blue-500 text-white"
+                }`}
+              >
+                EN
+              </button>
+            </div>
+
+            {/* Profile dropdown */}
+            <div className="relative">
+              <button
+                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium focus:outline-none"
+              >
+                <div className="flex items-center space-x-2 hover:bg-gray-700">
+                  <span className="h-6 w-6">
+                    <UserIcon />
+                  </span>
+                  <span>{translate("Account")}</span>
+                </div>
+              </button>
+
+              {isDropdownOpen && (
+                <div
+                  className="absolute right-0 top-12 w-48 bg-white border rounded-md shadow-lg"
+                  style={{ zIndex: 50 }}
                 >
-                  Profil
-                </Link>
-                <button
-                  onClick={logout}
-                  className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
-                >
-                  Deconectare
-                </button>
-              </div>
-            )}
+                  <Link
+                    href="/profile"
+                    className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+                  >
+                    {translate("Profile")}
+                  </Link>
+                  <button
+                    onClick={logout}
+                    className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
+                  >
+                    {translate("Logout")}
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>
@@ -141,27 +190,39 @@ export default function studentNavBar() {
           <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
             <Link
               href="/student"
-              className="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
+              className="text-gray-300 block px-3 py-2 rounded-md text-base font-medium"
             >
-              Acasa
+              <div className="flex items-center space-x-2">
+                <span className="h-6 w-6"><HomeIcon/></span>
+                <span>{ translate("Home") }</span>
+              </div>
             </Link>
             <Link
               href=""
-              className="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
+              className="text-gray-300 block px-3 py-2 rounded-md text-base font-medium"
             >
-              Teme
+              <div className="flex items-center space-x-2">
+                <span className="h-6 w-6"><AcademicCapIcon/></span>
+                <span>{ translate("Themes") }</span>
+              </div>
             </Link>
             <Link
               href=""
-              className="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
+              className="text-gray-300 block px-3 py-2 rounded-md text-base font-medium"
             >
-              Teme Favorite
+              <div className="flex items-center space-x-2">
+                <span className="h-6 w-6"><HeartIcon/></span>
+                <span>{ translate("Favorites") }</span>
+              </div>
             </Link>
             <Link
               href=""
-              className="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
+              className="text-gray-300 block px-3 py-2 rounded-md text-base font-medium"
             >
-              Cereri Teme
+              <div className="flex items-center space-x-2">
+                <span className="h-6 w-6"><NewspaperIcon/></span>
+                <span>{ translate("My Requests") }</span>
+              </div>
             </Link>
           </div>
         </div>
