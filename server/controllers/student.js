@@ -5,18 +5,23 @@ const User = require('../models/user');
 const { Op } = require('sequelize');
 const topicRequest = require('../models/topicRequest');
 const sanitizeHtml = require('sanitize-html');
+const jwt = require('jsonwebtoken');
 
-const getStudentTopics = async (req, res) => {
-  const specialization_id = req.session.loggedInUser.specialization_id;
-  const education_level = req.session.loggedInUser.education_level;
-
+const studentTopics = async (req, res) => {
   try {
 
+    const refreshToken = req.cookies.refreshToken;
+    const user = jwt.decode(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+    const specialization_id = user.specialization_id;
+    const education_level = user.education_level;
+
     const specialization = await Specialization.findByPk(specialization_id);
+
     if (!specialization) {
-        return res.status(404).status('Specialization not found');
+        return res.status(404).json({ message: 'Specialization not found' });
       }
       
+    //Filter topics by specialization, education level and available slots > 0 
     const topics = await specialization.getTopics({
       where: {
         education_level: education_level,
@@ -34,16 +39,16 @@ const getStudentTopics = async (req, res) => {
       return res.status(404).json({ message: 'Topics not found' });
     };
 
-   return res.render('pages/student/topics', { topics: topics});
+   return res.status(200).json({ topics: topics });
 
   }
   catch (error) {
     console.error('Error getting topics:', error);
-    res.status(500).send('Internal Server Error');
+    res.status(500).json({ message: 'Internal Server Error' });
   }
 };
 
-const topicPage = async (req, res) => {
+const topic = async (req, res) => {
   const topic_id = req.params.id;
 
   try {
@@ -195,8 +200,8 @@ const deleteRequest = async (req, res) => {
 };
 
 module.exports = {
-  getStudentTopics,
-  topicPage,
+  studentTopics,
+  topic,
   getRequestTopics,
   getRequestTopic,
   newRequest,

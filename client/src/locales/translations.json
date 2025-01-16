@@ -46,8 +46,12 @@
     "Welcome Student!": "Bine ai venit Studentule!",
     "Themes": "Teme",
     "Favorites": "Favorite",
-    "My Requests": "Cererile Mele"
-    
-    
+    "My Requests": "Cererile Mele",
+    "Teacher Name": "Nume Profesor",
+    "View Theme": "Vezi Tema",
+    "Request Theme": "Cere Tema",
+    "Send Request": "Trimite Cerere",
+    "Request Message": "Mesaj Cerere"
+
 }
   

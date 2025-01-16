@@ -23,14 +23,14 @@ export default function CompleteProfileStudent() {
   const handleCompleteProfile = async (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
-    const facultyId = formData.get("faculty");
-    const specializationId = formData.get("specialization");
-    const educationType = formData.get("educationType");
+    const faculty_id = formData.get("faculty");
+    const specialization_id = formData.get("specialization");
+    const education_level = formData.get("educationType");
 
     try {
       const response = await axios.put(
         `http://localhost:8080/complete-profile/as-student/${token}`,
-        { facultyId, specializationId, educationType },
+        { faculty_id, specialization_id, education_level },
         { withCredentials: true }
       );
 

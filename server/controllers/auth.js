@@ -231,7 +231,42 @@ const googleCallback = async (req, res) => {
   
       if (!created && user.complete_profile) {
         // Utilizator existent și profil complet
-        const payload = { id: user.id, email: user.email, role: user.type, complete_profile: user.complete_profile };
+        if(user.type === 'teacher') {
+            const payload = { 
+                id: user.id, 
+                name: user.name,
+                first_name: user.first_name,
+                email: user.email, 
+                role: user.type, 
+                complete_profile: user.complete_profile, 
+                title: user.title,
+            } 
+
+        } else if(user.type === 'student') {
+            const payload = { 
+                id: user.id, 
+                name: user.name,
+                first_name: user.first_name,
+                email: user.email, 
+                role: user.type, 
+                complete_profile: user.complete_profile, 
+                faculty_id: user.faculty_id,
+                specialization_id: user.specialization_id,
+                education_level: user.education_level
+            } 
+        } else if(user.type === 'admin') {
+            const payload = { 
+                id: user.id, 
+                name: user.name,
+                first_name: user.first_name,
+                email: user.email, 
+                role: user.type, 
+                complete_profile: user.complete_profile
+            } 
+        } else {
+            throw new Error('Invalid user type');
+        }
+
         const { accessToken, refreshToken } = generateTokens(payload);
 
         res.cookie("refreshToken", refreshToken, {
@@ -295,10 +330,13 @@ const completeProfileStudent = async (req, res) => {
 
         if(!userToken) {
             console.log('userToken not found trimit 404');
-            return res.status(404).send('user-token not found');
+            return res.status(404).json({ message: 'user-token not found' });
         }
 
         const { faculty_id, specialization_id, education_level } = req.body;
+        console.log(req.body);
+
+        console.log('faculty_id:----------------', faculty_id,"specialization" ,specialization_id, "edu lvl",education_level);
 
         const user = await User.findByPk(userToken.id);
         user.faculty_id = faculty_id;
@@ -308,7 +346,17 @@ const completeProfileStudent = async (req, res) => {
         user.complete_profile = true;
         await user.save();
 
-        const payload = { id: user.id, email: user.email, role: user.type, complete_profile: user.complete_profile };
+        const payload = { 
+            id: user.id,
+            name: user.name,
+            first_name: user.first_name,
+            email: user.email,
+            role: user.type,
+            complete_profile: user.complete_profile,
+            faculty_id: user.faculty_id,
+            specialization_id: user.specialization_id,
+            education_level: user.education_level 
+        };
 
 
         const { accessToken, refreshToken } = generateTokens(payload);
@@ -346,7 +394,14 @@ const completeProfileTeacher = async (req, res) => {
         user.complete_profile = true;
         await user.save();
 
-        const payload = { id: user.id, email: user.email, role: user.type, complete_profile: user.complete_profile };
+        const payload = { 
+            id: user.id,
+            name: user.name,
+            first_name: user.first_name,
+            email: user.email, 
+            role: user.type, 
+            complete_profile: user.complete_profile
+     };
 
         const { accessToken, refreshToken } = generateTokens(payload);
 
