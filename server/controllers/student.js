@@ -8,6 +8,7 @@ const sanitizeHtml = require('sanitize-html');
 const jwt = require('jsonwebtoken');
 
 const studentTopics = async (req, res) => {
+  //TODO: Ar fi mai ok daca as eticheta temele la care deja am aplicat, nu dupa ce da click pe acel topic.
   try {
 
     const refreshToken = req.cookies.refreshToken;
@@ -70,14 +71,14 @@ const topic = async (req, res) => {
     });
 
     if (topicRequested) {
-      return res.render('pages/student/topic', { topic: topic, requested: true });
+      return res.status(200).json({ topic: topic, requested: true });
     }
 
-    res.render('pages/student/topic', { topic: topic, requested: false });
+    res.status(200).json({ topic: topic, requested: false });
   }
   catch (error) {
     console.error('Error getting topic:', error);
-    res.status(500).send('Internal Server Error');
+    res.status(500).json({ message: 'Internal Server Error' });
   }
 };
 

@@ -198,7 +198,7 @@ export default function studentNavBar() {
               </div>
             </Link>
             <Link
-              href=""
+              href="/student/topics"
               className="text-gray-300 block px-3 py-2 rounded-md text-base font-medium"
             >
               <div className="flex items-center space-x-2">

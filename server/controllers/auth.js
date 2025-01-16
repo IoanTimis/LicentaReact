@@ -231,8 +231,9 @@ const googleCallback = async (req, res) => {
   
       if (!created && user.complete_profile) {
         // Utilizator existent și profil complet
+        let payload;
         if(user.type === 'teacher') {
-            const payload = { 
+            payload = { 
                 id: user.id, 
                 name: user.name,
                 first_name: user.first_name,
@@ -243,7 +244,7 @@ const googleCallback = async (req, res) => {
             } 
 
         } else if(user.type === 'student') {
-            const payload = { 
+            payload = { 
                 id: user.id, 
                 name: user.name,
                 first_name: user.first_name,
@@ -255,7 +256,7 @@ const googleCallback = async (req, res) => {
                 education_level: user.education_level
             } 
         } else if(user.type === 'admin') {
-            const payload = { 
+            payload = { 
                 id: user.id, 
                 name: user.name,
                 first_name: user.first_name,
