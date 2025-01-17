@@ -5,12 +5,13 @@ import axiosInstance from "@/utils/axiosInstance";
 import { useLanguage } from "@/context/Languagecontext";
 import Link from "next/link";
 import TopicCard from "@/app/components/student/topic-card";
+import RequestModal from "@/app/components/student/request-modal";
 
-export default function TeacherTopics() {
+export default function StudentTopics() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState(null);
-  const [requestedTopic, setRequestedTopic] = useState(null);
-  const [requestedTopicTeacher, setRequestedTopicTeacher] = useState(null);
+  const [requestedTopicId, setRequestedTopicId] = useState(null);
+  const [requestedTopicTeacherId, setRequestedTopicTeacherId] = useState(null);
   const { translate } = useLanguage();
 
   const [topics, setTopics] = useState([]);
@@ -20,7 +21,6 @@ export default function TeacherTopics() {
     const fetchData = async () => {
       try {
         const response = await axiosInstance.get("/student/fetch/topics", { withCredentials: true });
-        console.log(response.data.topics);
         setTopics(response.data.topics);
       } catch (error) {
         console.error("Eroare la obținerea datelor:", error);
@@ -34,18 +34,23 @@ export default function TeacherTopics() {
   // Toggle modal visibility
   const toggleModal = () => setIsModalOpen((prev) => !prev);
 
-  const onRequest = async (topic_id) => {
-    setRequestedTopic(topic_id);
-    const teacher_id = topics.find((topic) => topic.id === topic_id).user_id;
-    setRequestedTopicTeacher(teacher_id);
-  }
+  const onRequest = (topic_id) => {
+    console.log("Requested topic id: page ", topic_id);
+    const selectedTopic = topics.find((topic) => topic.id === topic_id);
+    if (!selectedTopic) return;
+
+    setRequestedTopicId(topic_id);
+    setRequestedTopicTeacherId(selectedTopic.user_id);
+    toggleModal();
+  };
+
+  console.log("Requested topic id state: ", requestedTopicId);
 
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-    
       const formData = new FormData(e.target);
 
       const newRequest = {
@@ -54,19 +59,15 @@ export default function TeacherTopics() {
         message: formData.get("message"),
       };
 
-      console.log(newRequest);
-    
-      const response = await axiosInstance.post("/student/topic/add", newRequest, {
+      const response = await axiosInstance.post("/student/request/add", newRequest, {
         withCredentials: true,
       });
 
-      setTopics((prev) => [...prev, response.data.topic]);
-      
+      console.log("Cererea a fost trimisă cu succes!", response.data);
       toggleModal();
-      console.log("Temă adăugată cu succes!");
     } catch (error) {
-      console.error("Eroare la adăugarea temei:", error);
-      setErrorMessage("A apărut o eroare la adăugarea temei.");
+      console.error("Eroare la trimiterea cererii:", error);
+      setErrorMessage("A apărut o eroare la trimiterea cererii.");
     }
   };
 
@@ -87,44 +88,21 @@ export default function TeacherTopics() {
               key={topic.id}
               topic={topic}
               translate={translate}
-              onRequest={() => toggleModal()}
-              toggleModal={toggleModal}
+              onRequest={onRequest}
             />
           ))}
         </div>
       </div>
 
       {/* Modal */}
-      {isModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg shadow-lg w-full max-w-md p-6">
-            <h2 className="text-xl font-bold text-gray-700 mb-4">{translate("Send Request")}</h2>
-            <form onSubmit={handleSubmit}>
-              <div className="mb-4">
-                <input hidden name="topic_id" value={requestedTopic} />
-                <input hidden name="teacher_id" value={requestedTopicTeacher} />
-                <label className="block text-gray-700">{translate("Request Mesage")}:</label>
-                <textarea
-                  className="border border-gray-300 text-gray-700 rounded w-full p-2" name="message"
-                  required
-                />
-              </div>
-              <div className="mb-4 flex justify-end">
-                <button
-                  type="button"
-                  className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded mr-2"
-                  onClick={toggleModal}
-                >
-                  {translate("Cancel")}
-                </button>
-                <button type="submit" className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">
-                  {translate("Send Request")}
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
+      <RequestModal
+        isOpen={isModalOpen}
+        onClose={toggleModal}
+        onSubmit={handleSubmit}
+        translate={translate}
+        requestedTopicId={requestedTopicId}
+        requestedTopicTeacherId={requestedTopicTeacherId}
+      />
     </div>
   );
 }

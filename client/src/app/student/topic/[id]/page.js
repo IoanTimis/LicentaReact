@@ -56,57 +56,65 @@ export default function TopicDetails() {
 
       {/* Layout */}
       {topic && (
-        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2">
-          {/* Professor Details */}
-          <div
-            className={
-              isSmallScreen
-                ? "bg-gray-900 shadow-md p-6 flex flex-col items-center rounded-tr-lg rounded-tl-lg"
-                : "bg-gray-900 shadow-md p-6 flex flex-col items-center lg:rounded-tl-lg lg:rounded-bl-lg"
-            }
-          >
-            <div className="w-32 h-32 rounded-full overflow-hidden mb-6">
-              <img
-                src="/logo_uvt_profile.png"
-                alt={`${topic.user.first_name} ${topic.user.name}`}
-                className="w-full h-full object-cover"
-              />
-            </div>
-            <h2 className="text-2xl font-bold text-gray-800 mb-2">
-              {topic.user.first_name} {topic.user.name}
-            </h2>
-            <p className="text-gray-600 mb-4">{topic.user.title}</p>
-            <a
-              href={`mailto:${topic.user.email}`}
-              className="text-blue-600 hover:underline text-lg"
+        <>
+          <div className="max-w-7xl shadow-xl mx-auto grid grid-cols-1 lg:grid-cols-2">
+            {/* Professor Details */}
+            <div
+              className={
+                isSmallScreen
+                  ? "bg-gray-300 p-6 flex flex-col items-center rounded-tr-lg rounded-tl-lg"
+                  : "bg-gray-300 p-6 flex flex-col items-center lg:rounded-tl-lg lg:rounded-bl-lg"
+              }
             >
-              {topic.user.email}
-            </a>
+              <div className="w-32 h-32 rounded-full overflow-hidden mb-6">
+                <img
+                  src="/logo_uvt_profile.png"
+                  alt={`${topic.user.first_name} ${topic.user.name}`}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <h2 className="text-2xl font-bold text-gray-800 mb-2">
+                {topic.user.title}. {topic.user.first_name} {topic.user.name}
+              </h2>
+              <p className="text-gray-600 mb-4">{topic.user.email}</p>
+            </div>
+
+            {/* Topic Details */}
+            <div
+              className={
+                isSmallScreen
+                  ? "bg-gray-300 p-6 flex flex-col items-left rounded-br-lg rounded-bl-lg"
+                  : "bg-gray-300 p-6 flex flex-col items-left lg:rounded-tr-lg lg:rounded-br-lg"
+              }
+            >
+              <h2 className="text-3xl font-bold text-center text-gray-800 mb-6">{topic.title}</h2>
+              <p className="text-gray-700 mb-4">
+                <span className="font-semibold ">{ translate("Description") }:</span> {topic.description}
+              </p>
+              <p className="text-gray-700 mb-4">
+                <span className="font-semibold ">{ translate("Keywords") }:</span> {topic.keywords}
+              </p>
+              <p className="text-gray-700 mb-4">
+                <span className="font-semibold ">{ translate("Slots") }:</span> {topic.slots}
+              </p>
+              <p className="text-gray-700">
+                <span className="font-semibold ">{ translate("Education Level") }:</span> {topic.education_level}
+              </p>
+            </div>
           </div>
 
-          {/* Topic Details */}
-          <div
-            className={
-              isSmallScreen
-                ? "bg-gray-900 shadow-md p-6 flex flex-col items-left rounded-br-lg rounded-bl-lg"
-                : "bg-gray-900 shadow-md p-6 flex flex-col items-left lg:rounded-tr-lg lg:rounded-br-lg"
-            }
-          >
-            <h2 className="text-3xl font-bold text-center text-gray-800 mb-6">{topic.title}</h2>
-            <p className="text-gray-700 mb-4">
-              <span className="font-semibold block">{ translate() }</span> {topic.description}
-            </p>
-            <p className="text-gray-700 mb-4">
-              <span className="font-semibold block">Cuvinte cheie:</span> {topic.keywords}
-            </p>
-            <p className="text-gray-700 mb-4">
-              <span className="font-semibold block">Locuri disponibile:</span> {topic.slots}
-            </p>
-            <p className="text-gray-700">
-              <span className="font-semibold block">Nivel educație:</span> {topic.education_level}
-            </p>
+          {/* Request topic */}
+          <div className="bg-gray-300 p-6 max-w-7xl mx-auto min-h-screen rounded-bl-lg rounded-br-lg">
+            <div className="flex items-center justify-center mt-8">
+              <h2 className="text-black font-semibold">Daca ti-a placut acest topic, fa o cerere apasand pe buton</h2>
+              <div className="">
+                <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-4">
+                  Fa o cerere
+                </button>
+              </div>
+            </div>
           </div>
-        </div>
+        </>
       )}
     </div>
   );

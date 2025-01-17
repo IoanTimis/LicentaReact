@@ -2,15 +2,15 @@ import Link from "next/link";
 import { ChevronDownIcon } from "@heroicons/react/24/solid";
 import { useState } from "react";
 
-export default function TopicCard({ topic, translate, toggleModal, onRequest }) {
+export default function TopicCard({ topic, translate, onRequest }) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   console.log(topic);
 
-  const handleRequestClick = async () => {
-    SetIsDropdownOpen(false);
-    onRequest(topic.id);
-    toggleModal();
-  }
+  const handleRequestClick = () => {
+    setIsDropdownOpen(false);
+    onRequest(topic.id); // Transmite topic.id corect
+  };
+  
 
   return (
     <div className="bg-white shadow rounded hover:shadow-lg transition border border-gray-950">

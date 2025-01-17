@@ -152,7 +152,10 @@ const getRequestTopic = async (req, res) => {
 };
 
 const newRequest = async (req, res) => {
-  const student_id = req.session.loggedInUser.id;
+  const refreshToken = req.cookies.refreshToken;
+  const user = jwt.decode(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+  const student_id = user.id;
+
   const { topic_id, teacher_id, message } = req.body;
   sanitizeHtml(message);
 
@@ -168,11 +171,12 @@ const newRequest = async (req, res) => {
       return res.status(500).json({ message: 'Error creating request' });
     }
 
-    res.redirect(`/student/request-topic/${request.id}`);
+    //res.redirect(`http://localhost:3000/student/my-request/${request.id}`);
+    res.status(201).json({ message: 'Request created', request: request });
   }
   catch (error) {
     console.error('Error creating request:', error);
-    res.status(500).send('Internal Server Error');
+    res.status(500).json({ message: 'Internal Server Error' });
   }
 };
 

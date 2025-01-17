@@ -14,7 +14,7 @@ router.get('/fetch/topic/:id', studentController.topic);
 router.get('/fetch/request-topics', studentController.getRequestTopics);
 router.get('/fetch/request-topic/:id', studentController.getRequestTopic);
 
-router.post('/new/request', studentController.newRequest);
-router.delete('/delete/request/:id', studentController.deleteRequest);
+router.post('/request/add', studentController.newRequest);
+router.delete('/request/delete/:id', studentController.deleteRequest);
 
 module.exports = router;
