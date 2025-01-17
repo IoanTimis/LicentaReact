@@ -152,7 +152,7 @@ export default function TeacherTopics() {
   }
 
   return (
-    <div className="flex flex-col min-h-screen bg-gray-100">
+    <div className="flex flex-col min-h-screen bg-gray-200">
     <div className="py-8 bg-gray-100">
       {/* Error Message */}
       {errorMessage && (

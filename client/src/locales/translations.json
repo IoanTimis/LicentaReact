@@ -35,7 +35,7 @@
     "Select Education Level": "Selectează Nivel Educațional",
     "Faculty": "Facultate",
     "Select Faculty": "Selectează Facultate",
-    "Specializations": "Specializari",
+    "Specializations": "Specializări",
     "Specialization": "Specializare",
     "Select Specialization": "Selectează Specializare",
     "Add Specialization": "Adaugă Specializare",
@@ -51,7 +51,12 @@
     "View Theme": "Vezi Tema",
     "Request Theme": "Cere Tema",
     "Send Request": "Trimite Cerere",
-    "Request Message": "Mesaj Cerere"
+    "Request Message": "Mesaj Cerere",
+    "Confirm Theme": "Confirmă Tema",
+    "View Request": "Vezi Cererea",
+    "Delete Request": "Șterge Cererea",
+    "Accept Request": "Acceptă Cererea",
+    "Reject Request": "Respinge Cererea"
 
 }
   
