@@ -50,9 +50,9 @@ const studentTopics = async (req, res) => {
 };
 
 const topic = async (req, res) => {
-  const topic_id = req.params.id;
-
   try {
+    const topic_id = req.params.id;
+  
     const topic = await Topic.findByPk(topic_id, {
       include: [{
         model: User,
@@ -85,15 +85,10 @@ const topic = async (req, res) => {
 //request topics------------------------------------------------------------------------------------------------------
 
 const getRequestTopics = async (req, res) => {
-  const student_id = req.session.loggedInUser.id;
-  const specialization_id = req.session.loggedInUser.specialization_id;
-
   try {
-    const specialization = await Specialization.findByPk(specialization_id);
-
-    if (!specialization) {
-      return res.status(404).json({ message: 'Specialization not found' });
-    }
+    const refreshToken = req.cookies.refreshToken;
+    const user = jwt.decode(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+    const student_id = user.id;
     
     const requests = await topicRequest.findAll({
       where: {
@@ -112,22 +107,18 @@ const getRequestTopics = async (req, res) => {
     if (!requests) {
       return res.status(404).json({ message: 'Requests not found' });
     }
-    const logout = (req, res) => {
-      delete req.session.loggedInUser;
-      res.redirect('/');
-    };
-    return res.render('pages/student/requests', { requests: requests});
+    
+    return res.json({ requests: requests });
   }
   catch (error) {
     console.error('Error getting requests:', error);
-    res.status(500).send('Internal Server Error');
+    res.status(500).json({ message: 'Internal Server Error' });
   }
 };
 
 const getRequestTopic = async (req, res) => {
-  const request_id = req.params.id;
-
   try {
+    const request_id = req.params.id;
     const request = await topicRequest.findByPk(request_id, {
       include: [{
         model: User,

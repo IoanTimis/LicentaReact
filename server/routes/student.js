@@ -11,8 +11,8 @@ const studentController = require('../controllers/student');
 router.get('/fetch/topics', studentController.studentTopics);
 router.get('/fetch/topic/:id', studentController.topic);
 
-router.get('/fetch/request-topics', studentController.getRequestTopics);
-router.get('/fetch/request-topic/:id', studentController.getRequestTopic);
+router.get('/fetch/requested-topics', studentController.getRequestTopics);
+router.get('/fetch/requested-topic/:id', studentController.getRequestTopic);
 
 router.post('/request/add', studentController.newRequest);
 router.delete('/request/delete/:id', studentController.deleteRequest);

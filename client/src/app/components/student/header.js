@@ -104,7 +104,7 @@ export default function studentNavBar() {
                 </div>
               </Link>
               <Link
-                href=""
+                href="/student/favorites"
                 className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
               >
                 <div className="flex items-center space-x-2">
@@ -113,7 +113,7 @@ export default function studentNavBar() {
                 </div>
               </Link>
               <Link
-                href=""
+                href="/student/my-requests"
                 className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
               >
                 <div className="flex items-center space-x-2">
@@ -207,7 +207,7 @@ export default function studentNavBar() {
               </div>
             </Link>
             <Link
-              href=""
+              href="/student/favorites"
               className="text-gray-300 block px-3 py-2 rounded-md text-base font-medium"
             >
               <div className="flex items-center space-x-2">
@@ -216,7 +216,7 @@ export default function studentNavBar() {
               </div>
             </Link>
             <Link
-              href=""
+              href="/student/my-requests"
               className="text-gray-300 block px-3 py-2 rounded-md text-base font-medium"
             >
               <div className="flex items-center space-x-2">
