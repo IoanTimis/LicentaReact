@@ -12,6 +12,7 @@ export default function StudentTopics() {
   const [errorMessage, setErrorMessage] = useState(null);
   const [requestedTopicId, setRequestedTopicId] = useState(null);
   const [requestedTopicTeacherId, setRequestedTopicTeacherId] = useState(null);
+  const [requestedTopicEducationLevel, setRequestedTopicEducationLevel] = useState(null);
   const { translate } = useLanguage();
 
   const [topics, setTopics] = useState([]);
@@ -41,6 +42,7 @@ export default function StudentTopics() {
 
     setRequestedTopicId(topic_id);
     setRequestedTopicTeacherId(selectedTopic.user_id);
+    setRequestedTopicEducationLevel(selectedTopic.education_level);
     toggleModal();
   };
 
@@ -56,6 +58,7 @@ export default function StudentTopics() {
       const newRequest = {
         topic_id: formData.get("topic_id"),
         teacher_id: formData.get("teacher_id"),
+        education_level: formData.get("education_level"),
         message: formData.get("message"),
       };
 

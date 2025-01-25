@@ -1,6 +1,6 @@
 "use client";
 
-export default function RequestModal({ isOpen, onClose, onSubmit, translate, requestedTopicId, requestedTopicTeacherId }) {
+export default function RequestModal({ isOpen, onClose, onSubmit, translate, requestedTopicId, requestedTopicTeacherId, requestedTopicEducationLevel }) {
   if (!isOpen) return null; // Nu afișa modalul dacă nu este deschis
   console.log("Requested topic id: ");
   console.log(requestedTopicId);
@@ -23,6 +23,13 @@ export default function RequestModal({ isOpen, onClose, onSubmit, translate, req
               type="text"
               hidden
               name="teacher_id"
+              value={requestedTopicTeacherId || ""}
+              readOnly
+            />
+            <input
+              type="text"
+              hidden
+              name="education_level"
               value={requestedTopicTeacherId || ""}
               readOnly
             />

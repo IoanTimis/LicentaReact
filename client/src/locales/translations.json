@@ -56,7 +56,12 @@
     "View Request": "Vezi Cererea",
     "Delete Request": "Șterge Cererea",
     "Accept Request": "Acceptă Cererea",
-    "Reject Request": "Respinge Cererea"
+    "Reject Request": "Respinge Cererea",
+    "Student": "Student",
+    "Status": "Stare",
+    "Pending": "În Așteptare",
+    "Accepted": "Acceptat",
+    "Rejected": "Respins"
 
 }
   

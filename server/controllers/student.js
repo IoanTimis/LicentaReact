@@ -143,14 +143,26 @@ const getRequestTopic = async (req, res) => {
 };
 
 const newRequest = async (req, res) => {
-  const refreshToken = req.cookies.refreshToken;
-  const user = jwt.decode(refreshToken, process.env.REFRESH_TOKEN_SECRET);
-  const student_id = user.id;
-
-  const { topic_id, teacher_id, message } = req.body;
-  sanitizeHtml(message);
-
+  
   try {
+    const refreshToken = req.cookies.refreshToken;
+    const user = jwt.decode(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+    const student_id = user.id;
+
+    const { topic_id, teacher_id, education_level,message } = req.body;
+
+    const student_data = await User.findByPk(student_id);
+
+    if (!student_data) {
+      return res.status(404).json({ message: 'Student not found' });
+    }
+
+    if (student_data.education_level !== education_level) {
+      return res.status(403).json({ message: 'Forbidden' });
+    }
+
+    sanitizeHtml(message);
+
     const request = await topicRequest.create({
       student_id: student_id,
       teacher_id: teacher_id,
@@ -162,6 +174,7 @@ const newRequest = async (req, res) => {
       return res.status(500).json({ message: 'Error creating request' });
     }
 
+    //TODO: Redirect to the request page
     //res.redirect(`http://localhost:3000/student/my-request/${request.id}`);
     res.status(201).json({ message: 'Request created', request: request });
   }

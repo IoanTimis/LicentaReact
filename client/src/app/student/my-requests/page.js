@@ -34,7 +34,7 @@ export default function StudentRequests() {
     <div className="min-h-screen bg-gray-300 p-8">
      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
       {requests.map((request) => (
-        <div key={request.id} className=""> {/* Card ocupă 2 coloane */}
+        <div key={request.id}> 
           <RequestCard request={request} handleDelete={handleDelete} />
         </div>
       ))}
