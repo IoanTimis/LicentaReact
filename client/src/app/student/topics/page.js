@@ -105,6 +105,7 @@ export default function StudentTopics() {
         translate={translate}
         requestedTopicId={requestedTopicId}
         requestedTopicTeacherId={requestedTopicTeacherId}
+        requestedTopicEducationLevel={requestedTopicEducationLevel}
       />
     </div>
   );

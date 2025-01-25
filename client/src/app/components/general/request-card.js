@@ -60,11 +60,12 @@ export default function RequestCard({ request, handleConfirm, handleDelete, hand
                   {translate("View Request")}
                 </Link>
                 <button
-                    className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-red-600 transition"
-                    onClick={handleDelete}
-                  >
-                    {translate("Delete Request")}
+                  className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-red-600 transition"
+                  onClick={() => handleDelete(request.id)} // Callback function
+                >
+                  {translate("Delete Request")}
                 </button>
+
               </div>
             )}
           </div>
@@ -113,19 +114,19 @@ export default function RequestCard({ request, handleConfirm, handleDelete, hand
               </Link>
               <button
                 className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-green-600 transition"
-                onClick={handleAccept}
+                onClick={() => handleAccept}
               >
                 {translate("Accept Request")}
               </button>
               <button
                 className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-red-600 transition"
-                onClick={handleReject}
+                onClick={() => handleReject}
               >
                 {translate("Reject Theme")}
               </button>
               <button
                 className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-red-600 transition"
-                onClick={handleDelete}
+                onClick={() => handleDelete}
               >
                 {translate("Delete Request")}
               </button>

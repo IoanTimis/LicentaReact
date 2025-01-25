@@ -61,7 +61,8 @@
     "Status": "Stare",
     "Pending": "În Așteptare",
     "Accepted": "Acceptat",
-    "Rejected": "Respins"
+    "Rejected": "Respins",
+    "The request has been successfully deleted.": "Cererea a fost ștearsă cu succes."
 
 }
   

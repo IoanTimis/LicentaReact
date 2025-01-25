@@ -134,11 +134,11 @@ const getRequestTopic = async (req, res) => {
       return res.status(404).json({ message: 'Request not found' });
     }
 
-    return res.render('pages/student/request', { request: request});
+    return res.json({ request: request });
   }
   catch (error) {
     console.error('Error getting request:', error);
-    res.status(500).send('Internal Server Error');
+    res.status(500).json({ message: 'Internal Server Error' });
   }
 };
 
@@ -174,7 +174,7 @@ const newRequest = async (req, res) => {
       return res.status(500).json({ message: 'Error creating request' });
     }
 
-    //TODO: Redirect to the request page
+    //TODO:Voi folosi toast redirect
     //res.redirect(`http://localhost:3000/student/my-request/${request.id}`);
     res.status(201).json({ message: 'Request created', request: request });
   }
@@ -185,7 +185,9 @@ const newRequest = async (req, res) => {
 };
 
 const deleteRequest = async (req, res) => {
-  const student_id = req.session.loggedInUser.id;
+  const refreshToken = req.cookies.refreshToken;
+  const user = jwt.decode(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+  const student_id = user.id;
   const request_id = req.params.id;
 
   try {
@@ -200,11 +202,11 @@ const deleteRequest = async (req, res) => {
 
     await request.destroy();
     
-    res.status(204).send();
+    res.status(200).json({ message: 'Request deleted' });
   }
   catch (error) {
     console.error('Error deleting request:', error);
-    res.status(500).send('Internal Server Error');
+    res.status(500).json({ message: 'Internal Server Error' });
   }
 };
 

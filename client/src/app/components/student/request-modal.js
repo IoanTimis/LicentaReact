@@ -30,7 +30,7 @@ export default function RequestModal({ isOpen, onClose, onSubmit, translate, req
               type="text"
               hidden
               name="education_level"
-              value={requestedTopicTeacherId || ""}
+              value={requestedTopicEducationLevel || ""}
               readOnly
             />
             <label className="block text-gray-700">{translate("Request Message")}:</label>
