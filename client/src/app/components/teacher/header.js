@@ -105,7 +105,7 @@ export default function TeacherNavBar() {
                 </div>
               </Link>
               <Link
-                href="/student-requests"
+                href="/teacher/student-requests"
                 className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
               >
                 <div className="flex items-center space-x-2 hover:bg-gray-700">
@@ -116,7 +116,7 @@ export default function TeacherNavBar() {
                 </div>
               </Link>
               <Link
-                href="/my-students"
+                href="/teacher/my-students"
                 className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
               >
                 <div className="flex items-center space-x-2 hover:bg-gray-700">
@@ -206,7 +206,7 @@ export default function TeacherNavBar() {
               </div>
             </Link>
             <Link
-              href="/student-requests"
+              href="/teacher/student-requests"
               className="text-gray-300  hover:text-white px-3 py-2 rounded-md text-sm font-medium"
             >
               <div className="flex items-center space-x-2">
@@ -217,7 +217,7 @@ export default function TeacherNavBar() {
               </div>
             </Link>
             <Link
-              href="/my-students"
+              href="/teacher/my-students"
               className="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
             >
               <div className="flex items-center space-x-2">

@@ -5,12 +5,17 @@ import { ChevronDownIcon } from "@heroicons/react/24/solid";
 import { useState } from "react";
 import { jwtDecode }  from "jwt-decode";
 
-export default function RequestCard({ request, handleConfirm, handleDelete, handleAccept, handleReject }) {
+export default function RequestCard({ request, handleConfirm, handleDelete, onResponse}) {
   const { translate } = useLanguage();
   const [isDropdownOpen, setIsDropdownOpen] = useState();
 
   const accessToken = localStorage.getItem("accessToken");
   const userRole = jwtDecode(accessToken).role;
+
+  const handleRequestClick = () => {
+    setIsDropdownOpen(false);
+    onResponse(request.id);
+  };
 
   if ( userRole === "student" ) {
 // Student request card
@@ -113,16 +118,10 @@ export default function RequestCard({ request, handleConfirm, handleDelete, hand
                 {translate("View Request")}
               </Link>
               <button
-                className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-green-600 transition"
-                onClick={() => handleAccept}
+                className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition"
+                onClick={handleRequestClick}
               >
-                {translate("Accept Request")}
-              </button>
-              <button
-                className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-red-600 transition"
-                onClick={() => handleReject}
-              >
-                {translate("Reject Theme")}
+                {translate("Respond to Request")}
               </button>
               <button
                 className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-red-600 transition"

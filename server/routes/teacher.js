@@ -16,9 +16,9 @@ router.post('/topic/add', teacherController.addTopic);
 router.put('/topic/edit/:id', teacherController.editTopic);
 router.delete('/topic/delete/:id', teacherController.deleteTopic);
 
-router.get('/student-requests', teacherController.studentRequests);
-router.get('/student-request/:id', teacherController.studentRequest);
+router.get('/fetch/student-requests', teacherController.studentRequests);
+router.get('/fetch/student-request/:id', teacherController.studentRequest);
 router.put('/student-request/response/:id', teacherController.teacherResponse);
-router.delete('/delete/request/:id', teacherController.deleteRequest);
+router.delete('/student-request/delete/:id', teacherController.deleteRequest);
 
 module.exports = router;

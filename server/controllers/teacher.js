@@ -181,11 +181,11 @@ const editTopic = async (req, res) => {
 };
 
 const deleteTopic = async (req, res) => {
-  const topicId = req.params.id;
-  const refreshToken = req.cookies.refreshToken;
-  const user = jwt.decode(refreshToken, process.env.REFRESH_TOKEN_SECRET);
-  
   try{
+    const topicId = req.params.id;
+    const refreshToken = req.cookies.refreshToken;
+    const user = jwt.decode(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+  
     const topic = await Topic.findByPk(topicId);
 
     if (!topic) {
@@ -208,9 +208,11 @@ const deleteTopic = async (req, res) => {
 
 //Student requests------------------------------------------------------------------------------------------------------
 const studentRequests = async (req, res) => {
-  const teacherId = req.session.loggedInUser.id;
-
   try{
+    const refreshToken = req.cookies.refreshToken;
+    const user = jwt.decode(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+    const teacherId = user.id;
+
     const requests = await topicRequest.findAll({
       where: {
         teacher_id: teacherId
@@ -227,14 +229,14 @@ const studentRequests = async (req, res) => {
     });
 
     if(!requests){
-      return res.status(404).send('Requests not found');
+      return res.status(404).json({ message: 'Requests not found' });
     }
 
-    res.render('pages/teacher/studentRequests', { studentRequests: requests});
+    res.status(200).json({ requests: requests });
   }
   catch (error) {
     console.error('Error getting requests:', error);
-    res.status(500).send('Internal Server Error');
+    res.status(500).json({ message: 'Internal Server Error' });
   }
 }
 
@@ -269,13 +271,14 @@ const studentRequest = async (req, res) => {
 }
 
 const teacherResponse = async (req, res) => {
-  const teacherId = req.session.loggedInUser.id;
-  const requestId = req.params.id;
-  const { status, message } = req.body;
-  sanitizeHtml(message);
-  console.log(status, message);
-
   try{
+    const requestId = req.params.id;
+    const refreshToken = req.cookies.refreshToken;
+    const user = jwt.decode(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+    const teacherId = user.id;
+    const { status, message } = req.body;
+    console.log(status, message);
+
     const request = await topicRequest.findByPk(requestId,{
       include: {
         model: Topic,

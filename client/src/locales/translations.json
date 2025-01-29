@@ -62,7 +62,10 @@
     "Pending": "În Așteptare",
     "Accepted": "Acceptat",
     "Rejected": "Respins",
-    "The request has been successfully deleted.": "Cererea a fost ștearsă cu succes."
+    "The request has been successfully deleted.": "Cererea a fost ștearsă cu succes.",
+    "Student Message": "Mesaj Student",
+    "Accept or Reject": "Acceptă sau Respinge",
+    "Respond to Request": "Răspunde Cererii"
 
 }
   
