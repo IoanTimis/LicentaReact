@@ -25,8 +25,12 @@ export default function StudentRequests() {
     fetchRequests();
   }, []);
 
+  //TODO: Refactor all ToggleModal functions to reset the "selectedRequestId"
   const toggleModal = () => {
     setIsModalOpen((prev) => !prev);
+    if (!isModalOpen) {
+      setSelectedRequestId(null);
+    }
   };
 
   const onResponse = (requestId) => {

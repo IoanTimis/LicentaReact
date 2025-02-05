@@ -1,4 +1,5 @@
 const Topic = require('../models/topic');
+const Faculty = require('../models/faculty')
 const Specialization = require('../models/specialization');
 const SpecializationTopic = require('../models/specializationTopic');
 const User = require('../models/user');
@@ -143,13 +144,12 @@ const getRequestTopic = async (req, res) => {
 };
 
 const newRequest = async (req, res) => {
-  
   try {
     const refreshToken = req.cookies.refreshToken;
     const user = jwt.decode(refreshToken, process.env.REFRESH_TOKEN_SECRET);
     const student_id = user.id;
 
-    const { topic_id, teacher_id, education_level,message } = req.body;
+    const { topic_id, teacher_id, education_level, message } = req.body;
 
     const student_data = await User.findByPk(student_id);
 
@@ -157,8 +157,56 @@ const newRequest = async (req, res) => {
       return res.status(404).json({ message: 'Student not found' });
     }
 
+    //Speacialization, faculty, topic to check if the student can apply to the topic
+    const topic_data = await Topic.findOne({
+      where: { id: topic_id },
+      include: [
+        {
+          model: Specialization,
+          as: "specializations",
+          attributes: ["id"], 
+          include: [
+            {
+              model: Faculty,
+              as: "faculty",
+              attributes: ["id"] 
+            }
+          ]
+        }
+      ]
+    });
+
+    if (!topic_data) {
+      return res.status(404).json({ message: 'Topic not found' });
+    };
+
+    //Check student education level
     if (student_data.education_level !== education_level) {
       return res.status(403).json({ message: 'Forbidden' });
+    }
+
+    let validReq = false;
+
+    //Check if the student can apply to the topic (specialization, faculty)
+    if(topic_data.specializations.length > 1){
+      for(let i = 0; i < topic_data.specializations.length; i++) {
+        if( (topic_data.specialization[i] === student_data.specialization_id)
+          && (topic_data.specialization[i].faculty === student_data.faculty_id)
+        )
+        {
+          validReq = true;
+          break;
+        }
+      }
+    } else if( (topic_data.specializations[0].id === student_data.specialization_id)
+      && (topic_data.specializations[0].faculty.id === student_data.faculty_id)
+    ) {
+      validReq = true;
+    }
+
+
+    if(!validReq){
+      return res.status(403).json({ message: 'Forbiden' })
     }
 
     sanitizeHtml(message);
@@ -180,6 +228,96 @@ const newRequest = async (req, res) => {
   }
   catch (error) {
     console.error('Error creating request:', error);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+};
+
+//TODO: confirmRequest
+const confirmRequest = async (req, res) => {
+  try {
+    const refreshToken = req.cookies.refreshToken;
+    const user = jwt.decode(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+    const student_id = user.id;
+
+    const { topic_id, teacher_id, education_level, message } = req.body;
+
+    const student_data = await User.findByPk(student_id);
+
+    if (!student_data) {
+      return res.status(404).json({ message: 'Student not found' });
+    }
+
+    //Speacialization, faculty, topic to check if the student can apply to the topic
+    const topic_data = await Topic.findOne({
+      where: { id: topic_id },
+      include: [
+        {
+          model: Specialization,
+          as: "specializations",
+          attributes: ["id"], 
+          include: [
+            {
+              model: Faculty,
+              as: "faculty",
+              attributes: ["id"] 
+            }
+          ]
+        }
+      ]
+    });
+
+    if (!topic_data) {
+      return res.status(404).json({ message: 'Topic not found' });
+    };
+
+    //Check student education level
+    if (student_data.education_level !== education_level) {
+      return res.status(403).json({ message: 'Forbidden' });
+    }
+
+    let validReq = false;
+
+    //Check if the student can apply to the topic (specialization, faculty)
+    if(topic_data.specializations.length > 1){
+      for(let i = 0; i < topic_data.specializations.length; i++) {
+        if( (topic_data.specialization[i] === student_data.specialization_id)
+          && (topic_data.specialization[i].faculty === student_data.faculty_id)
+        )
+        {
+          validReq = true;
+          break;
+        }
+      }
+    } else if( (topic_data.specializations[0].id === student_data.specialization_id)
+      && (topic_data.specializations[0].faculty.id === student_data.faculty_id)
+    ) {
+      validReq = true;
+    }
+
+
+    if(!validReq){
+      return res.status(403).json({ message: 'Forbiden' })
+    }
+
+    sanitizeHtml(message);
+
+    const request = await topicRequest.create({
+      student_id: student_id,
+      teacher_id: teacher_id,
+      topic_id: topic_id,
+      student_message: message
+    });
+
+    if (!request) {
+      return res.status(500).json({ message: 'Error creating request' });
+    }
+
+    //TODO:Voi folosi toast redirect
+    //res.redirect(`http://localhost:3000/student/my-request/${request.id}`);
+    res.status(201).json({ message: 'Request created', request: request });
+  }
+  catch (error) {
+    console.error('Error confirming request:', error);
     res.status(500).json({ message: 'Internal Server Error' });
   }
 };

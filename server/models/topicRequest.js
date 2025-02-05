@@ -18,7 +18,7 @@ const topicRequest = sequelize.define('topic_requests', {
     allowNull: true,
   },
   status: {
-    type: DataTypes.ENUM('pending', 'accepted', 'rejected'),
+    type: DataTypes.ENUM('pending', 'accepted', 'rejected', 'confirmed'),
     allowNull: false,
     defaultValue: 'pending',
   },
