@@ -14,8 +14,8 @@ export default function TeacherNavBar() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const { language, setLanguage, translate } = useLanguage();
 
-  const handleLanguageChange = (e) => {
-    setLanguage(e.target.value);
+  const handleLanguageChange = (selectedLanguage) => {
+    setLanguage(selectedLanguage); 
   };
 
   const router = useRouter();
@@ -132,14 +132,24 @@ export default function TeacherNavBar() {
           {/* Dropdown menu for "Profile" + Language Selector */}
           <div className="flex items-center space-x-4">
             {/* Language Selector */}
-            <select
-              value={language}
-              onChange={handleLanguageChange}
-              className="bg-navbar-gradient border border-gray-700 rounded px-2 py-1 text-sm focus:ring-blue-500 focus:border-blue-500"
-            >
-              <option className="text-black" value="ro">RO</option>
-              <option className="text-black" value="en">EN</option>
-            </select>
+            <div className="flex">
+              <button
+                onClick={() => handleLanguageChange("ro")}
+                className={`px-1 rounded-tl rounded-bl text-sm font-medium ${
+                  language === "ro" ? "bg-gray-300 text-black" : "bg-blue-500 text-white"
+                }`}
+              >
+                RO
+              </button>
+              <button
+                onClick={() => handleLanguageChange("en")}
+                className={`px-1 rounded-tr rounded-br text-sm font-medium ${
+                  language === "en" ? "bg-gray-300 text-black" : "bg-blue-500 text-white"
+                }`}
+              >
+                EN
+              </button>
+            </div>
 
             {/* Profile dropdown */}
             <div className="relative">

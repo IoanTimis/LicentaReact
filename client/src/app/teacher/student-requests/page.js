@@ -48,10 +48,11 @@ export default function StudentRequests() {
       }
 
       await axiosInstance.put(`/teacher/student-request/response/${selectedRequestId}`, { status, message }, { withCredentials: true });
-      
+
+      //TODO: update request status in the UI ( not working)
       setRequests((prevRequests) =>
         prevRequests.map((request) => {
-          if (request.id === 1) {
+          if (request.id === selectedRequestId) {
             return { ...request, status: "accepted" };
           }
           return request;

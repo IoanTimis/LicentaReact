@@ -19,10 +19,8 @@ export default function studentNavBar() {
   const router = useRouter();
 
   const handleLanguageChange = (selectedLanguage) => {
-    setLanguage(selectedLanguage); // Actualizează starea
-    // Orice logică suplimentară pentru schimbarea limbii
+    setLanguage(selectedLanguage); 
   };
-  
 
   const logout = async () => {
     try {

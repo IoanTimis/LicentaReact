@@ -303,7 +303,12 @@ const teacherResponse = async (req, res) => {
       await request.topic.save();
     }
 
-    res.json({ status: 'success' });
+    if(status === 'rejected' && request.status === 'accepted'){
+      request.topic.slots = request.topic.slots + 1;
+      await request.topic.save();
+    }
+
+    res.json({ message: 'Response sent', status: status });
   }
   catch (error) {
     console.error('Error responding to request:', error);
