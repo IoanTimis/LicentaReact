@@ -259,10 +259,10 @@ const studentRequest = async (req, res) => {
     );
 
     if (!request) {
-      return res.status(404).send('Request not found');
+      return res.status(404).json({ message: 'Request not found' });
     }
 
-    res.render('pages/teacher/studentRequest', { studentRequest: request });
+    res.status(200).json({ request: request });
   }
   catch (error) {
     console.error('Error getting request:', error);

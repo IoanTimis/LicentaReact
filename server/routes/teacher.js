@@ -18,6 +18,7 @@ router.delete('/topic/delete/:id', teacherController.deleteTopic);
 
 router.get('/fetch/student-requests', teacherController.studentRequests);
 router.get('/fetch/student-request/:id', teacherController.studentRequest);
+
 router.put('/student-request/response/:id', teacherController.teacherResponse);
 router.delete('/student-request/delete/:id', teacherController.deleteRequest);
 

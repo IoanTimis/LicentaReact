@@ -82,7 +82,7 @@ export default function RequestCard({ request, handleConfirm, handleDelete, onRe
 //teacher request card
   return (
     <div className="bg-white shadow rounded hover:shadow-lg transition border border-gray-950">
-        <Link href={`/teacher/request-topic/${request.id}`}>
+        <Link href={`/teacher/student-request/${request.id}`}>
           <div className="bg-navbar-gradient flex justify-between items-center py-2 px-4 rounded-t">
             <h2 className="text-lg font-semibold text-white">{request.topic.title}</h2>
           </div>
