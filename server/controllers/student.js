@@ -232,89 +232,48 @@ const newRequest = async (req, res) => {
   }
 };
 
-//TODO: confirmRequest
 const confirmRequest = async (req, res) => {
   try {
     const refreshToken = req.cookies.refreshToken;
     const user = jwt.decode(refreshToken, process.env.REFRESH_TOKEN_SECRET);
     const student_id = user.id;
+    const request_id = req.params.id;
 
-    const { topic_id, teacher_id, education_level, message } = req.body;
-
-    const student_data = await User.findByPk(student_id);
-
-    if (!student_data) {
-      return res.status(404).json({ message: 'Student not found' });
-    }
-
-    //Speacialization, faculty, topic to check if the student can apply to the topic
-    const topic_data = await Topic.findOne({
-      where: { id: topic_id },
-      include: [
-        {
-          model: Specialization,
-          as: "specializations",
-          attributes: ["id"], 
-          include: [
-            {
-              model: Faculty,
-              as: "faculty",
-              attributes: ["id"] 
-            }
-          ]
-        }
-      ]
-    });
-
-    if (!topic_data) {
-      return res.status(404).json({ message: 'Topic not found' });
-    };
-
-    //Check student education level
-    if (student_data.education_level !== education_level) {
-      return res.status(403).json({ message: 'Forbidden' });
-    }
-
-    let validReq = false;
-
-    //Check if the student can apply to the topic (specialization, faculty)
-    if(topic_data.specializations.length > 1){
-      for(let i = 0; i < topic_data.specializations.length; i++) {
-        if( (topic_data.specialization[i] === student_data.specialization_id)
-          && (topic_data.specialization[i].faculty === student_data.faculty_id)
-        )
-        {
-          validReq = true;
-          break;
-        }
-      }
-    } else if( (topic_data.specializations[0].id === student_data.specialization_id)
-      && (topic_data.specializations[0].faculty.id === student_data.faculty_id)
-    ) {
-      validReq = true;
-    }
-
-
-    if(!validReq){
-      return res.status(403).json({ message: 'Forbiden' })
-    }
-
-    sanitizeHtml(message);
-
-    const request = await topicRequest.create({
-      student_id: student_id,
-      teacher_id: teacher_id,
-      topic_id: topic_id,
-      student_message: message
-    });
+    const request = await topicRequest.findByPk(request_id);
 
     if (!request) {
-      return res.status(500).json({ message: 'Error creating request' });
+      return res.status(404).json({ message: 'Request not found' });
+    };
+
+    const req_student_id = request.student_id;
+
+    if (req_student_id !== student_id) {
+      return res.status(403).json({ message: 'Forbidden' });
+    };
+
+    request.status = 'confirmed';
+    await request.save();
+
+    const topic_id = request.topic_id;
+
+    const topic = await Topic.findByPk(topic_id);
+
+    if (!topic) {
+      return res.status(404).json({ message: 'Topic not found' });
     }
 
-    //TODO:Voi folosi toast redirect
-    //res.redirect(`http://localhost:3000/student/my-request/${request.id}`);
-    res.status(201).json({ message: 'Request created', request: request });
+    topic.slots -= 1;
+    await topic.save();
+
+    //Delete any other request the student has made to any other theme
+    await topicRequest.destroy({
+      where: {
+        student_id: student_id,
+        status: { [Op.ne]: 'confirmed' }
+      }
+    });
+
+    res.status(200).json({ message: 'Request Confirmed', request: request });
   }
   catch (error) {
     console.error('Error confirming request:', error);
@@ -348,11 +307,14 @@ const deleteRequest = async (req, res) => {
   }
 };
 
+//TODO: if a theme is requested the student should not be able to apply to it again
+
 module.exports = {
   studentTopics,
   topic,
   getRequestTopics,
   getRequestTopic,
   newRequest,
+  confirmRequest,
   deleteRequest
 };

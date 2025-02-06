@@ -280,10 +280,10 @@ const teacherResponse = async (req, res) => {
     console.log(status, message);
 
     const request = await topicRequest.findByPk(requestId,{
-      include: {
-        model: Topic,
-        as: 'topic'
-      }
+      // include: {
+      //   model: Topic,
+      //   as: 'topic'
+      // }
     });
 
     if (!request) {
@@ -298,15 +298,17 @@ const teacherResponse = async (req, res) => {
     request.teacher_message = message;
     await request.save();
 
-    if(status === 'accepted'){
-      request.topic.slots = request.topic.slots - 1;
-      await request.topic.save();
-    }
+    //Slots should be updated only if request is confirmed by the student
 
-    if(status === 'rejected' && request.status === 'accepted'){
-      request.topic.slots = request.topic.slots + 1;
-      await request.topic.save();
-    }
+    // if(status === 'accepted'){
+    //   request.topic.slots = request.topic.slots - 1;
+    //   await request.topic.save();
+    // }
+
+    // if(status === 'rejected' && request.status === 'accepted'){
+    //   request.topic.slots = request.topic.slots + 1;
+    //   await request.topic.save();
+    // }
 
     res.json({ message: 'Response sent', status: status });
   }

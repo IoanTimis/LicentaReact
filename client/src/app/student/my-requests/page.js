@@ -20,6 +20,28 @@ export default function StudentRequests() {
     fetchRequests();
   }, []);
 
+  const handleConfirm = async (requestId) => {
+    try {
+      await axiosInstance.put(`/student/request/confirm/${requestId}`, { withCredentials: true });
+  
+      setRequests((prevRequests) =>
+        prevRequests
+          .map((request) => {
+            if (request.id === requestId) {
+              return { ...request, status: "confirmed" };
+            }
+            return request;
+          })
+          .filter((request) => request.id === requestId)
+      );
+  
+      console.log("Cererea a fost confirmată. Celelalte cereri au fost eliminate.");
+    } catch (error) {
+      console.error("Eroare la confirmarea cererii:", error);
+    }
+  };
+  
+
   const handleDelete = async (requestId) => {
     try {
       await axiosInstance.delete(`/student/request/delete/${requestId}`, { withCredentials: true });
@@ -35,7 +57,7 @@ export default function StudentRequests() {
      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
       {requests.map((request) => (
         <div key={request.id}> 
-          <RequestCard request={request} handleDelete={handleDelete} />
+          <RequestCard request={request} handleDelete={handleDelete} handleConfirm={handleConfirm} />
         </div>
       ))}
     </div>

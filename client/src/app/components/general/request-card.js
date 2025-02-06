@@ -12,11 +12,6 @@ export default function RequestCard({ request, handleConfirm, handleDelete, onRe
   const accessToken = localStorage.getItem("accessToken");
   const userRole = jwtDecode(accessToken).role;
 
-  const handleRequestClick = () => {
-    setIsDropdownOpen(false);
-    onResponse(request.id);
-  };
-
   if ( userRole === "student" ) {
 // Student request card
     return (
@@ -53,7 +48,10 @@ export default function RequestCard({ request, handleConfirm, handleDelete, onRe
                 {request.status === "accepted" && (
                   <button
                     className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-green-600 transition"
-                    onClick={handleConfirm}
+                    onClick={() => {
+                      handleConfirm(request.id);
+                      setIsDropdownOpen(false);
+                    }}
                   >
                     {translate("Confirm Theme")}
                   </button>
@@ -119,7 +117,10 @@ export default function RequestCard({ request, handleConfirm, handleDelete, onRe
               </Link>
               <button
                 className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition"
-                onClick={handleRequestClick}
+                onClick={() => {
+                  onResponse(request.id);
+                  setIsDropdownOpen(false);
+                }}
               >
                 {translate("Respond to Request")}
               </button>
