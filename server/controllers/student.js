@@ -245,6 +245,10 @@ const confirmRequest = async (req, res) => {
       return res.status(404).json({ message: 'Request not found' });
     };
 
+    if(request.status !== 'accepted'){
+      return res.status(403).json({ message: 'Forbidden' });
+    };
+
     const req_student_id = request.student_id;
 
     if (req_student_id !== student_id) {

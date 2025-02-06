@@ -3,9 +3,19 @@
 import { useState, useEffect } from "react";
 import axiosInstance from "@/utils/axiosInstance";
 import RequestCard from "@/app/components/general/request-card";
+import ConfirmActionModal from "@/app/components/general/confirm-action-modal";
 
 export default function StudentRequests() {
   const [requests, setRequests] = useState([]);
+  const [selectedRequest, setSelectedRequest] = useState(null);
+  const [isOpen, setIsOpen] = useState(false);
+  const [modalAction, setModalAction] = useState("");
+
+  const handleOpenConfirmModal = (requestId, action) => {
+    setSelectedRequest(requestId);
+    setModalAction(action);
+    setIsOpen(true);
+  };
 
   useEffect(() => {
     const fetchRequests = async () => {
@@ -57,10 +67,21 @@ export default function StudentRequests() {
      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
       {requests.map((request) => (
         <div key={request.id}> 
-          <RequestCard request={request} handleDelete={handleDelete} handleConfirm={handleConfirm} />
+          <RequestCard 
+          request={request} 
+          handleOpenConfirmModal={handleOpenConfirmModal}
+          />
         </div>
       ))}
     </div>
+      
+    <ConfirmActionModal
+      actionFunction={() => modalAction === "delete" ? handleDelete(selectedRequest) : handleConfirm(selectedRequest)}
+      isOpen={isOpen}
+      setIsOpen={setIsOpen}
+      action={modalAction}
+    />
+
    </div>
   );
 }

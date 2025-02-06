@@ -59,13 +59,19 @@
     "Reject Request": "Respinge Cererea",
     "Student": "Student",
     "Status": "Stare",
-    "pending": "în așteptare",
-    "accepted": "acceptat",
-    "rejected": "respins",
+    "Pending": "în așteptare",
+    "Accepted": "Acceptat",
+    "Rejected": "Respins",
     "The request has been successfully deleted.": "Cererea a fost ștearsă cu succes.",
     "Student Message": "Mesaj Student",
     "Accept or Reject": "Acceptă sau Respinge",
-    "Respond to Request": "Răspunde Cererii"
+    "Respond to Request": "Răspunde Cererii",
+    "Are you sure you want to delete this request?": "Ești sigur că vrei să ștergi această cerere?",
+    "Are you sure you want to confirm this theme? This action will delete all other requests!": 
+    "Ești sigur că vrei să confirmi această temă? Această acțiune va șterge toate celelalte cereri!",
+    "Delete": "Șterge",
+    "Confirm": "Confirmă",
+    "Confirmed": "Confirmată"
 
 }
   

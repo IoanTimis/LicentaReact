@@ -5,9 +5,9 @@ import { ChevronDownIcon } from "@heroicons/react/24/solid";
 import { useState } from "react";
 import { jwtDecode }  from "jwt-decode";
 
-export default function RequestCard({ request, handleConfirm, handleDelete, onResponse}) {
+export default function RequestCard({ request, onResponse, handleOpenConfirmModal }) {
   const { translate } = useLanguage();
-  const [isDropdownOpen, setIsDropdownOpen] = useState();
+  const [isDropdownOpen, setIsDropdownOpen] = useState(null);
 
   const accessToken = localStorage.getItem("accessToken");
   const userRole = jwtDecode(accessToken).role;
@@ -26,7 +26,15 @@ export default function RequestCard({ request, handleConfirm, handleDelete, onRe
             </p>
             <p className="text-sm text-gray-600 mb-1">{ translate("Slots") }: {request.topic.slots}</p>
             <p className="text-sm text-gray-600 mb-1">{ translate("Student") }: {request.teacher.name} {request.teacher.first_name}</p>
-            <p className="text-sm text-gray-600 font-bold">{ translate("Status") }: { translate(request.status) }</p>
+            {request.status === "pending" ? (
+              <p className="text-yellow-500">{ translate("Pending") }...</p>
+            ) : request.status === "confirmed" ? (
+              <p className="text-green-500">{ translate("Confirmed") }!</p>
+            ) : request.status === "accepted" ? (
+              <p className="text-blue-500">{ translate("Accepted") }!</p>
+            ) : (
+              <p className="text-red-500">{ translate("Rejected") }!</p>
+            )}
           </div>
         </Link>
 
@@ -49,7 +57,7 @@ export default function RequestCard({ request, handleConfirm, handleDelete, onRe
                   <button
                     className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-green-600 transition"
                     onClick={() => {
-                      handleConfirm(request.id);
+                      handleOpenConfirmModal(request.id, "confirm")
                       setIsDropdownOpen(false);
                     }}
                   >
@@ -64,7 +72,10 @@ export default function RequestCard({ request, handleConfirm, handleDelete, onRe
                 </Link>
                 <button
                   className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-red-600 transition"
-                  onClick={() => handleDelete(request.id)} // Callback function
+                  onClick={() => {
+                    handleOpenConfirmModal(request.id, "delete")
+                    setIsDropdownOpen(false);
+                  }}
                 >
                   {translate("Delete Request")}
                 </button>
@@ -90,7 +101,15 @@ export default function RequestCard({ request, handleConfirm, handleDelete, onRe
             </p>
             <p className="text-sm text-gray-600 mb-1">{ translate("Slots") }: {request.topic.slots}</p>
             <p className="text-sm text-gray-600 mb-1">{ translate("Student") }: {request.student.name} {request.student.first_name}</p>
-            <p className="text-sm text-gray-600 font-bold">{ translate("Status") }: { translate(request.status) }</p>
+            {request.status === "pending" ? (
+              <p className="text-yellow-500">{ translate("Pending") }...</p>
+            ) : request.status === "confirmed" ? (
+              <p className="text-green-500">{ translate("Confirmed") }!</p>
+            ) : request.status === "accepted" ? (
+              <p className="text-blue-500">{ translate("Accepted") }!</p>
+            ) : (
+              <p className="text-red-500">{ translate("Rejected") }!</p>
+            )}
           </div>
         </Link>
 
