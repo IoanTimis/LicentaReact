@@ -1,6 +1,6 @@
 'use client';
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Provider } from "react-redux";
 import Navbar from "./components/general/header";
 import StudentNavBar from "./components/student/header";
@@ -11,6 +11,11 @@ import { usePathname } from "next/navigation";
 
 export default function AppProvider({ children }) {
   const pathname = usePathname();
+  const [errorMessage, setErrorMessage] = useState(null);
+
+  useEffect(() => {
+    setErrorMessage(null);
+  }, [pathname]); // Se va executa de fiecare dată când se schimbă pagina
 
   const getNavbar = () => {
     if (pathname.startsWith("/admin")) {
@@ -26,12 +31,22 @@ export default function AppProvider({ children }) {
 
   return (
     <Provider store={store}>
-      {getNavbar()} {/* Afișăm navbar-ul corespunzător */}
+      {getNavbar()} 
+
+      {/* Afișează eroarea doar dacă există */}
+      {errorMessage && (
+        <div className="bg-red-100 text-red-800 p-4 rounded mb-4 text-center">
+          {errorMessage}
+        </div>
+      )}
+
       <main className="flex-grow bg-gray-200">
         <div className="lg:mx-24 xl:mx-32 2xl:mx-64">
-          {children}
+          {/* Pasăm funcția `setErrorMessage` ca prop către children */}
+          {React.cloneElement(children, { setGlobalError: setErrorMessage })}
         </div>
       </main>
+
       <Footer />
     </Provider>
   );

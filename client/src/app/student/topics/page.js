@@ -79,13 +79,6 @@ export default function StudentTopics() {
   return (
     <div className="flex flex-col min-h-screen bg-gray-100">
       <div className="py-8 bg-gray-100">
-        {/* Error Message */}
-        {errorMessage && (
-          <div className="bg-red-100 text-red-800 p-4 rounded mb-4">
-            {errorMessage}
-          </div>
-        )}
-
         {/* Topics */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 px-4">
           {topics.map((topic) => (

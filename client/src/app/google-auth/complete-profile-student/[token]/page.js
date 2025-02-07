@@ -86,12 +86,6 @@ export default function CompleteProfileStudent() {
 
   return (
     <main className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4">
-      {errorMessage && (
-        <div className="bg-red-100 text-red-800 p-4 rounded mb-4">
-          {errorMessage}
-        </div>
-      )}
-
       {successMessage && (
         <div className="bg-green-100 text-green-800 p-4 rounded mb-4">
           {successMessage}

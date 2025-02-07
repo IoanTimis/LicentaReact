@@ -63,13 +63,6 @@ export default function TopicDetails() {
 
   return (
     <div className="min-h-screen bg-gray-100 p-8">
-      {/* Error Message */}
-      {errorMessage && (
-        <div className="bg-red-100 text-red-800 p-4 rounded mb-4">
-          {errorMessage}
-        </div>
-      )}
-
       {/* Layout */}
       {request && (
         <>
