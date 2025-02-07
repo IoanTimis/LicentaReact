@@ -6,7 +6,7 @@ import { useLanguage } from "@/context/Languagecontext";
 const Footer = () => {
   const { translate } = useLanguage();
   return (
-    <footer className="bg-footer-color text-white py-4">
+    <footer className="bg-navbar-gradient text-white py-4">
       <div className="container mx-auto text-center">
         <p className="text-sm">
           © {new Date().getFullYear()} {translate("Online BSc/MSc themes selection application. All rights reserved")}
