@@ -145,7 +145,10 @@ export default function RequestCard({ request, onResponse, handleOpenConfirmModa
               </button>
               <button
                 className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-red-600 transition"
-                onClick={() => handleDelete}
+                onClick={() => {
+                  handleOpenConfirmModal(request.id, "delete");
+                  setIsDropdownOpen(false);
+                }}
               >
                 {translate("Delete Request")}
               </button>

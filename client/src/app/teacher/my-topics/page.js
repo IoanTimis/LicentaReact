@@ -7,6 +7,7 @@ import { useLanguage } from "@/context/Languagecontext";
 import Link from "next/link";
 import TopicCard from "@/app/components/teacher/topic-card";
 import { checkForDuplicates } from "@/utils/checkForDublicates";
+import ConfirmActionModal from "@/app/components/general/confirm-action-modal";
 
 export default function TeacherTopics() {
   const { translate } = useLanguage();
@@ -14,6 +15,10 @@ export default function TeacherTopics() {
   const [errorMessage, setErrorMessage] = useState(null);
 
   const [topics, setTopics] = useState([]);
+  const [selectedTopic, setSelectedTopic] = useState(null);
+
+  const [isOpen, setIsOpen] = useState(false);
+  const [modalAction, setModalAction] = useState("");
 
   const [ formMode , setFormMode ] = useState("add");
   const [title, setTitle] = useState("");
@@ -27,12 +32,16 @@ export default function TeacherTopics() {
   const [specializations, setSpecializations] = useState([]);
   const [selectedSpecializations, setSelectedSpecializations] = useState([null]); // Array pentru specializări
 
+  const handleOpenConfirmModal = (topicId, action) => {
+    setSelectedTopic(topicId);
+    setModalAction(action);
+    setIsOpen(true);
+  };
 
   // Fetch data from the server
   useEffect(() => {
     const fetchData = async () => {
       try {
-        console.log("fetching data-------------------------------");
         const response = await axiosInstance.get("/teacher/fetch/topics", { withCredentials: true });
         setFaculties(response.data.faculties);
         setTopics(response.data.teacher.topics);
@@ -152,7 +161,7 @@ export default function TeacherTopics() {
   }
 
   return (
-    <div className="flex flex-col min-h-screen bg-gray-200">
+    <div className="flex flex-col min-h-screen bg-gray-100 p-8">
     <div className="py-8 bg-gray-100">
       {/* Error Message */}
       {errorMessage && (
@@ -179,7 +188,7 @@ export default function TeacherTopics() {
           </div>
         </div>
         {topics.map((topic) => (
-          <TopicCard key={topic.id} topic={topic} translate={translate} onEdit={handleEdit} onDelete={handleDelete} />
+          <TopicCard key={topic.id} topic={topic} translate={translate} onEdit={handleEdit} handleOpenConfirmModal={handleOpenConfirmModal} />
         ))}
       </div>
 
@@ -298,6 +307,13 @@ export default function TeacherTopics() {
         </div>
       )}
     </div>
+
+     <ConfirmActionModal
+      actionFunction={() => modalAction === "delete" ? handleDelete(selectedTopic) : null}
+      isOpen={isOpen}
+      setIsOpen={setIsOpen}
+      action={modalAction}
+    />
   </div>
   );
 }

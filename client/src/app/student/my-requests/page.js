@@ -81,7 +81,6 @@ export default function StudentRequests() {
       setIsOpen={setIsOpen}
       action={modalAction}
     />
-
    </div>
   );
 }

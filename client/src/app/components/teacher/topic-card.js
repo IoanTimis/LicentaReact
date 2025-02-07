@@ -2,7 +2,7 @@ import Link from "next/link";
 import { ChevronDownIcon } from "@heroicons/react/24/solid";
 import { useState } from "react";
 
-export default function TopicCard({ topic, translate, onEdit, onDuplicate, onDelete }) {
+export default function TopicCard({ topic, translate, onEdit, onDuplicate, handleOpenConfirmModal }) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   console.log(topic);
 
@@ -56,7 +56,10 @@ export default function TopicCard({ topic, translate, onEdit, onDuplicate, onDel
               </button>
               <button
                 className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-red-50 hover:text-red-600 transition"
-                onClick={() => onDelete(topic.id)}
+                onClick={() => {
+                  handleOpenConfirmModal(topic.id, "delete");
+                  setIsDropdownOpen(false);
+                }}
               >
                 {translate("Delete")}
               </button>

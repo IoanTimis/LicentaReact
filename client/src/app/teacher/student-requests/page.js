@@ -5,11 +5,14 @@ import axiosInstance from "@/utils/axiosInstance";
 import RequestCard from "@/app/components/general/request-card";
 import AcceptRejectModal from "@/app/components/teacher/accept-reject-modal";
 import { useLanguage } from "@/context/Languagecontext";
+import ConfirmActionModal from "@/app/components/general/confirm-action-modal";
 
 export default function StudentRequests() {
   const [requests, setRequests] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedRequestId, setSelectedRequestId] = useState();
+  const [isOpen, setIsOpen] = useState(false);
+  const [modalAction, setModalAction] = useState("");
   const { translate } = useLanguage();
 
   useEffect(() => {
@@ -24,6 +27,12 @@ export default function StudentRequests() {
 
     fetchRequests();
   }, []);
+
+  const handleOpenConfirmModal = (requestId, action) => {
+    setSelectedRequestId(requestId);
+    setModalAction(action);
+    setIsOpen(true);
+  };
 
   //TODO: Refactor all ToggleModal functions to reset the "selectedRequestId"
   const toggleModal = () => {
@@ -87,7 +96,7 @@ export default function StudentRequests() {
      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
       {requests.map((request) => (
         <div key={request.id}> 
-          <RequestCard request={request} handleDelete={handleDelete}  onResponse={onResponse}/>
+          <RequestCard request={request} handleOpenConfirmModal={handleOpenConfirmModal}  onResponse={onResponse}/>
         </div>
       ))}
     </div>
@@ -97,6 +106,13 @@ export default function StudentRequests() {
         onClose={toggleModal}
         onSubmit={handleSubmit}
         translate={translate}
+      />
+
+      <ConfirmActionModal
+        actionFunction={() => modalAction === "delete" ? handleDelete(selectedRequestId) : null}
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+        action={modalAction}
       />
    </div>
   );

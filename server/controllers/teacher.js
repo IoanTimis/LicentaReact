@@ -279,12 +279,7 @@ const teacherResponse = async (req, res) => {
     const { status, message } = req.body;
     console.log(status, message);
 
-    const request = await topicRequest.findByPk(requestId,{
-      // include: {
-      //   model: Topic,
-      //   as: 'topic'
-      // }
-    });
+    const request = await topicRequest.findByPk(requestId);
 
     if (!request) {
       return res.status(404).json({ message: 'Request not found' });
@@ -298,18 +293,6 @@ const teacherResponse = async (req, res) => {
     request.teacher_message = message;
     await request.save();
 
-    //Slots should be updated only if request is confirmed by the student
-
-    // if(status === 'accepted'){
-    //   request.topic.slots = request.topic.slots - 1;
-    //   await request.topic.save();
-    // }
-
-    // if(status === 'rejected' && request.status === 'accepted'){
-    //   request.topic.slots = request.topic.slots + 1;
-    //   await request.topic.save();
-    // }
-
     res.json({ message: 'Response sent', status: status });
   }
   catch (error) {
@@ -319,10 +302,11 @@ const teacherResponse = async (req, res) => {
 }
 
 const deleteRequest = async (req, res) => {
-  const requestId = req.params.id;
-  const user = req.session.loggedInUser;
-  
   try{
+    const refreshToken = req.cookies.refreshToken;
+    const user = jwt.decode(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+    const requestId = req.params.id;
+
     const request = await topicRequest.findByPk(requestId);
 
     if (!request) {
@@ -339,7 +323,7 @@ const deleteRequest = async (req, res) => {
   }
   catch (error) {
     console.error('Error deleting request:', error);
-    res.status(500).send('Internal Server Error');
+    res.status(500).json({ message: 'Internal Server Error' });
   }
 };
 
