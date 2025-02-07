@@ -4,13 +4,21 @@ import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import axiosInstance from "@/utils/axiosInstance";
 import { useLanguage } from "@/context/Languagecontext";
+import ConfirmActionModal from "@/app/components/general/confirm-action-modal";
 
 export default function TopicDetails() {
   const [request, setRequest] = useState(null);
   const [errorMessage, setErrorMessage] = useState(null);
   const [isRequestDeleted, setIsRequestDeleted] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const [modalAction, setModalAction] = useState("");
   const { translate } = useLanguage();
   const { id } = useParams();
+
+  const handleModal = (action) => {
+    setModalAction(action);
+    setIsOpen(true);
+  };
 
   // Fetch topic details
   useEffect(() => {
@@ -54,7 +62,7 @@ export default function TopicDetails() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-200 p-8">
+    <div className="min-h-screen bg-gray-100 p-8">
       {/* Error Message */}
       {errorMessage && (
         <div className="bg-red-100 text-red-800 p-4 rounded mb-4">
@@ -65,11 +73,10 @@ export default function TopicDetails() {
       {/* Layout */}
       {request && (
         <>
-          <div className="max-w-7xl shadow-xl mx-auto grid grid-cols-1 lg:grid-cols-2">
+          <h2 className="text-5xl font-bold text-center text-gray-800 mb-6">{request.topic.title}</h2>
+          <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2">
             {/* Professor Details */}
-            <div
-              className={"bg-gray-300 p-6 flex flex-col items-center"}
-            >
+            <div className={"bg-gray-100 p-6 flex flex-col items-center justify-center"}>
               <div className="w-32 h-32 rounded-full overflow-hidden mb-6">
                 <img
                   src="/logo_uvt_profile.png"
@@ -84,14 +91,7 @@ export default function TopicDetails() {
             </div>
 
             {/* Request Details */}
-            <div
-              className={
-                isSmallScreen
-                  ? "bg-gray-300 p-6 flex flex-col items-left rounded-br-lg rounded-bl-lg"
-                  : "bg-gray-300 p-6 flex flex-col items-left lg:rounded-tr-lg lg:rounded-br-lg"
-              }
-            >
-              <h2 className="text-3xl font-bold text-center text-gray-800 mb-6">{request.topic.title}</h2>
+            <div className={"bg-gray-100 p-6 flex flex-col items-center justify-center"}>
               <p className="text-gray-700 mb-4">
                 <span className="font-semibold ">{ translate("Description") }:</span> {request.topic.description}
               </p>
@@ -110,21 +110,29 @@ export default function TopicDetails() {
               </p>
             </div>
           </div>
+          {/* Request button */}
+          <div className="flex justify-center mt-4">
+            <button className="bg-red-500 hover:bg-red-700 text-white font-semibold py-2 px-4 w-[50%] rounded"
+              onClick={() => handleModal("delete")}
+            >
+              {translate("Delete Request")}
+            </button> 
+          </div>
 
-          {/* Request topic */}
-          <div className="bg-gray-300 p-6 max-w-7xl mx-auto min-h-screen rounded-bl-lg rounded-br-lg">
-            <div className="flex items-center justify-center mt-8">
-              <h2 className="text-black font-semibold">Daca doresti poti sterge cererea.</h2>
-              <div className="">
-                <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-4" 
-                onClick={() => handleDelete(request.id)}>
-                  Sterge cerere
-                </button>
-              </div>
-            </div>
+          {/* Description */}
+          <div className="bg-gray-100 p-6 max-w-7xl mx-auto min-h-screen rounded-bl-lg rounded-br-lg">
+            <h2 className="text-2xl font-bold text-gray-800 mb-4 text-center">{ translate("Description") }</h2>
+            <p className="text-gray-700 text-center">{request.topic.description}</p>
           </div>
         </>
       )}
+
+      <ConfirmActionModal
+        actionFunction={() => modalAction === "delete" ? handleDelete(request.id) : null}
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+        action={modalAction}
+      />
     </div>
   );
 }

@@ -83,7 +83,7 @@ export default function TopicDetails() {
 
             {/* Professor Details */}
             <div
-              className={"bg-gray-100 p-6 flex flex-col items-center"}
+              className={"bg-gray-100 p-6 flex flex-col items-center justify-center"}
             >
               <div className="w-28 h-28 rounded-full overflow-hidden mb-6">
                 <img
@@ -100,7 +100,7 @@ export default function TopicDetails() {
 
             {/* Topic Details */}
             <div
-              className={"bg-gray-100 p-6 flex flex-col items-center justify-left"}
+              className={"bg-gray-100 p-6 flex flex-col items-center justify-center"}
             >
               <p className="text-gray-700 mb-4 ">
                 <span className="font-semibold">{ translate("Keywords") }:</span> {topic.keywords}
