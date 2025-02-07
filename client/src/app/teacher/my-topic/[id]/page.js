@@ -5,14 +5,16 @@ import { useParams } from "next/navigation";
 import axiosInstance from "@/utils/axiosInstance";
 import { useLanguage } from "@/context/Languagecontext";
 import ConfirmActionModal from "@/app/components/general/confirm-action-modal";
+import { ErrorContext } from "@/context/errorContext";
+import { useContext } from "react";
 
 export default function TopicDetails() {
   const [topic, setTopic] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
   const [modalAction, setModalAction] = useState("");
-  const [errorMessage, setErrorMessage] = useState(null);
   const { translate } = useLanguage();
   const { id } = useParams();
+  const { setGlobalErrorMessage } = useContext(ErrorContext);
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
@@ -38,7 +40,7 @@ export default function TopicDetails() {
 
       } catch (error) {
         console.error("Eroare la obținerea detaliilor temei:", error);
-        setErrorMessage("A apărut o eroare la încărcarea detaliilor temei.");
+        setGlobalErrorMessage("A apărut o eroare la obținerea detaliilor temei.");
       }
     };
 
@@ -51,15 +53,15 @@ export default function TopicDetails() {
       console.log("Tema a fost ștearsă.");
     } catch (error) {
       console.error("Eroare la ștergerea temei:", error);
-      setErrorMessage("A apărut o eroare la ștergerea temei.");
+      setGlobalErrorMessage("A apărut o eroare la ștergerea temei.");
     }
   };
 
   //TODO: Edit Logic
 
-  if (!topic && !errorMessage) {
-    return <div className="text-center text-black mt-8">Se încarcă...</div>;
-  }
+  // if (!topic) {
+  //   return <div className="text-center text-black mt-8">Se încarcă...</div>;
+  // }
 
   return (
     <div className="min-h-screen bg-gray-100 p-8">
