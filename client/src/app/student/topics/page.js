@@ -22,6 +22,7 @@ export default function StudentTopics() {
     const fetchData = async () => {
       try {
         const response = await axiosInstance.get("/student/fetch/topics", { withCredentials: true });
+
         setTopics(response.data.topics);
       } catch (error) {
         console.error("Eroare la obținerea datelor:", error);
@@ -46,33 +47,37 @@ export default function StudentTopics() {
     toggleModal();
   };
 
-  console.log("Requested topic id state: ", requestedTopicId);
-
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     try {
       const formData = new FormData(e.target);
-
+  
       const newRequest = {
         topic_id: formData.get("topic_id"),
         teacher_id: formData.get("teacher_id"),
         education_level: formData.get("education_level"),
         message: formData.get("message"),
       };
-
+  
       const response = await axiosInstance.post("/student/request/add", newRequest, {
         withCredentials: true,
       });
-
+  
       console.log("Cererea a fost trimisă cu succes!", response.data);
+
+      //TODO: dinamic update the topics array not working
+      setTopics([...topics]); 
+  
       toggleModal();
     } catch (error) {
       console.error("Eroare la trimiterea cererii:", error);
       setErrorMessage("A apărut o eroare la trimiterea cererii.");
     }
   };
+  
+  
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-100">

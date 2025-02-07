@@ -14,6 +14,8 @@ router.get('/fetch/topic/:id', studentController.topic);
 router.get('/fetch/requested-topics', studentController.getRequestTopics);
 router.get('/fetch/requested-topic/:id', studentController.getRequestTopic);
 
+router.get('/is-topic-requested/:id', studentController.isTopicRequested);
+
 router.post('/request/add', studentController.newRequest);
 router.put('/request/confirm/:id', studentController.confirmRequest);
 router.delete('/request/delete/:id', studentController.deleteRequest);

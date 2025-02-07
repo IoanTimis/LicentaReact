@@ -1,16 +1,32 @@
 import Link from "next/link";
 import { ChevronDownIcon } from "@heroicons/react/24/solid";
 import { useState } from "react";
+import { useEffect } from "react";
+import axiosInstance from "@/utils/axiosInstance";
 
 export default function TopicCard({ topic, translate, onRequest }) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isTopicRequested, setIsTopicRequested] = useState(false);
   console.log(topic);
 
-  const handleRequestClick = () => {
-    setIsDropdownOpen(false);
-    onRequest(topic.id); // Transmite topic.id corect
-  };
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axiosInstance.get(`/student/is-topic-requested/${topic.id}`, { withCredentials: true });
+        setIsTopicRequested(response.data.requested);
+      } catch (error) {
+        console.error("Eroare la obținerea datelor:", error);
+      }
+    };
   
+    fetchData();
+  }, [topic.id]);
+
+  const handleRequestClick = async () => {
+    setIsDropdownOpen(false);
+    if (isTopicRequested) return;
+    onRequest(topic.id);
+  };
 
   return (
     <div className="bg-white shadow rounded hover:shadow-lg transition border border-gray-950">
@@ -34,14 +50,18 @@ export default function TopicCard({ topic, translate, onRequest }) {
           <p className="text-sm text-gray-700">
             <span className="font-semibold">{translate("Type")}:</span> {topic.education_level}
           </p>
+          { isTopicRequested ?  (
+            <p className="text-yellow-500"> {translate("Requested Theme")} </p>
+          ) : (
+            <p className="text-green-700"> {translate("Available Theme")} </p>
+          )}
         </div>
       </Link>
       {/* Footer */}
       <div className="px-4 py-2 flex justify-between items-center bg-gray-50 border-t border-gray-200 rounded-b">
-        <span className="text-gray-500">{translate("")}</span>
         <div className="relative">
           <button
-            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+            onClick={() => setIsDropdownOpen(!isDropdownOpen) }
             className="flex items-center text-gray-500 hover:text-gray-700 focus:outline-none"
           >
             <span>{translate("Actions")}</span>
@@ -51,12 +71,15 @@ export default function TopicCard({ topic, translate, onRequest }) {
             <div
               className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-20 border border-gray-200"
             >
-              <button
-                className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition"
-                onClick={ handleRequestClick }
-              >
-                {translate("Request Theme")}
-              </button>
+              { !isTopicRequested && (
+                <button
+                  className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition"
+                  onClick={ handleRequestClick }
+                >
+                  {translate("Request Theme")}
+                </button>)
+              }
+              
               <Link
                 href={`/student/topic/${topic.id}`}
                 className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition"

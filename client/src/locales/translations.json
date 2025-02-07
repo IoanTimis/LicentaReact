@@ -71,7 +71,9 @@
     "Ești sigur că vrei să confirmi această temă? Această acțiune va șterge toate celelalte cereri!",
     "Delete": "Șterge",
     "Confirm": "Confirmă",
-    "Confirmed": "Confirmată"
+    "Confirmed": "Confirmată",
+    "Requested Theme": "Temă Cerută",
+    "Available Theme": "Temă Disponibilă"
 
 }
   

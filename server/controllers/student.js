@@ -143,6 +143,28 @@ const getRequestTopic = async (req, res) => {
   }
 };
 
+const isTopicRequested = async (req, res) => {
+  try {
+    const refreshToken = req.cookies.refreshToken;
+    const user = jwt.decode(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+    const student_id = user.id;
+    const topic_id = req.params.id;
+
+    const request = await topicRequest.findOne({
+      where: {
+        student_id: student_id,
+        topic_id: topic_id
+      }
+    });
+
+    return res.status(200).json({ requested: !!request });
+  } catch (error) {
+    console.error('Error getting request:', error);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+};
+
+
 const newRequest = async (req, res) => {
   try {
     const refreshToken = req.cookies.refreshToken;
@@ -156,6 +178,17 @@ const newRequest = async (req, res) => {
     if (!student_data) {
       return res.status(404).json({ message: 'Student not found' });
     }
+
+    const requestExists = await topicRequest.findOne({
+      where: {
+        student_id: student_id,
+        topic_id: topic_id
+      }
+    });
+
+    if (requestExists) {
+      return res.status(403).json({ message: 'Forbidden' });
+    };
 
     //Speacialization, faculty, topic to check if the student can apply to the topic
     const topic_data = await Topic.findOne({
@@ -318,6 +351,7 @@ module.exports = {
   topic,
   getRequestTopics,
   getRequestTopic,
+  isTopicRequested,
   newRequest,
   confirmRequest,
   deleteRequest
