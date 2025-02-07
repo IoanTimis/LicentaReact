@@ -4,11 +4,15 @@ import { useState } from "react";
 import { useEffect } from "react";
 import axiosInstance from "@/utils/axiosInstance";
 import { useLanguage } from "@/context/Languagecontext";
+import { ErrorContext } from "@/context/errorContext";
+import { useContext } from "react";
+
 
 export default function TopicCard({ topic, onRequest }) {
   const { translate } = useLanguage();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isTopicRequested, setIsTopicRequested] = useState(false);
+  const {setGlobalErrorMessage} = useContext(ErrorContext);
   console.log(topic);
 
   useEffect(() => {
@@ -17,7 +21,8 @@ export default function TopicCard({ topic, onRequest }) {
         const response = await axiosInstance.get(`/student/is-topic-requested/${topic.id}`, { withCredentials: true });
         setIsTopicRequested(response.data.requested);
       } catch (error) {
-        console.error("Eroare la obținerea datelor:", error);
+        console.error("Error while getting data:", error);
+        setGlobalErrorMessage(translate("An error occurred while getting the data. Please try again."));
       }
     };
   

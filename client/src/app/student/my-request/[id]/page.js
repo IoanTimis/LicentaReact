@@ -5,14 +5,16 @@ import { useParams } from "next/navigation";
 import axiosInstance from "@/utils/axiosInstance";
 import { useLanguage } from "@/context/Languagecontext";
 import ConfirmActionModal from "@/app/components/general/confirm-action-modal";
+import { ErrorContext } from "@/context/errorContext";
+import { useContext } from "react";
 
 export default function TopicDetails() {
   const [request, setRequest] = useState(null);
-  const [errorMessage, setErrorMessage] = useState(null);
   const [isRequestDeleted, setIsRequestDeleted] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [modalAction, setModalAction] = useState("");
   const { translate } = useLanguage();
+  const { setGlobalErrorMessage } = useContext(ErrorContext);
   const { id } = useParams();
 
   const handleModal = (action) => {
@@ -29,8 +31,8 @@ export default function TopicDetails() {
         const response = await axiosInstance.get(`/student/fetch/requested-topic/${id}`, { withCredentials: true });
         setRequest(response.data.request);
       } catch (error) {
-        console.error("Eroare la obținerea detaliilor temei:", error);
-        setErrorMessage("A apărut o eroare la încărcarea detaliilor temei.");
+        console.error("Error fetching request details:", error);
+        setGlobalErrorMessage("An error occurred while fetching request details.");
       }
     };
 
@@ -40,12 +42,11 @@ export default function TopicDetails() {
   const handleDelete = async (requestId) => {
     try {
       await axiosInstance.delete(`/student/request/delete/${requestId}`, { withCredentials: true });
-      console.log("Cererea a fost ștearsă.");
-
+      console.log("Request deleted successfully.");
       setIsRequestDeleted(true);
     } catch (error) {
-      console.error("Eroare la ștergerea cererii:", error);
-      setErrorMessage("A apărut o eroare la ștergerea cererii.");
+      console.error("Error deleting request:", error);
+      setGlobalErrorMessage(translate("An error occurred while deleting the request."));
     }
   };
 
@@ -57,9 +58,9 @@ export default function TopicDetails() {
     );
   }
 
-  if (!request && !errorMessage) {
-    return <div className="text-center text-black mt-8">Se încarcă...</div>;
-  }
+  // if (!request && !errorMessage) {
+  //   return <div className="text-center text-black mt-8">Se încarcă...</div>;
+  // }
 
   return (
     <div className="min-h-screen bg-gray-100 p-8">

@@ -4,15 +4,16 @@ import { useState, useEffect } from "react";
 import axiosInstance from "@/utils/axiosInstance";
 import { PlusCircleIcon, ChevronDownIcon } from "@heroicons/react/24/solid";
 import { useLanguage } from "@/context/Languagecontext";
-import Link from "next/link";
 import TopicCard from "@/app/components/teacher/topic-card";
 import { checkForDuplicates } from "@/utils/checkForDublicates";
 import ConfirmActionModal from "@/app/components/general/confirm-action-modal";
+import { ErrorContext } from "@/context/errorContext";
+import { useContext } from "react";
 
 export default function TeacherTopics() {
   const { translate } = useLanguage();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [errorMessage, setErrorMessage] = useState(null);
+  const { setGlobalErrorMessage } = useContext(ErrorContext);
 
   const [topics, setTopics] = useState([]);
   const [selectedTopic, setSelectedTopic] = useState(null);
@@ -30,7 +31,7 @@ export default function TeacherTopics() {
   const [faculties, setFaculties] = useState([]);
   const [selectedFacultyId, setSelectedFacultyId] = useState(null);
   const [specializations, setSpecializations] = useState([]);
-  const [selectedSpecializations, setSelectedSpecializations] = useState([null]); // Array pentru specializări
+  const [selectedSpecializations, setSelectedSpecializations] = useState([null]); 
 
   const handleOpenConfirmModal = (topicId, action) => {
     setSelectedTopic(topicId);
@@ -46,8 +47,8 @@ export default function TeacherTopics() {
         setFaculties(response.data.faculties);
         setTopics(response.data.teacher.topics);
       } catch (error) {
-        console.error("Eroare la obținerea datelor:", error);
-        setErrorMessage("A apărut o eroare la obținerea datelor.");
+        console.error("Error fetching topics:", error);
+        setGlobalErrorMessage(translate("An error occurred while fetching topics."));
       }
     };
 
@@ -124,17 +125,18 @@ export default function TeacherTopics() {
       setTopics((prev) => [...prev, response.data.topic]);
       
       toggleModal();
-      console.log("Temă adăugată cu succes!");
+      console.log("Theme added successfully!");
     } catch (error) {
-      console.error("Eroare la adăugarea temei:", error);
-      setErrorMessage("A apărut o eroare la adăugarea temei.");
+      console.error("Error adding theme:", error);
+      setGlobalErrorMessage(translate("An error occurred while adding the theme."));
     }
   };
 
+  //TODO: Think the edit logic
   const handleEdit = async (topicId) => {
     try {
       const response = await axiosInstance.put(`/teacher/topic/edit/${topicId}`, { withCredentials: true });
-      console.log("Tema a fost editată cu succes!");
+      console.log("Theme edited successfully!");
       const updatedTopic = response.data.topic;
 
       setTopics((prevTopics) =>
@@ -143,8 +145,8 @@ export default function TeacherTopics() {
       )
     );
     } catch (error) {
-      console.error("Eroare la editarea temei:", error);
-      setErrorMessage("A apărut o eroare la editarea temei.");
+      console.error("Error editing theme:", error);
+      setGlobalErrorMessage(translate("An error occurred while editing the theme."));
   };
 }
 
@@ -153,10 +155,10 @@ export default function TeacherTopics() {
     try {
       const response = await axiosInstance.delete(`/teacher/topic/delete/${topicId}`, { withCredentials: true });
       setTopics((prev) => prev.filter((topic) => topic.id !== topicId));
-      console.log("Tema a fost ștearsă cu succes!");
+      console.log("Theme deleted successfully!");
     } catch (error) {
-      console.error("Eroare la ștergerea temei:", error);
-      setErrorMessage("A apărut o eroare la ștergerea temei.");
+      console.error("Error deleting theme:", error);
+      setGlobalErrorMessage(translate("An error occurred while deleting the theme."));
     };
   }
 

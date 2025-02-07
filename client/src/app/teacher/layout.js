@@ -21,6 +21,7 @@ export default function TeacherLayout({ children }) {
       console.log("decoded", decoded);
       if (decoded.role !== "teacher") { //Solutie temporara
         console.log("Nu ai acces la aceasta pagina, rolul tau este: ", decoded.role);
+        //localStorage.removeItem("accessToken"); TODO: Test this
         router.push(`/${decoded.role}`);
       }
     } catch (error) {

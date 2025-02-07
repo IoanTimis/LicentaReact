@@ -20,11 +20,13 @@ export default function StudentLayout({ children }) {
       const decoded = jwtDecode(accessToken);
       console.log("decoded", decoded);
       if (decoded.role !== "student") { //Solutie temporara
-        console.log("Nu ai acces la aceasta pagina, rolul tau este: ", decoded.role);
+        console.error("Invalid role:", decoded.role);
+        alert("Forbidden access");
         router.push(`/${decoded.role}`); 
       }
     } catch (error) {
       console.error("Invalid token:", error);
+      //localStorage.removeItem("accessToken"); TODO: test this
       router.push("/auth/login"); 
     }
   }, [router]);

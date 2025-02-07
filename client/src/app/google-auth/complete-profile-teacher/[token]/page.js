@@ -7,15 +7,18 @@ import { setUser } from "@/store/features/user/userSlice";
 import { useRouter } from "next/navigation";
 import { jwtDecode } from "jwt-decode";
 import axios from "axios";
+import { ErrorContext } from "@/context/errorContext";
+import { useContext } from "react";
+import { useLanguage } from "@/context/Languagecontext";
 
 export default function CompleteProfileTeacher() {
-  const [errorMessage, setErrorMessage] = useState(null); // Stare pentru mesajele de eroare
-  const [successMessage, setSuccessMessage] = useState(null); // Stare pentru mesajele de succes
-  const [formVisible, setFormVisible] = useState(true); // Controlează afișarea formularului
+  const [successMessage, setSuccessMessage] = useState(null); 
+  const [formVisible, setFormVisible] = useState(true);
+  const { setGlobalErrorMessage } = useContext(ErrorContext);
+  const {translate} = useLanguage();
 
   const router = useRouter();
   const dispatch = useDispatch();
-
   const { token } = useParams();
 
   const handleCompleteProfile = async (e) => {
@@ -35,24 +38,22 @@ export default function CompleteProfileTeacher() {
         localStorage.setItem("accessToken", accessToken);
         const user = jwtDecode(accessToken);
         dispatch(setUser({ user }));
-        setSuccessMessage("Profilul a fost completat cu succes!");
+        setSuccessMessage(translate("Profile completed successfully"));
         setFormVisible(false);
 
-        console.log("Profilul a fost completat cu succes");
+        console.log("Profile completed successfully");
         setTimeout(() => {
           router.push("/teacher");
-        }, 3000); // Redirecționează după 3 secunde
+        }, 3000);
       }
     } catch (error) {
       if (error.response && error.response.status === 404) {
-        setErrorMessage(
-          "Tokenul este invalid sau expirat, vă rugăm să vă logați cu contul Google din nou"
-        );
-        setFormVisible(false); // Ascunde formularul dacă tokenul este invalid
-        console.log("Tokenul este invalid sau expirat");
+        setGlobalErrorMessage(translate("The token is invalid or expired"));
+        setFormVisible(false);
+        console.error("The token is invalid or expired");
       } else {
-        setErrorMessage("A apărut o eroare la completarea profilului");
-        console.error("Eroare la completarea profilului:", error);
+        setGlobalErrorMessage(translate("An error occurred while completing the profile. Please try again."));
+        console.error("An error occurred while completing the profile:", error);
       }
     }
   };

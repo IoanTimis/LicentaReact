@@ -1,8 +1,10 @@
 import React, { useContext } from 'react';
 import { ErrorContext } from '@/context/errorContext';
+import { useLanguage } from '@/context/Languagecontext';
 
 const ErrorDiv = () => {
   const { errorMessage, clearErrorMessage } = useContext(ErrorContext);
+  const { translate } = useLanguage();
 
   if (!errorMessage) return null;
 
@@ -14,7 +16,7 @@ const ErrorDiv = () => {
       >
         ✖
       </button>
-      {errorMessage}
+      {translate(errorMessage)}
     </div>
   );
 };

@@ -5,13 +5,14 @@ import { useParams } from "next/navigation";
 import axiosInstance from "@/utils/axiosInstance";
 import { useLanguage } from "@/context/Languagecontext";
 import RequestModal from "@/app/components/student/request-modal";
+import { useContext } from "react";
 
 export default function TopicDetails() {
   const [topic, setTopic] = useState(null);
   const [topicRequested, setTopicRequested] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [errorMessage, setErrorMessage] = useState(null);
   const { translate } = useLanguage();
+  const { setGlobalErrorMessage } = useContext(ErrorContext);
   const { id } = useParams();
 
   const toggleModal = () => setIsModalOpen((prev) => !prev);
@@ -29,8 +30,8 @@ export default function TopicDetails() {
         setTopicRequested(topicRequestedResponse.data.requested);
 
       } catch (error) {
-        console.error("Eroare la obținerea detaliilor temei:", error);
-        setErrorMessage("A apărut o eroare la încărcarea detaliilor temei.");
+        console.error("Error fetching topic details:", error);
+        setGlobalErrorMessage("An error occurred while fetching the topic details.");
       }
     };
 
@@ -52,19 +53,14 @@ export default function TopicDetails() {
 
       const response = await axiosInstance.post("/student/request/add", newRequest, { withCredentials: true });
       console.log("Request response:", response.data);
-
       setTopicRequested(true);
 
       toggleModal();
     } catch (error) {
       console.error("Error sending request:", error);
-      setErrorMessage("A apărut o eroare la trimiterea cererii.");
+      setGlobalErrorMessage("An error occurred while sending the request.");
     }
   };
-
-  if (!topic && !errorMessage) {
-    return <div className="text-center text-black mt-8">Se încarcă...</div>;
-  }
 
   return (
     <div className="min-h-screen bg-gray-100 p-8">

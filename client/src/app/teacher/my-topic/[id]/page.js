@@ -39,8 +39,8 @@ export default function TopicDetails() {
         setTopic(response.data.topic);
 
       } catch (error) {
-        console.error("Eroare la obținerea detaliilor temei:", error);
-        setGlobalErrorMessage("A apărut o eroare la obținerea detaliilor temei.");
+        console.error("Error fetching topic details:", error);
+        setGlobalErrorMessage(translate("An error occurred while fetching topic details."));
       }
     };
 
@@ -50,18 +50,14 @@ export default function TopicDetails() {
   const handleDelete = async (topicId) => {
     try {
       await axiosInstance.delete(`/teacher/topic/delete/${topicId}`, { withCredentials: true });
-      console.log("Tema a fost ștearsă.");
+      console.log("Theme deleted successfully");
     } catch (error) {
-      console.error("Eroare la ștergerea temei:", error);
-      setGlobalErrorMessage("A apărut o eroare la ștergerea temei.");
+      console.error("Error deleting theme:", error);
+      setGlobalErrorMessage(translate("An error occurred while deleting the theme."));
     }
   };
 
   //TODO: Edit Logic
-
-  // if (!topic) {
-  //   return <div className="text-center text-black mt-8">Se încarcă...</div>;
-  // }
 
   return (
     <div className="min-h-screen bg-gray-100 p-8">

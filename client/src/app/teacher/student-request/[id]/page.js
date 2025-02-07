@@ -8,15 +8,17 @@ import ConfirmActionModal from "@/app/components/general/confirm-action-modal";
 import AcceptRejectModal from "@/app/components/teacher/accept-reject-modal";
 import { jwtDecode } from "jwt-decode";
 import { EnvelopeIcon, TrashIcon } from "@heroicons/react/24/solid";
+import { ErrorContext } from "@/context/errorContext";
+import { useContext } from "react";
 
 export default function TopicDetails() {
   const [request, setRequest] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
   const [responseModalOpen, setResponseModalOpen] = useState(false);
   const [modalAction, setModalAction] = useState("");
-  const [errorMessage, setErrorMessage] = useState(null);
   const [isRequestDeleted, setIsRequestDeleted] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const { setGlobalErrorMessage } = useContext(ErrorContext);
   const { translate } = useLanguage();
   const { id } = useParams();
   
@@ -43,8 +45,8 @@ export default function TopicDetails() {
         setRequest(response.data.request);
 
       } catch (error) {
-        console.error("Eroare la obținerea detaliilor temei:", error);
-        setErrorMessage("A apărut o eroare la încărcarea detaliilor temei.");
+        console.error("Error fetching topic details:", error);
+        setGlobalErrorMessage(translate("An error occurred while fetching topic details."));
       }
     };
 
@@ -54,11 +56,11 @@ export default function TopicDetails() {
   const handleDelete = async (topicId) => {
     try {
       await axiosInstance.delete(`/teacher/student-request/delete/${topicId}`, { withCredentials: true });
-      console.log("Tema a fost ștearsă.");
+      console.log("Theme deleted successfully.");
       setIsRequestDeleted(true);
     } catch (error) {
-      console.error("Eroare la ștergerea temei:", error);
-      setErrorMessage("A apărut o eroare la ștergerea temei.");
+      console.error("Error deleting topic:", error);
+      setGlobalErrorMessage(translate("An error occurred while deleting the topic."));
     }
   };
 
@@ -67,16 +69,15 @@ export default function TopicDetails() {
     const formData = new FormData(e.target);
     const status = formData.get("status");
     const message = formData.get("message");
-    console.log("status", status);
-    console.log("message", message);
 
     try {
       await axiosInstance.put(`/teacher/student-request/response/${request.id}`, { status, message }, { withCredentials: true });
   
-      console.log("Răspunsul a fost trimis.");
+      console.log("Response sent successfully.");
       toggleModal();
     } catch (error) {
-      console.error("Eroare la trimiterea răspunsului:", error);
+      console.error("Error sending response:", error);
+      setGlobalErrorMessage(translate("An error occurred while sending the response."));
     }
   };
 
@@ -86,10 +87,6 @@ export default function TopicDetails() {
         <h1 className="text-2xl font-bold text-green-500">{ translate("The request has been successfully deleted.") }</h1>
       </div>
     );
-  }
-
-  if (!request && !errorMessage) {
-    return <div className="text-center text-black mt-8">Se încarcă...</div>;
   }
 
   return (

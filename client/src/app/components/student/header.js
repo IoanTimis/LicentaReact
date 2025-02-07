@@ -7,6 +7,8 @@ import { clearUser } from "@/store/features/user/userSlice";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import { useLanguage } from "@/context/Languagecontext";
+import { ErrorContext } from "@/context/errorContext";
+import { useContext } from "react";
 
 import { HomeIcon, AcademicCapIcon, HeartIcon, UserIcon, NewspaperIcon } from '@heroicons/react/24/solid';
 
@@ -14,6 +16,7 @@ export default function studentNavBar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const { language, setLanguage, translate } = useLanguage();
+  const { setGlobalErrorMessage } = useContext(ErrorContext);
 
   const dispatch = useDispatch();
   const router = useRouter();
@@ -32,7 +35,8 @@ export default function studentNavBar() {
       
       router.push("/auth/login");
     } catch (error) {
-      console.error("Eroare la logout:", error);
+      console.error("Logout error:", error);
+      setGlobalErrorMessage(translate("An error occurred while logging out. Please try again."));
     }
   };
 

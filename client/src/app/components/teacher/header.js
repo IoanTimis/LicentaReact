@@ -8,11 +8,14 @@ import { clearUser } from "@/store/features/user/userSlice";
 import { useDispatch } from "react-redux";
 import { useLanguage } from "@/context/Languagecontext";
 import { HomeIcon, AcademicCapIcon, UserIcon, UserGroupIcon, NewspaperIcon } from "@heroicons/react/24/solid";
+import { ErrorContext } from "@/context/errorContext";
+import { useContext } from "react";
 
 export default function TeacherNavBar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const { language, setLanguage, translate } = useLanguage();
+  const { setGlobalErrorMessage } = useContext(ErrorContext);
 
   const handleLanguageChange = (selectedLanguage) => {
     setLanguage(selectedLanguage); 
@@ -32,6 +35,7 @@ export default function TeacherNavBar() {
       router.push("/auth/login");
     } catch (error) {
       console.error("Error at logout:", error);
+      setGlobalErrorMessage(translate("An error occurred while logging out. Please try again."));
     }
   };
 

@@ -7,13 +7,17 @@ import { setUser } from "@/store/features/user/userSlice";
 import { useRouter } from "next/navigation";
 import { jwtDecode } from "jwt-decode";
 import axios from "axios";
+import { ErrorContext } from "@/context/errorContext";
+import { useContext } from "react";
+import { useLanguage } from "@/context/Languagecontext";
 
 export default function CompleteProfileStudent() {
-  const [errorMessage, setErrorMessage] = useState(null); // Stare pentru mesajele de eroare
-  const [successMessage, setSuccessMessage] = useState(null); // Stare pentru mesajele de succes
-  const [formVisible, setFormVisible] = useState(true); // Controlează afișarea formularului
+  const [successMessage, setSuccessMessage] = useState(null); 
+  const [formVisible, setFormVisible] = useState(true);
   const [faculties, setFaculties] = useState([]);
   const [specializations, setSpecializations] = useState([]);
+  const { setGlobalErrorMessage } = useContext(ErrorContext);
+  const { translate } = useLanguage();
 
   const router = useRouter();
   const dispatch = useDispatch();
@@ -39,28 +43,27 @@ export default function CompleteProfileStudent() {
         localStorage.setItem("accessToken", accessToken);
         const user = jwtDecode(accessToken);
         dispatch(setUser({ user }));
-        setSuccessMessage("Profilul a fost completat cu succes!");
+        setSuccessMessage(translate("Profile completed successfully"));
         setFormVisible(false); 
-        console.log("Profilul a fost completat cu succes");
+        console.log("Profile completed successfully");
 
         setTimeout(() => {
           router.push("/student");
         }
-        , 3000); // Redirecționează utilizatorul către pagina de student după 3 secunde
+        , 3000);
       }
     } catch (error) {
       if (error.response && error.response.status === 404) {
-        setErrorMessage("Tokenul este invalid sau expirat, va rugam sa va logati cu contul Google din nou");
-        setFormVisible(false); // Ascunde formularul dacă tokenul este invalid
-        console.log("Tokenul este invalid sau expirat");
+        setGlobalErrorMessage(translate("The token is invalid or expired"));
+        setFormVisible(false);
+        console.log("The token is invalid or expired");
       } else {
-        setErrorMessage("A apărut o eroare la completarea profilului");
-        console.error("Eroare la completarea profilului:", error);
+        console.error("Error completing the profile:", error);
+        setGlobalErrorMessage(translate("An error occurred while completing the profile. Please try again."));
       }
     }
   };
 
-  // Funcție pentru a obține facultățile de la server
   useEffect(() => {
     const fetchFaculties = async () => {
       try {
@@ -69,8 +72,8 @@ export default function CompleteProfileStudent() {
         );
         setFaculties(response.data);
       } catch (error) {
-        console.error("Eroare la obținerea facultăților:", error);
-        setErrorMessage("Eroare la obținerea datelor despre facultăți");
+        console.error("Error fetching faculties and specializations:", error);
+        setGlobalErrorMessage(translate("An error occurred while fetching faculties and specializations. Please try again."));
       }
     };
 

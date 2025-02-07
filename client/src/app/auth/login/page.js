@@ -7,12 +7,14 @@ import { useDispatch } from "react-redux";
 import axios from "axios";
 import { setUser } from "@/store/features/user/userSlice";
 import { useLanguage } from "@/context/Languagecontext";
+import { ErrorContext } from "@/context/errorContext";
+import { useContext } from "react";
 
 const LoginPage = () => {
   const router = useRouter();
   const dispatch = useDispatch();
-  const [error, setError] = useState(null);
   const { translate } = useLanguage();
+  const { setGlobalErrorMessage } = useContext(ErrorContext);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -41,7 +43,8 @@ const LoginPage = () => {
         router.push("/student");
       }
     } catch (error) {
-      setError(error.response?.data?.error || "Autentificare eșuată");
+      console.error("Error on login:", error);
+      setGlobalErrorMessage("An error occurred while logging in. Please try again.");
     }
   };
 
@@ -54,7 +57,6 @@ const LoginPage = () => {
     <div className="flex flex-col justify-center items-center min-h-screen bg-gray-100">
       <form onSubmit={handleLogin} className="bg-white shadow-lg rounded-lg p-6 w-11/12 max-w-md">
         <h1 className="text-2xl text-black font-bold text-center mb-6">{translate("Login")}</h1>
-        {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
         <div className="mb-4">
           <label htmlFor="email" className="block text-gray-700 font-medium mb-2">Email</label>
           <input type="email" id="email" name="email" className="w-full border text-black border-gray-300 rounded-md p-3" required />

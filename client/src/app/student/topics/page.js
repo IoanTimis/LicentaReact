@@ -4,13 +4,17 @@ import { useState, useEffect } from "react";
 import axiosInstance from "@/utils/axiosInstance";
 import TopicCard from "@/app/components/student/topic-card";
 import RequestModal from "@/app/components/student/request-modal";
+import { ErrorContext } from "@/context/errorContext";
+import { useContext } from "react";
+import { useLanguage } from "@/context/Languagecontext";
 
 export default function StudentTopics() {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [errorMessage, setErrorMessage] = useState(null);
   const [requestedTopicId, setRequestedTopicId] = useState(null);
   const [requestedTopicTeacherId, setRequestedTopicTeacherId] = useState(null);
   const [requestedTopicEducationLevel, setRequestedTopicEducationLevel] = useState(null);
+  const { translate } = useLanguage();
+  const { setGlobalErrorMessage } = useContext(ErrorContext);
 
   const [topics, setTopics] = useState([]);
 
@@ -22,8 +26,8 @@ export default function StudentTopics() {
 
         setTopics(response.data.topics);
       } catch (error) {
-        console.error("Eroare la obținerea datelor:", error);
-        setErrorMessage("A apărut o eroare la obținerea datelor.");
+        console.error("Error fetching topics:", error);
+        setGlobalErrorMessage(translate("An error occurred while fetching topics. Please try again."));
       }
     };
 
@@ -34,8 +38,8 @@ export default function StudentTopics() {
   const toggleModal = () => setIsModalOpen((prev) => !prev);
 
   const onRequest = (topic_id) => {
-    console.log("Requested topic id: page ", topic_id);
     const selectedTopic = topics.find((topic) => topic.id === topic_id);
+
     if (!selectedTopic) return;
 
     setRequestedTopicId(topic_id);
@@ -62,19 +66,21 @@ export default function StudentTopics() {
         withCredentials: true,
       });
   
-      console.log("Cererea a fost trimisă cu succes!", response.data);
+      console.log("Request sent successfully:", response.data);
 
       //TODO: dinamic update the topics array not working
       setTopics([...topics]); 
   
       toggleModal();
     } catch (error) {
-      console.error("Eroare la trimiterea cererii:", error);
-      setErrorMessage("A apărut o eroare la trimiterea cererii.");
+      console.error("Error sending request:", error);
+      setGlobalErrorMessage(translate("An error occurred while sending the request. Please try again."));
     }
   };
   
-  
+  if(topics.length === 0) {
+    return <div className="flex items-center justify-center h-screen">{translate("No themes available.")}</div>;
+  }
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-100">
