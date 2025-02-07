@@ -106,11 +106,9 @@ export default function TopicDetails() {
               <p className="text-gray-700 mb-4">
                 <span className="font-semibold ">{ translate("Education Level") }:</span> {topic.education_level}
               </p>
-              {/* Request button */}
-              
             </div>
           </div>
-          {/* Request button */}
+          {/* Actions button */}
           <div className="relative flex justify-center mt-4">
           <button
             className="bg-blue-500 hover:bg-blue-700 text-white font-semibold py-2 px-4 w-[50%] rounded flex items-center justify-between"
