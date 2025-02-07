@@ -8,10 +8,9 @@ import { useLanguage } from "@/context/Languagecontext";
 export default function TopicDetails() {
   const [request, setRequest] = useState(null);
   const [errorMessage, setErrorMessage] = useState(null);
-  const { id } = useParams();
   const [isRequestDeleted, setIsRequestDeleted] = useState(false);
-  const [isSmallScreen, setIsSmallScreen] = useState(window.innerWidth < 640);
   const { translate } = useLanguage();
+  const { id } = useParams();
 
   // Fetch topic details
   useEffect(() => {
@@ -34,23 +33,13 @@ export default function TopicDetails() {
     try {
       await axiosInstance.delete(`/student/request/delete/${requestId}`, { withCredentials: true });
       console.log("Cererea a fost ștearsă.");
+
+      setIsRequestDeleted(true);
     } catch (error) {
       console.error("Eroare la ștergerea cererii:", error);
       setErrorMessage("A apărut o eroare la ștergerea cererii.");
     }
   };
-
-  // Handle screen resize
-  useEffect(() => {
-    const handleResize = () => {
-      setIsSmallScreen(window.innerWidth < 640);
-    };
-
-    window.addEventListener("resize", handleResize);
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
 
   if (isRequestDeleted) {
     return (
@@ -79,11 +68,7 @@ export default function TopicDetails() {
           <div className="max-w-7xl shadow-xl mx-auto grid grid-cols-1 lg:grid-cols-2">
             {/* Professor Details */}
             <div
-              className={
-                isSmallScreen
-                  ? "bg-gray-300 p-6 flex flex-col items-center rounded-tr-lg rounded-tl-lg"
-                  : "bg-gray-300 p-6 flex flex-col items-center lg:rounded-tl-lg lg:rounded-bl-lg"
-              }
+              className={"bg-gray-300 p-6 flex flex-col items-center"}
             >
               <div className="w-32 h-32 rounded-full overflow-hidden mb-6">
                 <img

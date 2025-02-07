@@ -3,8 +3,10 @@ import { ChevronDownIcon } from "@heroicons/react/24/solid";
 import { useState } from "react";
 import { useEffect } from "react";
 import axiosInstance from "@/utils/axiosInstance";
+import { useLanguage } from "@/context/Languagecontext";
 
-export default function TopicCard({ topic, translate, onRequest }) {
+export default function TopicCard({ topic, onRequest }) {
+  const { translate } = useLanguage();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isTopicRequested, setIsTopicRequested] = useState(false);
   console.log(topic);

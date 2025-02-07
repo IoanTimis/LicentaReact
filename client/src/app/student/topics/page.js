@@ -2,8 +2,6 @@
 
 import { useState, useEffect } from "react";
 import axiosInstance from "@/utils/axiosInstance";
-import { useLanguage } from "@/context/Languagecontext";
-import Link from "next/link";
 import TopicCard from "@/app/components/student/topic-card";
 import RequestModal from "@/app/components/student/request-modal";
 
@@ -13,7 +11,6 @@ export default function StudentTopics() {
   const [requestedTopicId, setRequestedTopicId] = useState(null);
   const [requestedTopicTeacherId, setRequestedTopicTeacherId] = useState(null);
   const [requestedTopicEducationLevel, setRequestedTopicEducationLevel] = useState(null);
-  const { translate } = useLanguage();
 
   const [topics, setTopics] = useState([]);
 
@@ -95,7 +92,6 @@ export default function StudentTopics() {
             <TopicCard
               key={topic.id}
               topic={topic}
-              translate={translate}
               onRequest={onRequest}
             />
           ))}
@@ -107,7 +103,6 @@ export default function StudentTopics() {
         isOpen={isModalOpen}
         onClose={toggleModal}
         onSubmit={handleSubmit}
-        translate={translate}
         requestedTopicId={requestedTopicId}
         requestedTopicTeacherId={requestedTopicTeacherId}
         requestedTopicEducationLevel={requestedTopicEducationLevel}

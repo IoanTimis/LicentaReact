@@ -1,10 +1,10 @@
 "use client";
+import { useLanguage } from "@/context/Languagecontext";
 
-export default function RequestModal({ isOpen, onClose, onSubmit, translate, requestedTopicId, requestedTopicTeacherId, requestedTopicEducationLevel }) {
+export default function RequestModal({ isOpen, onClose, onSubmit, requestedTopicId, requestedTopicTeacherId, requestedTopicEducationLevel }) {
   if (!isOpen) return null; // Nu afișa modalul dacă nu este deschis
-  console.log("Requested topic id: ");
-  console.log(requestedTopicId);
-  console.log("teacher id :",requestedTopicTeacherId);
+  
+  const { translate } = useLanguage();
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
