@@ -7,9 +7,9 @@ const { Op } = require('sequelize');
 const topicRequest = require('../models/topicRequest');
 const sanitizeHtml = require('sanitize-html');
 const jwt = require('jsonwebtoken');
+const FavoriteTopics = require('../models/favoriteTopics');
 
 const studentTopics = async (req, res) => {
-  //TODO: Ar fi mai ok daca as eticheta temele la care deja am aplicat, nu dupa ce da click pe acel topic.
   try {
 
     const refreshToken = req.cookies.refreshToken;
@@ -79,6 +79,120 @@ const topic = async (req, res) => {
   }
   catch (error) {
     console.error('Error getting topic:', error);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+};
+
+const getFavoriteTopics = async (req, res) => {
+  try {
+    const refreshToken = req.cookies.refreshToken;
+    const user = jwt.decode(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+    const student_id = user.id;
+
+    const favoriteTopics = await FavoriteTopics.findAll({
+      where: {
+        user_id: student_id
+      },
+      include: [{
+        model: Topic,
+        as: 'topic',
+        include: [{
+          model: User,
+          as: 'user'
+        }]
+      }]
+    });
+
+    if (!favoriteTopics) {
+      return res.status(404).json({ message: 'Favorite topics not found' });
+    }
+
+    const topics = favoriteTopics.map(favoriteTopic => favoriteTopic.topic);
+    console.log(topics);
+
+    return res.json({ topics: topics });
+  }
+  catch (error) {
+    console.error('Error getting favorite topics:', error);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+};
+
+const addFavoriteTopic = async (req, res) => {
+  try {
+    const refreshToken = req.cookies.refreshToken;
+    const user = jwt.decode(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+    const student_id = user.id;
+
+    const topic_id  = req.params.id;
+
+    const favoriteTopic = await FavoriteTopics.create({
+      user_id: student_id,
+      topic_id: topic_id
+    });
+
+    if (!favoriteTopic) {
+      return res.status(500).json({ message: 'Error adding favorite topic' });
+    }
+
+    res.status(201).json({ message: 'Favorite topic added', favoriteTopic: favoriteTopic });
+  }
+  catch (error) {
+    console.error('Error adding favorite topic:', error);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+};
+
+const removeFavoriteTopic = async (req, res) => {
+  try {
+    const refreshToken = req.cookies.refreshToken;
+    const user = jwt.decode(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+    const student_id = user.id;
+    const topic = req.params.id;
+
+    const favoriteTopic = await FavoriteTopics.findOne({
+      where: {
+        user_id: student_id,
+        topic_id: topic
+      }
+    });
+
+    if (!favoriteTopic) {
+      return res.status(404).json({ message: 'Favorite topic not found' });
+    }
+
+    if (favoriteTopic.user_id !== student_id) {
+      return res.status(403).json({ message: 'Forbidden' });
+    }
+
+    await favoriteTopic.destroy();
+
+    res.status(200).json({ message: 'Favorite topic removed' });
+  }
+  catch (error) {
+    console.error('Error removing favorite topic:', error);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+};
+
+const isTopicFavorite = async (req, res) => {
+  try {
+    const refreshToken = req.cookies.refreshToken;
+    const user = jwt.decode(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+    const student_id = user.id;
+    const topic_id = req.params.id;
+
+    const favoriteTopic = await FavoriteTopics.findOne({
+      where: {
+        user_id: student_id,
+        topic_id: topic_id
+      }
+    });
+
+    return res.status(200).json({ favorite: !!favoriteTopic });
+  }
+  catch (error) {
+    console.error('Error getting favorite topic:', error);
     res.status(500).json({ message: 'Internal Server Error' });
   }
 };
@@ -344,11 +458,13 @@ const deleteRequest = async (req, res) => {
   }
 };
 
-//TODO: if a theme is requested the student should not be able to apply to it again
-
 module.exports = {
   studentTopics,
   topic,
+  getFavoriteTopics,
+  addFavoriteTopic,
+  removeFavoriteTopic,
+  isTopicFavorite,
   getRequestTopics,
   getRequestTopic,
   isTopicRequested,

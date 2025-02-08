@@ -1,31 +1,31 @@
 import Link from "next/link";
-import { ChevronDownIcon } from "@heroicons/react/24/solid";
-import { useState } from "react";
-import { useEffect } from "react";
+import { ChevronDownIcon, HeartIcon } from "@heroicons/react/24/solid";
+import { useState, useEffect, useContext } from "react";
 import axiosInstance from "@/utils/axiosInstance";
 import { useLanguage } from "@/context/Languagecontext";
 import { ErrorContext } from "@/context/errorContext";
-import { useContext } from "react";
-
 
 export default function TopicCard({ topic, onRequest }) {
   const { translate } = useLanguage();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isTopicRequested, setIsTopicRequested] = useState(false);
-  const {setGlobalErrorMessage} = useContext(ErrorContext);
-  console.log(topic);
+  const [isFavorite, setIsFavorite] = useState(false);
+  const { setGlobalErrorMessage } = useContext(ErrorContext);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await axiosInstance.get(`/student/is-topic-requested/${topic.id}`, { withCredentials: true });
         setIsTopicRequested(response.data.requested);
+
+        const favoriteResponse = await axiosInstance.get(`/student/is-topic-favorite/${topic.id}`, { withCredentials: true });
+        setIsFavorite(favoriteResponse.data.favorite);
       } catch (error) {
         console.error("Error while getting data:", error);
         setGlobalErrorMessage(translate("An error occurred while getting the data. Please try again."));
       }
     };
-  
+
     fetchData();
   }, [topic.id]);
 
@@ -35,64 +35,82 @@ export default function TopicCard({ topic, onRequest }) {
     onRequest(topic.id);
   };
 
+  const handleFavoriteClick = async () => {
+    try {
+      if(!isFavorite) {
+        const response = await axiosInstance.post(`/student/favorite/add/${topic.id}`, {}, { withCredentials: true });
+        setIsFavorite(true);
+      } else {
+        const response = await axiosInstance.delete(`/student/favorite/delete/${topic.id}`, { withCredentials: true });
+        setIsFavorite(false);
+      }
+    } catch (error) {
+      console.error("Error toggling favorite:", error);
+      setGlobalErrorMessage(translate("An error occurred while updating favorites."));
+    }
+  };
+
   return (
     <div className="bg-white shadow rounded hover:shadow-lg transition border border-gray-950">
-      <Link href={`/student/topic/${topic.id}`}>
-        <div className="bg-navbar-gradient flex justify-between items-center py-2 px-4 rounded-t">
+      <div className="bg-navbar-gradient flex justify-between items-center py-2 px-4 rounded-t">
+        <Link href={`/student/topic/${topic.id}`} className="flex-grow">
           <h2 className="text-lg font-semibold text-white">{topic.title}</h2>
-        </div>
-        <div className="p-4">
-          <p className="text-gray-700">
-            <span className="font-semibold">{translate("Teacher Name")}:</span> {topic.user.first_name} {topic.user.name}
-          </p>
-          <p className="text-gray-700">
-            <span className="font-semibold">{translate("Description")}:</span> {topic.description}
-          </p>
-          <p className="text-sm text-gray-700">
-            <span className="font-semibold">{translate("Keywords")}:</span> {topic.keywords}
-          </p>
-          <p className="text-sm text-gray-700">
-            <span className="font-semibold">{translate("Slots")}:</span> {topic.slots}
-          </p>
-          <p className="text-sm text-gray-700">
-            <span className="font-semibold">{translate("Type")}:</span> {topic.education_level}
-          </p>
-          { isTopicRequested ?  (
-            <p className="text-yellow-500"> {translate("Requested Theme")} </p>
-          ) : (
-            <p className="text-green-700"> {translate("Available Theme")} </p>
-          )}
-        </div>
-      </Link>
+        </Link>
+        <button onClick={handleFavoriteClick} className="ml-4 focus:outline-none">
+          <HeartIcon className={`h-6 w-6 transition ${isFavorite ? "text-red-500" : "text-white"}`} />
+        </button>
+      </div>
+
+      <div className="p-4">
+        <p className="text-gray-700">
+          <span className="font-semibold">{translate("Teacher Name")}:</span> {topic.user.first_name} {topic.user.name}
+        </p>
+        <p className="text-gray-700">
+          <span className="font-semibold">{translate("Description")}:</span> {topic.description}
+        </p>
+        <p className="text-sm text-gray-700">
+          <span className="font-semibold">{translate("Keywords")}:</span> {topic.keywords}
+        </p>
+        <p className="text-sm text-gray-700">
+          <span className="font-semibold">{translate("Slots")}:</span> {topic.slots}
+        </p>
+        <p className="text-sm text-gray-700">
+          <span className="font-semibold">{translate("Type")}:</span> {topic.education_level}
+        </p>
+        {isTopicRequested ? (
+          <p className="text-yellow-500">{translate("Requested Theme")}</p>
+        ) : (
+          <p className="text-green-700">{translate("Available Theme")}</p>
+        )}
+      </div>
+
       {/* Footer */}
       <div className="px-4 py-2 flex justify-between items-center bg-gray-50 border-t border-gray-200 rounded-b">
         <div className="relative">
           <button
-            onClick={() => setIsDropdownOpen(!isDropdownOpen) }
+            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
             className="flex items-center text-gray-500 hover:text-gray-700 focus:outline-none"
           >
             <span>{translate("Actions")}</span>
             <ChevronDownIcon className="h-5 w-5 ml-1" />
           </button>
           {isDropdownOpen && (
-            <div
-              className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-20 border border-gray-200"
-            >
-              { !isTopicRequested && (
+            <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-20 border border-gray-200">
+              {!isTopicRequested && (
                 <button
                   className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition"
-                  onClick={ handleRequestClick }
+                  onClick={handleRequestClick}
                 >
                   {translate("Request Theme")}
-                </button>)
-              }
-              
+                </button>
+              )}
+
               <Link
                 href={`/student/topic/${topic.id}`}
                 className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition"
-                >
+              >
                 {translate("View Theme")}
-             </Link>
+              </Link>
             </div>
           )}
         </div>

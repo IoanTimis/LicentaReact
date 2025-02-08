@@ -3,7 +3,7 @@ const sequelize = require('../config/database');
 const User = require('./user');
 
 
-const CompleteProfileToken = sequelize.define('completeProfileTokens', {
+const CompleteProfileToken = sequelize.define('complete_profile_tokens', {
   id: {
     type: DataTypes.INTEGER,
     primaryKey: true,

@@ -14,6 +14,13 @@ router.get('/fetch/topic/:id', studentController.topic);
 router.get('/fetch/requested-topics', studentController.getRequestTopics);
 router.get('/fetch/requested-topic/:id', studentController.getRequestTopic);
 
+router.get('/fetch/favorite-topics', studentController.getFavoriteTopics);
+
+router.post('/favorite/add/:id', studentController.addFavoriteTopic);
+router.delete('/favorite/delete/:id', studentController.removeFavoriteTopic);
+
+router.get('/is-topic-favorite/:id', studentController.isTopicFavorite);
+
 router.get('/is-topic-requested/:id', studentController.isTopicRequested);
 
 router.post('/request/add', studentController.newRequest);

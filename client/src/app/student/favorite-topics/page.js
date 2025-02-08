@@ -22,7 +22,7 @@ export default function StudentTopics() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axiosInstance.get("/student/fetch/topics", { withCredentials: true });
+        const response = await axiosInstance.get("/student/fetch/favorite-topics", { withCredentials: true });
 
         setTopics(response.data.topics);
       } catch (error) {
@@ -33,6 +33,7 @@ export default function StudentTopics() {
 
     fetchData();
   }, []);
+
 
   // Toggle modal visibility
   const toggleModal = () => setIsModalOpen((prev) => !prev);

@@ -3,7 +3,7 @@ const sequelize = require("../config/database");
 const Topic = require("./topic");
 const User = require("./user");
 
-const FavoriteTopics = sequelize.define('Favorite_topics', {
+const FavoriteTopics = sequelize.define('favorite_topics', {
     user_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
