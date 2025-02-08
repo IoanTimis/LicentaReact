@@ -118,7 +118,7 @@ export default function TeacherNavBar() {
                 className={`text-white hover:text-black px-3 py-2 text-sm font-medium 
                   ${pathname === "/teacher/student-requests" ? "border-b border-white" : ""}`}
               >
-                <div className="flex items-center space-x-2 hover:bg-gray-700">
+                <div className="flex items-center space-x-2">
                   <span className="h-6 w-6">
                     <NewspaperIcon />
                   </span>
@@ -130,7 +130,7 @@ export default function TeacherNavBar() {
                 className={`text-white hover:text-black px-3 py-2 text-sm font-medium 
                   ${pathname === "/teacher/my-students" ? "border-b border-white" : ""}`}
               >
-                <div className="flex items-center space-x-2 hover:bg-gray-700">
+                <div className="flex items-center space-x-2">
                   <span className="h-6 w-6">
                     <UserGroupIcon />
                   </span>

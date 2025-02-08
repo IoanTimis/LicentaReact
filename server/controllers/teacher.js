@@ -6,6 +6,7 @@ const Specialization = require('../models/specialization');
 const specializationTopic = require('../models/specializationTopic');
 const sanitizeHtml = require('sanitize-html');
 const jwt = require('jsonwebtoken');
+const  myStudents = require('../models/myStudents');
 
 
 const teacherTopics = async (req, res) => {
@@ -327,6 +328,38 @@ const deleteRequest = async (req, res) => {
   }
 };
 
+const getMyStudents = async (req, res) => {
+  try{
+    const refreshToken = req.cookies.refreshToken;
+    const user = jwt.decode(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+    const teacherId = user.id;
+
+    const students = await myStudents.findAll({
+      where: {
+        teacher_id: teacherId
+      },
+      include: [{
+          model: User,
+          as: 'student'
+        },
+        {
+          model: Topic,
+          as: 'topic'
+        }
+      ]
+    });
+
+    if(!students){
+      return res.status(404).json({ message: 'Students not found' });
+    }
+
+    res.status(200).json({ students: students });
+  } catch (error) {
+    console.error('Error getting students:', error);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+}
+
 
 module.exports = {
   teacherTopics,
@@ -338,5 +371,6 @@ module.exports = {
   studentRequests,
   studentRequest,
   teacherResponse,
-  deleteRequest
+  deleteRequest,
+  getMyStudents
 };

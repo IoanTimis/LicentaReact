@@ -8,6 +8,7 @@ const topicRequest = require('../models/topicRequest');
 const sanitizeHtml = require('sanitize-html');
 const jwt = require('jsonwebtoken');
 const FavoriteTopics = require('../models/favoriteTopics');
+const MyStudents = require('../models/myStudents');
 
 const studentTopics = async (req, res) => {
   try {
@@ -327,6 +328,10 @@ const newRequest = async (req, res) => {
       return res.status(404).json({ message: 'Topic not found' });
     };
 
+    if(topic_data.slots === 0){
+      return res.status(403).json({ message: 'Forbidden' });
+    }
+
     //Check student education level
     if (student_data.education_level !== education_level) {
       return res.status(403).json({ message: 'Forbidden' });
@@ -413,6 +418,10 @@ const confirmRequest = async (req, res) => {
       return res.status(404).json({ message: 'Topic not found' });
     }
 
+    if(topic.slots === 0){
+      return res.status(403).json({ message: 'Forbidden' });
+    }
+
     topic.slots -= 1;
     await topic.save();
 
@@ -423,6 +432,16 @@ const confirmRequest = async (req, res) => {
         status: { [Op.ne]: 'confirmed' }
       }
     });
+
+    const teacherNewStudent = await MyStudents.create({
+      teacher_id: request.teacher_id,
+      student_id: student_id,
+      topic_id: topic_id
+    });
+
+    if (!teacherNewStudent) {
+      return res.status(500).json({ message: 'Error creating teacher new student' });
+    };
 
     res.status(200).json({ message: 'Request Confirmed', request: request });
   }

@@ -80,7 +80,7 @@ export default function StudentTopics() {
   };
   
   if(topics.length === 0) {
-    return <div className="flex items-center justify-center h-screen">{translate("No themes available.")}</div>;
+    return <div className="flex items-center justify-center h-screen">{translate("No themes added to favorites.")}</div>;
   }
 
   return (
