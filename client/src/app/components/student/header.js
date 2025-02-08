@@ -112,9 +112,9 @@ export default function studentNavBar() {
                 </div>
               </Link>
               <Link
-                href="/student/favorites"
+                href="/student/favorite-topics"
                 className={`text-white hover:text-black px-3 py-2 text-sm font-medium 
-                  ${pathname === "/student/favorites" ? "border-b border-white" : ""}`}
+                  ${pathname === "/student/favorite-topics" ? "border-b border-white" : ""}`}
               >
                 <div className="flex items-center space-x-2">
                   <span className="h-6 w-6"><HeartIcon/></span>
@@ -223,9 +223,9 @@ export default function studentNavBar() {
               </div>
             </Link>
             <Link
-              href="/student/favorites"
+              href="/student/favorite-topics"
               className={`text-white block px-3 py-2 text-base font-medium 
-                ${pathname === "/student/favorites" ? "border-b border-white" : ""}`}
+                ${pathname === "/student/favorite-topics" ? "border-b border-white" : ""}`}
             >
               <div className="flex items-center space-x-2">
                 <span className="h-6 w-6"><HeartIcon/></span>
