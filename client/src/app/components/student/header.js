@@ -9,14 +9,17 @@ import axios from "axios";
 import { useLanguage } from "@/context/Languagecontext";
 import { ErrorContext } from "@/context/errorContext";
 import { useContext } from "react";
+import { usePathname } from "next/navigation";
 
-import { HomeIcon, AcademicCapIcon, HeartIcon, UserIcon, NewspaperIcon } from '@heroicons/react/24/solid';
+import { HomeIcon, AcademicCapIcon, HeartIcon, UserIcon, NewspaperIcon, ChevronDownIcon } from '@heroicons/react/24/solid';
 
 export default function studentNavBar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const { language, setLanguage, translate } = useLanguage();
   const { setGlobalErrorMessage } = useContext(ErrorContext);
+  const pathname = usePathname();
+  console.log("Current path:", pathname);
 
   const dispatch = useDispatch();
   const router = useRouter();
@@ -49,7 +52,8 @@ export default function studentNavBar() {
             <div className="md:hidden">
               <button
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
-                className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white"
+                className="inline-flex items-center justify-center p-2 rounded-md text-white 
+                focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white"
                 aria-controls="mobile-menu"
                 aria-expanded="false"
               >
@@ -88,8 +92,9 @@ export default function studentNavBar() {
           <div className="hidden md:flex">
             <div className="ml-10 flex items-baseline space-x-4">
               <Link
-                href="/student"
-                className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                href="/student" 
+                className={`text-white hover:text-black px-3 py-2 text-sm font-medium 
+                  ${pathname === "/student" ? "border-b border-white" : ""}`}
               >
                <div className="flex items-center space-x-2">
                   <span className="h-6 w-6"><HomeIcon/></span>
@@ -98,7 +103,8 @@ export default function studentNavBar() {
               </Link>
               <Link
                 href="/student/topics"
-                className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                className={`text-white hover:text-black px-3 py-2 text-sm font-medium 
+                  ${pathname === "/student/topics" ? "border-b border-white" : ""}`}
               >
                 <div className="flex items-center space-x-2">
                   <span className="h-6 w-6"><AcademicCapIcon/></span>
@@ -107,7 +113,8 @@ export default function studentNavBar() {
               </Link>
               <Link
                 href="/student/favorites"
-                className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                className={`text-white hover:text-black px-3 py-2 text-sm font-medium 
+                  ${pathname === "/student/favorites" ? "border-b border-white" : ""}`}
               >
                 <div className="flex items-center space-x-2">
                   <span className="h-6 w-6"><HeartIcon/></span>
@@ -116,7 +123,8 @@ export default function studentNavBar() {
               </Link>
               <Link
                 href="/student/my-requests"
-                className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                className={`text-white hover:text-black px-3 py-2 text-sm font-medium 
+                  ${pathname === "/student/my-requests" ? "border-b border-white" : ""}`}
               >
                 <div className="flex items-center space-x-2">
                   <span className="h-6 w-6"><NewspaperIcon/></span>
@@ -152,13 +160,16 @@ export default function studentNavBar() {
             <div className="relative">
               <button
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium focus:outline-none"
+                className="text-white px-3 py-2 text-sm font-medium focus:outline-none"
               >
-                <div className="flex items-center space-x-2 hover:bg-gray-700">
+                <div className="flex items-center space-x-2">
                   <span className="h-6 w-6">
                     <UserIcon />
                   </span>
                   <span>{translate("Account")}</span>
+                  <span className="h-4 w-4">
+                    <ChevronDownIcon />
+                  </span>
                 </div>
               </button>
 
@@ -169,13 +180,13 @@ export default function studentNavBar() {
                 >
                   <Link
                     href="/profile"
-                    className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+                    className={`block w-full text-left px-4 py-2 text-black ${pathname === "/profile" ? "border-b border-black" : ""}`}
                   >
                     {translate("Profile")}
                   </Link>
                   <button
                     onClick={logout}
-                    className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
+                    className="block w-full text-left px-4 py-2 text-black"
                   >
                     {translate("Logout")}
                   </button>
@@ -192,7 +203,8 @@ export default function studentNavBar() {
           <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
             <Link
               href="/student"
-              className="text-gray-300 block px-3 py-2 rounded-md text-base font-medium"
+              className={`text-white block px-3 py-2 text-base font-medium 
+                ${pathname === "/student" ? "border-b border-white" : ""}`}
             >
               <div className="flex items-center space-x-2">
                 <span className="h-6 w-6"><HomeIcon/></span>
@@ -201,7 +213,8 @@ export default function studentNavBar() {
             </Link>
             <Link
               href="/student/topics"
-              className="text-gray-300 block px-3 py-2 rounded-md text-base font-medium"
+              className={`text-white block px-3 py-2 text-base font-medium 
+                ${pathname === "/student/topics" ? "border-b border-white" : ""}`}
             >
               <div className="flex items-center space-x-2">
                 <span className="h-6 w-6"><AcademicCapIcon/></span>
@@ -210,7 +223,8 @@ export default function studentNavBar() {
             </Link>
             <Link
               href="/student/favorites"
-              className="text-gray-300 block px-3 py-2 rounded-md text-base font-medium"
+              className={`text-white block px-3 py-2 text-base font-medium 
+                ${pathname === "/student/favorites" ? "border-b border-white" : ""}`}
             >
               <div className="flex items-center space-x-2">
                 <span className="h-6 w-6"><HeartIcon/></span>
@@ -219,7 +233,8 @@ export default function studentNavBar() {
             </Link>
             <Link
               href="/student/my-requests"
-              className="text-gray-300 block px-3 py-2 rounded-md text-base font-medium"
+              className={`text-white block px-3 py-2 text-base font-medium 
+                ${pathname === "/student/my-requests" ? "border-b border-white" : ""}`}
             >
               <div className="flex items-center space-x-2">
                 <span className="h-6 w-6"><NewspaperIcon/></span>

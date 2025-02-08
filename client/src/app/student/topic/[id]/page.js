@@ -5,6 +5,7 @@ import { useParams } from "next/navigation";
 import axiosInstance from "@/utils/axiosInstance";
 import { useLanguage } from "@/context/Languagecontext";
 import RequestModal from "@/app/components/student/request-modal";
+import { ErrorContext } from "@/context/errorContext";
 import { useContext } from "react";
 
 export default function TopicDetails() {

@@ -38,7 +38,7 @@ export default function StudentRequests() {
     setIsOpen(true);
   };
 
-  //TODO: Refactor all ToggleModal functions to reset the "selectedRequestId"
+  //TODO: if problems: Refactor all ToggleModal functions to reset the "selectedRequestId"
   const toggleModal = () => {
     setIsModalOpen((prev) => !prev);
     if (!isModalOpen) {

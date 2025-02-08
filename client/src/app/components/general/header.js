@@ -4,10 +4,14 @@ import Link from 'next/link';
 import { useState } from 'react';
 import { HomeIcon, InformationCircleIcon, PhoneIcon, IdentificationIcon } from '@heroicons/react/24/solid';
 import { useLanguage } from "@/context/Languagecontext";
+import { usePathname } from 'next/navigation';
 
 export default function NavBar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { language, setLanguage, translate } = useLanguage();
+
+  const pathname = usePathname();
+  console.log("Current path:", pathname);
 
   const handleLanguageChange = (e) => {
     setLanguage(e.target.value);
