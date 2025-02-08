@@ -162,7 +162,7 @@ export default function studentNavBar() {
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                 className="text-white px-3 py-2 text-sm font-medium focus:outline-none"
               >
-                <div className="flex items-center space-x-2">
+                <div className="flex items-center space-x-2 hover:text-black">
                   <span className="h-6 w-6">
                     <UserIcon />
                   </span>
@@ -180,13 +180,14 @@ export default function studentNavBar() {
                 >
                   <Link
                     href="/profile"
-                    className={`block w-full text-left px-4 py-2 text-black ${pathname === "/profile" ? "border-b border-black" : ""}`}
+                    className={`block w-full text-left px-4 py-2 text-gray-600 hover:text-black 
+                      ${pathname === "/profile" ? "border-b border-black" : ""}`}
                   >
                     {translate("Profile")}
                   </Link>
                   <button
                     onClick={logout}
-                    className="block w-full text-left px-4 py-2 text-black"
+                    className="block w-full text-left px-4 py-2 text-gray-600 hover:text-black"
                   >
                     {translate("Logout")}
                   </button>
