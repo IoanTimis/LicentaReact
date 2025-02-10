@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect, useContext } from "react";
 import axiosInstance from "@/utils/axiosInstance";
-import FilterBar from "@/app/components/general/filterBar";
+import FilterBar from "@/app/components/general/filter-bar";
 import { useLanguage } from "@/context/Languagecontext";
 import { ErrorContext } from "@/context/errorContext";
 import StudentInfoCard from "@/app/components/teacher/student-info-card";
@@ -41,19 +41,16 @@ export default function MyStudents() {
   };
 
   return (
-    <div className="max-w-7xl mx-auto flex flex-col lg:flex-row min-h-screen bg-gray-100 p-4">
-      {/* FilterBar - 25% din container */}
-      <FilterBar onSearch={handleSearch} onFilterChange={handleFilterChange} />
-
-      {/* Lista de Studenți - 75% din container */}
-      <div className="lg:w-3/4 w-full p-4">
-        {/* Wrapper responsiv */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4">
+    <div className="mx-auto flex flex-col lg:flex-row min-h-screen bg-gray-100 p-4">
+      <FilterBar className="lg:w-1/4 w-full" onSearch={handleSearch} onFilterChange={handleFilterChange} />
+  
+      <div className="lg:w-3/4 w-full p-4 flex-grow">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4 gap-y-6">
           {filteredStudents.map((student) => (
             <StudentInfoCard key={student.id} studentInfo={student} />
           ))}
         </div>
       </div>
     </div>
-  );
+  );  
 }

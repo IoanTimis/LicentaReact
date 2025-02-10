@@ -24,4 +24,7 @@ router.delete('/student-request/delete/:id', teacherController.deleteRequest);
 
 router.get('/fetch/my-students', teacherController.getMyStudents);
 
+//Filters & search
+router.get('/search-filter/request', teacherController.requestSearchFilter);
+
 module.exports = router;

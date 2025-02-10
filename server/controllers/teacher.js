@@ -7,6 +7,7 @@ const specializationTopic = require('../models/specializationTopic');
 const sanitizeHtml = require('sanitize-html');
 const jwt = require('jsonwebtoken');
 const  myStudents = require('../models/myStudents');
+const { Op } = require('sequelize');
 
 
 const teacherTopics = async (req, res) => {
@@ -360,6 +361,62 @@ const getMyStudents = async (req, res) => {
   }
 }
 
+//Search & Filters
+
+//Requests
+const requestSearchFilter = async (req, res) => {
+  try {
+    const refreshToken = req.cookies.refreshToken;
+    const user = jwt.decode(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+    const { query, status } = req.query;
+
+    if (!query && !status) {
+      return res.status(400).json({ message: "No search query or status provided." });
+    }
+
+    const whereCondition = {};
+
+    if (status) {
+      whereCondition.status = status; 
+    }
+
+    // Efectuăm interogarea cu Sequelize
+    const requests = await topicRequest.findAll({
+      where: whereCondition,
+      teacher_id: user.id,
+      include: [
+        {
+          model: User,
+          as: "student",
+          attributes: ["id", "first_name", "name", "email"], 
+          where: query
+            ? {
+                [Op.or]: [
+                  { first_name: { [Op.like]: `%${query}%` } },
+                  { name: { [Op.like]: `%${query}%` } }, 
+                ],
+              }
+            : undefined, //If no query is provided, don't filter by name
+        },
+        {
+          model: Topic,
+          as: "topic",
+          attributes: ["id", "title"], 
+        },
+      ],
+    });
+
+    if (requests.length === 0) {
+      return res.status(204).json({ message: "No requests found." });
+    }
+
+    return res.json({ requests });
+  } catch (error) {
+    console.error("Error searching requests:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
 
 module.exports = {
   teacherTopics,
@@ -372,5 +429,6 @@ module.exports = {
   studentRequest,
   teacherResponse,
   deleteRequest,
-  getMyStudents
+  getMyStudents,
+  requestSearchFilter
 };

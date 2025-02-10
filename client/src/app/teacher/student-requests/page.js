@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import axiosInstance from "@/utils/axiosInstance";
 import RequestCard from "@/app/components/general/request-card";
 import AcceptRejectModal from "@/app/components/teacher/accept-reject-modal";
+import FilterBar from "@/app/components/general/filter-bar";
 import { useLanguage } from "@/context/Languagecontext";
 import ConfirmActionModal from "@/app/components/general/confirm-action-modal";
 import { ErrorContext } from "@/context/errorContext";
@@ -11,6 +12,8 @@ import { useContext } from "react";
 
 export default function StudentRequests() {
   const [requests, setRequests] = useState([]);
+  const [filteredRequests, setFilteredRequests] = useState([]);
+  const [noMatch, setNoMatch] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedRequestId, setSelectedRequestId] = useState();
   const [isOpen, setIsOpen] = useState(false);
@@ -23,6 +26,7 @@ export default function StudentRequests() {
       try {
         const response = await axiosInstance.get("/teacher/fetch/student-requests", { withCredentials: true });
         setRequests(response.data.requests);
+        setFilteredRequests(response.data.requests);
       } catch (error) {
         console.error("Error fetching requests:", error);
         setGlobalErrorMessage(translate("An error occurred while fetching requests. Please try again."));
@@ -97,6 +101,30 @@ export default function StudentRequests() {
     }
   };
 
+  //Search and Filter
+  const handleSearchAndFilter = async (searchQuery, selectedStatus) => {
+    try {
+      const response = await axiosInstance.get("/teacher/search-filter/requests", {
+        params: {
+          query: searchQuery,
+          status: selectedStatus
+        },
+        withCredentials: true
+      });
+
+      if(response.status(204)) {
+        setNoMatch(true);
+        console.log("No requests found.");
+      }
+  
+      setFilteredRequests(response.data.requests);
+    } catch (error) {
+      console.error("Error fetching requests:", error);
+      setGlobalErrorMessage("Error fetching requests.");
+    }
+  };
+  
+
   if(requests.length === 0) {
     return (
       <div className="min-h-screen bg-gray-100 p-8">
@@ -106,14 +134,25 @@ export default function StudentRequests() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100 p-8">
-     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-      {requests.map((request) => (
-        <div key={request.id}> 
-          <RequestCard request={request} handleOpenConfirmModal={handleOpenConfirmModal}  onResponse={onResponse}/>
+    <div className="mx-auto flex flex-col lg:flex-row min-h-screen bg-gray-100 p-4">
+
+      <FilterBar className="lg:w-1/4 w-full" onSearch={handleSearchAndFilter} />
+
+      { noMatch && (
+        <div className="w-full text-center bg-yellow-100 text-yellow-800 py-3 px-4 rounded-lg mb-4">
+          🔍 {translate("No results found for your search or filters.")}
         </div>
-      ))}
-    </div>
+      )}
+
+      <div className="lg:w-3/4 w-full p-4 flex-grow">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4 gap-y-6">
+          {requests.map((request) => (
+            <div key={request.id}> 
+              <RequestCard request={request} handleOpenConfirmModal={handleOpenConfirmModal}  onResponse={onResponse}/>
+            </div>
+          ))}
+        </div>
+      </div>
 
       <AcceptRejectModal
         isOpen={isModalOpen}
