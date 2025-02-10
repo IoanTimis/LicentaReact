@@ -36,11 +36,42 @@ export default function FilterBar({ onSearch, onFilterChange }) {
       </div>
 
       {/* Filters */}
+      {/* Teacher */}
 
-      { pathname !== "/teacher/my-students" && (
+      {/*My-Students Filters*/}
+      { pathname === "/teacher/my-students" && (
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-2">
         <select
-          value={selectedFilter}
+          className="w-full p-2 border border-gray-500 text-black rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
+          onChange={handleFilterChange}
+        >
+          <option value="">{`All Status`}</option>
+          <option value="bsc">BSC</option>
+          <option value="msc">MSC</option>
+        </select>
+      </div>
+      )}
+
+      {/*Request Filters*/}
+      { pathname === "/teacher/student-requests" && (
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-2">
+        <select
+          className="w-full p-2 border border-gray-500 text-black rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
+          onChange={handleFilterChange}
+        >
+          <option value="">{`All Status`}</option>
+          <option value="pending">Pending</option>
+          <option value="accepted">Accepted</option>
+          <option value="confirmed">Confirmed</option>
+          <option value="rejected">Rejected</option>
+        </select>
+      </div>
+      )}
+
+      {/*Topics Filters*/}
+      { pathname === "/teacher/my-topics" && (
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-2">
+        <select
           onChange={handleFilterChange}
           className="w-full p-2 border border-gray-500 text-black rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
         >
@@ -53,7 +84,8 @@ export default function FilterBar({ onSearch, onFilterChange }) {
         >
           <option value="">{`All Status`}</option>
           <option value="pending">Pending</option>
-          <option value="approved">Approved</option>
+          <option value="accepted">Accepted</option>
+          <option value="confirmed">Confirmed</option>
           <option value="rejected">Rejected</option>
         </select>
       </div>
