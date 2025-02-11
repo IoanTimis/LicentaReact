@@ -31,7 +31,7 @@ export default function FilterBar({ onSearch, onFilterChange, filterOnDatabase, 
     }));
   
     if (filterOnDatabase) {
-      filterSearchDatabase(searchTerm, { ...selectedFilters, [filterName]: value });
+      filterSearchDatabase(searchTerm,  { ...selectedFilters, [filterName]: value });
     } else {
       onFilterChange({ ...selectedFilters, [filterName]: value });
     }
@@ -79,7 +79,7 @@ export default function FilterBar({ onSearch, onFilterChange, filterOnDatabase, 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-2">
         <select
           className="w-full p-2 border border-gray-500 text-black rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
-          
+          value={selectedFilters.educationLevel}
           onChange={(e) => handleFilterChange("educationLevel", e.target.value)}
         >
           <option value="">{translate("All")}</option>
@@ -94,8 +94,8 @@ export default function FilterBar({ onSearch, onFilterChange, filterOnDatabase, 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-2">
         <select
           className="w-full p-2 border border-gray-500 text-black rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
-          value={selectedFilters.educationLevel}
-          onChange={(e) => handleFilterChange("educationLevel", e.target.value)}
+          value={selectedFilters.status}
+          onChange={(e) => handleFilterChange("status", e.target.value)}
         >
           <option value="">{translate("All")}</option>
           <option value="pending">{translate("Pending")}</option>

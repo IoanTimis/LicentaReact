@@ -102,8 +102,10 @@ export default function StudentRequests() {
   };
 
   //Search and Filter
-  const handleSearchAndFilter = async (searchQuery, selectedStatus) => {
+  const handleSearchAndFilter = async (searchQuery, filter) => {
     try {
+      const selectedStatus = filter.status;
+      console.log("selectedStatus", selectedStatus);
       const response = await axiosInstance.get("/teacher/search-filter/requests", {
         params: {
           query: searchQuery,
