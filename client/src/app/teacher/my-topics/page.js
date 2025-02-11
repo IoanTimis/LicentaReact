@@ -17,6 +17,7 @@ export default function TeacherTopics() {
   const { setGlobalErrorMessage } = useContext(ErrorContext);
 
   const [topics, setTopics] = useState([]);
+  const [filteredTopics, setFilteredTopics] = useState([]);
   const [selectedTopic, setSelectedTopic] = useState(null);
 
   const [isOpen, setIsOpen] = useState(false);
@@ -34,7 +35,7 @@ export default function TeacherTopics() {
   const [specializations, setSpecializations] = useState([]);
   const [selectedSpecializations, setSelectedSpecializations] = useState([null]); 
 
-  const noMatch = false;
+  const [noMatch, setNoMatch] = useState(false);
 
   const handleOpenConfirmModal = (topicId, action) => {
     setSelectedTopic(topicId);
@@ -49,6 +50,7 @@ export default function TeacherTopics() {
         const response = await axiosInstance.get("/teacher/fetch/topics", { withCredentials: true });
         setFaculties(response.data.faculties);
         setTopics(response.data.teacher.topics);
+        setFilteredTopics(response.data.teacher.topics);
       } catch (error) {
         console.error("Error fetching topics:", error);
         setGlobalErrorMessage(translate("An error occurred while fetching topics."));
@@ -165,12 +167,13 @@ export default function TeacherTopics() {
     };
   }
 
-  const handleSearchAndFilter = async (searchTerm, filter) => {
+  const handleSearchAndFilter = async (searchQuery, filter) => {
     try {
       const selectedEducationLevel = filter.educationLevel;
       const selectedSlots = filter.slots;
-      console.log("selectedStatus", selectedStatus);
-      const response = await axiosInstance.get("/teacher/search-filter/requests", {
+      console.log("Selected education level:", selectedEducationLevel);
+      console.log("Selected slots:", selectedSlots);
+      const response = await axiosInstance.get("/teacher/search-filter/topics", {
         params: {
           query: searchQuery,
           education_level: selectedEducationLevel,
@@ -186,13 +189,15 @@ export default function TeacherTopics() {
       }
   
       setNoMatch(false);
-      console.log(response.data.requests);
-      setFilteredRequests(response.data.requests);
+      console.log(response.data.topics);
+      setFilteredTopics(response.data.topics);
     } catch (error) {
       console.error("Error searching requests:", error);
       setGlobalErrorMessage(translate("Error searching for themes. Please try again."));
     }
   };
+
+  //TODO: Ca peste tot, am probleme cu actualizarea dinamica in pagina ( la adaugare in acest caz)
 
   if(topics.length === 0) {
     return <p className="text-center text-gray-700">{ translate("You didn't add any themes yet.")}</p>;
@@ -219,7 +224,7 @@ export default function TeacherTopics() {
         </div>
 
         {/* Topic Cards */}
-        {topics.map((topic) => (
+        {filteredTopics.map((topic) => (
           <TopicCard key={topic.id} topic={topic} translate={translate} onEdit={handleEdit} handleOpenConfirmModal={handleOpenConfirmModal} />
         ))}
       </div>

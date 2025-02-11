@@ -59,11 +59,11 @@ export default function FilterBar({ onSearch, onFilterChange, filterOnDatabase, 
             placeholder="Search..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full p-2 border border-gray-500 text-black rounded-l-lg focus:outline-none"
+            className="w-full p-2 border border-gray-500 border-r-0 text-black rounded-l-lg focus:outline-none"
           />
           <button
-            onClick={() => filterSearchDatabase(searchTerm, selectedFilter)}
-            className="bg-blue-500 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded-r-lg"
+            onClick={() => filterSearchDatabase(searchTerm, selectedFilters)}
+            className="text-black hover:text-blue-600 font-semibold px-4 py-2 rounded-r-lg border border-gray-500 border-l-0 "
           >
             <MagnifyingGlassIcon className="h-6 w-6 transition" />
           </button>
@@ -83,8 +83,8 @@ export default function FilterBar({ onSearch, onFilterChange, filterOnDatabase, 
           onChange={(e) => handleFilterChange("educationLevel", e.target.value)}
         >
           <option value="">{translate("All")}</option>
-          <option value="bsc">BSC</option>
-          <option value="msc">MSC</option>
+          <option value="bsc">{translate("Bachelor")}</option>
+          <option value="msc">{translate("Master")}</option>
         </select>
       </div>
       )}
@@ -115,8 +115,8 @@ export default function FilterBar({ onSearch, onFilterChange, filterOnDatabase, 
           onChange={(e) => handleFilterChange("educationLevel", e.target.value)}
         >
           <option value="">{translate("Any Education Level")}</option>
-          <option value="bsc">Bachelor</option>
-          <option value="msc">Master</option>
+          <option value="bsc">{translate("Bachelor")}</option>
+          <option value="msc">{translate("Master")}</option>
         </select>
         <select
           className="w-full p-2 border border-gray-500 text-black rounded-lg focus:outline-none focus:ring focus:ring-blue-300"

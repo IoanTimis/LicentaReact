@@ -429,7 +429,7 @@ const topicSearchFilter = async (req, res) => {
     }
 
     if (slots) {
-      whereCondition.slots = slots;
+      whereCondition.slots = slots === "0" ? 0 : { [Op.gte]: 1 };
     }
 
     if (query) {
@@ -467,6 +467,7 @@ const topicSearchFilter = async (req, res) => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
+
 
 
 module.exports = {
