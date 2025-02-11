@@ -363,45 +363,41 @@ const getMyStudents = async (req, res) => {
 
 //Search & Filters
 
-//Requests
+// Requests
 const requestSearchFilter = async (req, res) => {
   try {
     const refreshToken = req.cookies.refreshToken;
     const user = jwt.decode(refreshToken, process.env.REFRESH_TOKEN_SECRET);
     const { query, status } = req.query;
 
-    if (!query && !status) {
-      return res.status(400).json({ message: "No search query or status provided." });
-    }
-
-    const whereCondition = {};
+    let whereCondition = {
+      teacher_id: user.id,
+    };
 
     if (status) {
       whereCondition.status = status; 
     }
 
-    // Efectuăm interogarea cu Sequelize
+    if (query) {
+      whereCondition[Op.or] = [
+        { '$student.first_name$': { [Op.like]: `%${query}%` } },
+        { '$student.name$': { [Op.like]: `%${query}%` } },
+        { '$topic.title$': { [Op.like]: `%${query}%` } },
+      ];
+    }
+
     const requests = await topicRequest.findAll({
       where: whereCondition,
-      teacher_id: user.id,
       include: [
         {
           model: User,
           as: "student",
-          attributes: ["id", "first_name", "name", "email"], 
-          where: query
-            ? {
-                [Op.or]: [
-                  { first_name: { [Op.like]: `%${query}%` } },
-                  { name: { [Op.like]: `%${query}%` } }, 
-                ],
-              }
-            : undefined, //If no query is provided, don't filter by name
+          attributes: ["id", "first_name", "name", "email"]
         },
         {
           model: Topic,
           as: "topic",
-          attributes: ["id", "title"], 
+          attributes: ["id", "title", "description","slots"]
         },
       ],
     });
@@ -410,6 +406,7 @@ const requestSearchFilter = async (req, res) => {
       return res.status(204).json({ message: "No requests found." });
     }
 
+    console.log(requests);
     return res.json({ requests });
   } catch (error) {
     console.error("Error searching requests:", error);

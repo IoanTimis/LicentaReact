@@ -111,18 +111,22 @@ export default function StudentRequests() {
         },
         withCredentials: true
       });
-
-      if(response.status(204)) {
+  
+      if (response.status === 204) { // corect verificarea
         setNoMatch(true);
         console.log("No requests found.");
+        return;
       }
   
+      setNoMatch(false);
+      console.log(response.data.requests);
       setFilteredRequests(response.data.requests);
     } catch (error) {
       console.error("Error fetching requests:", error);
       setGlobalErrorMessage("Error fetching requests.");
     }
   };
+  
   
 
   if(requests.length === 0) {
@@ -136,17 +140,11 @@ export default function StudentRequests() {
   return (
     <div className="mx-auto flex flex-col lg:flex-row min-h-screen bg-gray-100 p-4">
 
-      <FilterBar className="lg:w-1/4 w-full" onSearch={handleSearchAndFilter} />
-
-      { noMatch && (
-        <div className="w-full text-center bg-yellow-100 text-yellow-800 py-3 px-4 rounded-lg mb-4">
-          🔍 {translate("No results found for your search or filters.")}
-        </div>
-      )}
+      <FilterBar className="lg:w-1/4 w-full" filterOnDatabase={true} filterSearchDatabase={handleSearchAndFilter} noMatch={noMatch} />
 
       <div className="lg:w-3/4 w-full p-4 flex-grow">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4 gap-y-6">
-          {requests.map((request) => (
+          {filteredRequests.map((request) => (
             <div key={request.id}> 
               <RequestCard request={request} handleOpenConfirmModal={handleOpenConfirmModal}  onResponse={onResponse}/>
             </div>
