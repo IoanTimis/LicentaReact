@@ -114,7 +114,7 @@ export default function StudentRequests() {
         withCredentials: true
       });
   
-      if (response.status === 204) { // corect verificarea
+      if (response.status === 204) {
         setNoMatch(true);
         console.log("No requests found.");
         return;
@@ -124,8 +124,8 @@ export default function StudentRequests() {
       console.log(response.data.requests);
       setFilteredRequests(response.data.requests);
     } catch (error) {
-      console.error("Error fetching requests:", error);
-      setGlobalErrorMessage("Error fetching requests.");
+      console.error("Error searching requests:", error);
+      setGlobalErrorMessage(translate("Error searching for requests. Please try again."));
     }
   };
   

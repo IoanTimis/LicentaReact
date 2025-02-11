@@ -165,7 +165,34 @@ export default function TeacherTopics() {
     };
   }
 
-  const handleSearchAndFilter = async (searchTerm, selectedFilter) => {};
+  const handleSearchAndFilter = async (searchTerm, filter) => {
+    try {
+      const selectedEducationLevel = filter.educationLevel;
+      const selectedSlots = filter.slots;
+      console.log("selectedStatus", selectedStatus);
+      const response = await axiosInstance.get("/teacher/search-filter/requests", {
+        params: {
+          query: searchQuery,
+          education_level: selectedEducationLevel,
+          slots: selectedSlots
+        },
+        withCredentials: true
+      });
+  
+      if (response.status === 204) {
+        setNoMatch(true);
+        console.log("No requests found.");
+        return;
+      }
+  
+      setNoMatch(false);
+      console.log(response.data.requests);
+      setFilteredRequests(response.data.requests);
+    } catch (error) {
+      console.error("Error searching requests:", error);
+      setGlobalErrorMessage(translate("Error searching for themes. Please try again."));
+    }
+  };
 
   if(topics.length === 0) {
     return <p className="text-center text-gray-700">{ translate("You didn't add any themes yet.")}</p>;
@@ -174,7 +201,7 @@ export default function TeacherTopics() {
   return (
     <div className="mx-auto flex flex-col lg:flex-row min-h-screen bg-gray-100 p-4">
      <FilterBar className="lg:w-1/4 w-full" filterOnDatabase={true} filterSearchDatabase={handleSearchAndFilter} noMatch={noMatch} />
-     
+
       {/* Topics */}
     <div className="lg:w-3/4 w-full p-4 flex-grow">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4 gap-y-6">

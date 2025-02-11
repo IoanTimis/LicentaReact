@@ -124,6 +124,8 @@
     "An error occurred while sending the response." : "A apărut o eroare la trimiterea răspunsului.",
     "An error occurred while sending response. Please try again." : "A apărut o eroare la trimiterea răspunsului. Te rog încearcă din nou.",
     "An error occurred while deleting request. Please try again." : "A apărut o eroare la ștergerea cererii. Te rog încearcă din nou.",
-    "An error occurred while fetching students." : "A apărut o eroare la preluarea studenților."
+    "An error occurred while fetching students." : "A apărut o eroare la preluarea studenților.",
+    "Error searching for themes. Please try again." : "Eroare la căutarea temelor. Te rog încearcă din nou.",
+    "Error searching for requests. Please try again." : "Eroare la căutarea cererilor. Te rog încearcă din nou."
 }
   
