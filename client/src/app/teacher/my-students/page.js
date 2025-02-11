@@ -30,7 +30,8 @@ export default function MyStudents() {
     setFilteredStudents(students.filter((student) =>
       student.student.first_name.toLowerCase().includes(query.toLowerCase()) ||
       student.student.name.toLowerCase().includes(query.toLowerCase()) ||
-      student.student.email.toLowerCase().includes(query.toLowerCase())
+      student.student.email.toLowerCase().includes(query.toLowerCase()) ||
+      student.topic.title.toLowerCase().includes(query.toLowerCase())
     ));
   };
 
@@ -43,7 +44,7 @@ export default function MyStudents() {
 
   return (
     <div className="mx-auto flex flex-col lg:flex-row min-h-screen bg-gray-100 p-4">
-      <FilterBar className="lg:w-1/4 w-full" onSearch={handleSearch} onFilterChange={handleFilterChange} />
+      <FilterBar className="lg:w-1/4 w-full" filterOnDatabase={false}  onSearch={handleSearch} onFilterChange={handleFilterChange} />
   
       <div className="lg:w-3/4 w-full p-4 flex-grow">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4 gap-y-6">

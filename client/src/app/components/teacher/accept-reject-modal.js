@@ -6,7 +6,7 @@ export default function AcceptRejectModal({ isOpen, onClose, onSubmit, translate
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-white rounded-lg shadow-lg w-full max-w-md p-6">
-        <h2 className="text-xl font-bold text-gray-700 mb-4">{translate("Send Request")}</h2>
+        <h2 className="text-xl font-bold text-gray-700 mb-4">{translate("Send Response")}</h2>
         <form onSubmit={onSubmit}>
           <div className="mb-4">
             <label className="block text-gray-700">{translate("Accept or Reject")}:</label>
@@ -34,7 +34,7 @@ export default function AcceptRejectModal({ isOpen, onClose, onSubmit, translate
               {translate("Cancel")}
             </button>
             <button type="submit" className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">
-              {translate("Send Request")}
+              {translate("Send")}
             </button>
           </div>
         </form>

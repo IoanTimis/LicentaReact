@@ -25,7 +25,7 @@ export default function RequestCard({ request, onResponse, handleOpenConfirmModa
               { translate("Description") }: {truncateText(request.topic.description, 40)}
             </p>
             <p className="text-sm text-gray-600 mb-1">{ translate("Slots") }: {request.topic.slots}</p>
-            <p className="text-sm text-gray-600 mb-1">{ translate("Student") }: {request.teacher.name} {request.teacher.first_name}</p>
+            <p className="text-sm text-gray-600 mb-1">{ translate("Teacher") }: {request.teacher.name} {request.teacher.first_name}</p>
             {request.status === "pending" ? (
               <p className="text-yellow-500">{ translate("Pending") }...</p>
             ) : request.status === "confirmed" ? (

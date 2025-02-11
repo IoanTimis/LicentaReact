@@ -46,7 +46,7 @@ export default function FilterBar({ onSearch, onFilterChange, filterOnDatabase, 
         <div className="mb-4">
           <input
             type="text"
-            placeholder="Search..."
+            placeholder= {translate("Search...")}
             value={searchTerm}
             onChange={handleSearch}
             className="w-full p-2 border border-gray-500 text-black rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
@@ -56,7 +56,7 @@ export default function FilterBar({ onSearch, onFilterChange, filterOnDatabase, 
         <div className="mb-4 flex">
           <input
             type="text"
-            placeholder="Search..."
+            placeholder={translate("Search...")}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="w-full p-2 border border-gray-500 border-r-0 text-black rounded-l-lg focus:outline-none"
@@ -72,7 +72,8 @@ export default function FilterBar({ onSearch, onFilterChange, filterOnDatabase, 
 
 
       {/* Filters */}
-      {/* Teacher */}
+
+      {/*Teacher Filters*/}
 
       {/*My-Students Filters*/}
       { pathname === "/teacher/my-students" && (
@@ -90,7 +91,7 @@ export default function FilterBar({ onSearch, onFilterChange, filterOnDatabase, 
       )}
 
       {/*Request Filters*/}
-      { pathname === "/teacher/student-requests" && (
+      { (pathname === "/teacher/student-requests") && (
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-2">
         <select
           className="w-full p-2 border border-gray-500 text-black rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
@@ -130,6 +131,27 @@ export default function FilterBar({ onSearch, onFilterChange, filterOnDatabase, 
       </div>
       )}
 
+      {/*Student Filters*/}
+
+      {/*My-Requests Filters*/}
+      { pathname === "/student/my-requests" && (
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-2">
+        <select
+          className="w-full p-2 border border-gray-500 text-black rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
+          value={selectedFilters.status}
+          onChange={(e) => handleFilterChange("status", e.target.value)}
+        >
+          <option value="">{translate("All")}</option>
+          <option value="pending">{translate("Pending")}</option>
+          <option value="accepted">{translate("Accepted")}</option>
+          <option value="confirmed">{translate("Confirmed")}</option>
+          <option value="rejected">{translate("Rejected")}</option>
+        </select>
+      </div>
+      )}
+
+
+      {/*No Match*/}
       { noMatch && (
         <div className="w-full text-center bg-yellow-100 text-yellow-800 py-3 px-4 rounded-lg mt-4">
           🔍 {translate("No results found for your search or filters.")}
