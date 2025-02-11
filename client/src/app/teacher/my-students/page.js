@@ -35,8 +35,9 @@ export default function MyStudents() {
   };
 
   const handleFilterChange = (filter) => {
+    console.log(filter);
     setFilteredStudents(
-      filter ? students.filter((student) => student.topic.education_level === filter) : students
+      filter.educationLevel ? students.filter((student) => student.topic.education_level === filter.educationLevel) : students
     );
   };
 

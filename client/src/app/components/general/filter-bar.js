@@ -7,7 +7,12 @@ import { MagnifyingGlassIcon } from "@heroicons/react/24/solid";
 
 export default function FilterBar({ onSearch, onFilterChange, filterOnDatabase, filterSearchDatabase, noMatch }) {
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedFilter, setSelectedFilter] = useState("");
+  const [selectedFilters, setSelectedFilters] = useState({
+    educationLevel: "",
+    slots: "",
+    status: "",
+  });
+  
   const pathname = usePathname();
   const { translate } = useLanguage();
 
@@ -19,16 +24,19 @@ export default function FilterBar({ onSearch, onFilterChange, filterOnDatabase, 
     }
   };
 
-  const handleFilterChange = (e) => {
-    const value = e.target.value;
-    setSelectedFilter(value);
+  const handleFilterChange = (filterName, value) => {
+    setSelectedFilters((prevFilters) => ({
+      ...prevFilters,
+      [filterName]: value,
+    }));
   
     if (filterOnDatabase) {
-      filterSearchDatabase(searchTerm, value); // corectăm apelul
+      filterSearchDatabase(searchTerm, { ...selectedFilters, [filterName]: value });
     } else {
-      onFilterChange(value);
+      onFilterChange({ ...selectedFilters, [filterName]: value });
     }
   };
+  
   
 
   return (
@@ -71,7 +79,8 @@ export default function FilterBar({ onSearch, onFilterChange, filterOnDatabase, 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-2">
         <select
           className="w-full p-2 border border-gray-500 text-black rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
-          onChange={handleFilterChange}
+          
+          onChange={(e) => handleFilterChange("educationLevel", e.target.value)}
         >
           <option value="">{translate("All")}</option>
           <option value="bsc">BSC</option>
@@ -85,13 +94,14 @@ export default function FilterBar({ onSearch, onFilterChange, filterOnDatabase, 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-2">
         <select
           className="w-full p-2 border border-gray-500 text-black rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
-          onChange={handleFilterChange}
+          value={selectedFilters.educationLevel}
+          onChange={(e) => handleFilterChange("educationLevel", e.target.value)}
         >
           <option value="">{translate("All")}</option>
-          <option value="pending">Pending</option>
-          <option value="accepted">Accepted</option>
-          <option value="confirmed">Confirmed</option>
-          <option value="rejected">Rejected</option>
+          <option value="pending">{translate("Pending")}</option>
+          <option value="accepted">{translate("Accepted")}</option>
+          <option value="confirmed">{translate("Confirmed")}</option>
+          <option value="rejected">{translate("Rejected")}</option>
         </select>
       </div>
       )}
@@ -100,21 +110,22 @@ export default function FilterBar({ onSearch, onFilterChange, filterOnDatabase, 
       { pathname === "/teacher/my-topics" && (
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-2">
         <select
-          onChange={handleFilterChange}
           className="w-full p-2 border border-gray-500 text-black rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
+          value={selectedFilters.educationLevel}
+          onChange={(e) => handleFilterChange("educationLevel", e.target.value)}
         >
-          <option value="">{`All`}</option>
+          <option value="">{translate("Any Education Level")}</option>
           <option value="bsc">Bachelor</option>
           <option value="msc">Master</option>
         </select>
         <select
           className="w-full p-2 border border-gray-500 text-black rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
+          value={selectedFilters.slots}
+          onChange={(e) => handleFilterChange("slots", e.target.value)}
         >
-          <option value="">{translate("All")}</option>
-          <option value="pending">Pending</option>
-          <option value="accepted">Accepted</option>
-          <option value="confirmed">Confirmed</option>
-          <option value="rejected">Rejected</option>
+          <option value="">{translate("Any Slot Number")}</option>
+          <option value="0">{translate("0 Slots")}</option>
+          <option value="1">{translate("1+ Slots")}</option>
         </select>
       </div>
       )}

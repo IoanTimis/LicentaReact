@@ -414,6 +414,60 @@ const requestSearchFilter = async (req, res) => {
   }
 };
 
+const topicSearchFilter = async (req, res) => {
+  try {
+    const refreshToken = req.cookies.refreshToken;
+    const user = jwt.decode(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+    const { query, education_level, slots } = req.query;
+
+    let whereCondition = {
+      user_id: user.id,
+    };
+
+    if (education_level) {
+      whereCondition.education_level = education_level;
+    }
+
+    if (slots) {
+      whereCondition.slots = slots;
+    }
+
+    if (query) {
+      whereCondition[Op.or] = [
+        { title: { [Op.like]: `%${query}%` } },
+        { description: { [Op.like]: `%${query}%` } },
+        { keywords: { [Op.like]: `%${query}%` } },
+      ];
+    }
+
+    const topics = await Topic.findAll({
+      where: whereCondition,
+      include: [
+        {
+          model: User,
+          as: "user",
+          attributes: ["id", "first_name", "name", "email"]
+        },
+        {
+          model: Specialization,
+          as: "specializations",
+          attributes: ["id", "name"]
+        },
+      ],
+    });
+
+    if (topics.length === 0) {
+      return res.status(204).json({ message: "No topics found." });
+    }
+
+    console.log(topics);
+    return res.json({ topics });
+  } catch (error) {
+    console.error("Error searching topics:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
 
 module.exports = {
   teacherTopics,
@@ -427,5 +481,6 @@ module.exports = {
   teacherResponse,
   deleteRequest,
   getMyStudents,
-  requestSearchFilter
+  requestSearchFilter,
+  topicSearchFilter
 };

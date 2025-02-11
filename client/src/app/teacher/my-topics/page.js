@@ -5,8 +5,9 @@ import axiosInstance from "@/utils/axiosInstance";
 import { PlusCircleIcon, ChevronDownIcon } from "@heroicons/react/24/solid";
 import { useLanguage } from "@/context/Languagecontext";
 import TopicCard from "@/app/components/teacher/topic-card";
-import { checkForDuplicates } from "@/utils/checkForDublicates";
 import ConfirmActionModal from "@/app/components/general/confirm-action-modal";
+import FilterBar from "@/app/components/general/filter-bar";
+import { checkForDuplicates } from "@/utils/checkForDublicates";
 import { ErrorContext } from "@/context/errorContext";
 import { useContext } from "react";
 
@@ -32,6 +33,8 @@ export default function TeacherTopics() {
   const [selectedFacultyId, setSelectedFacultyId] = useState(null);
   const [specializations, setSpecializations] = useState([]);
   const [selectedSpecializations, setSelectedSpecializations] = useState([null]); 
+
+  const noMatch = false;
 
   const handleOpenConfirmModal = (topicId, action) => {
     setSelectedTopic(topicId);
@@ -162,11 +165,19 @@ export default function TeacherTopics() {
     };
   }
 
+  const handleSearchAndFilter = async (searchTerm, selectedFilter) => {};
+
+  if(topics.length === 0) {
+    return <p className="text-center text-gray-700">{ translate("You didn't add any themes yet.")}</p>;
+  }
+
   return (
-    <div className="flex flex-col min-h-screen bg-gray-100 p-8">
-    <div className="py-8 bg-gray-100">
+    <div className="mx-auto flex flex-col lg:flex-row min-h-screen bg-gray-100 p-4">
+     <FilterBar className="lg:w-1/4 w-full" filterOnDatabase={true} filterSearchDatabase={handleSearchAndFilter} noMatch={noMatch} />
+     
       {/* Topics */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 px-4">
+    <div className="lg:w-3/4 w-full p-4 flex-grow">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4 gap-y-6">
         {/* Add Topic Card */}
         <div className="bg-white shadow rounded hover:shadow-lg transition cursor-pointer border border-gray-950" onClick={toggleModal}>
           <div className="bg-navbar-gradient flex justify-between items-center py-2 px-4 rounded-t">
@@ -175,20 +186,20 @@ export default function TeacherTopics() {
           <div className="px-4 py-2">
             <p className="text-gray-700">{translate("Click here to add a new theme")}</p>
           </div>
-          <div className="px-4 py-2">
-            {/* <p className="text-gray-700">{translate("Click on any other card to view its dedicated page.")}</p> */}
-          </div>
           <div className="pb-4">
             <PlusCircleIcon className="h-9 w-9 text-gray-400 mx-auto"/>
           </div>
         </div>
+
+        {/* Topic Cards */}
         {topics.map((topic) => (
           <TopicCard key={topic.id} topic={topic} translate={translate} onEdit={handleEdit} handleOpenConfirmModal={handleOpenConfirmModal} />
         ))}
       </div>
+    </div>
 
-      {/* Modal */}
-      {isModalOpen && (
+    {/* Modal */}
+    {isModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg shadow-lg w-full max-w-md p-6">
             <h2 className="text-xl font-bold text-gray-700 mb-4">
@@ -301,7 +312,6 @@ export default function TeacherTopics() {
           </div>
         </div>
       )}
-    </div>
 
      <ConfirmActionModal
       actionFunction={() => modalAction === "delete" ? handleDelete(selectedTopic) : null}

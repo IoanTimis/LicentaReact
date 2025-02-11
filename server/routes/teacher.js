@@ -26,5 +26,6 @@ router.get('/fetch/my-students', teacherController.getMyStudents);
 
 //Filters & search
 router.get('/search-filter/requests', teacherController.requestSearchFilter);
+router.get('/search-filter/topics', teacherController.topicSearchFilter);
 
 module.exports = router;
