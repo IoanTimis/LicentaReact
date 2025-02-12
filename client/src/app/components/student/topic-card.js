@@ -4,6 +4,7 @@ import { useState, useEffect, useContext } from "react";
 import axiosInstance from "@/utils/axiosInstance";
 import { useLanguage } from "@/context/Languagecontext";
 import { ErrorContext } from "@/context/errorContext";
+import { truncateText } from "@/utils/truncate-text";
 
 export default function TopicCard({ topic, onRequest }) {
   const { translate } = useLanguage();
@@ -54,7 +55,7 @@ export default function TopicCard({ topic, onRequest }) {
     <div className="bg-white shadow rounded hover:shadow-lg transition border border-gray-950">
       <div className="bg-navbar-gradient flex justify-between items-center py-2 px-4 rounded-t">
         <Link href={`/student/topic/${topic.id}`} className="flex-grow">
-          <h2 className="text-lg font-semibold text-white">{topic.title}</h2>
+          <h2 className="text-lg font-semibold text-white">{truncateText(topic.title, 20)}</h2>
         </Link>
         <button onClick={handleFavoriteClick} className="ml-4 focus:outline-none">
           <HeartIcon className={`h-6 w-6 transition ${isFavorite ? "text-red-500" : "text-white"}`} />

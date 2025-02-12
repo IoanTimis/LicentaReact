@@ -1,4 +1,5 @@
 import { useLanguage } from "@/context/Languagecontext";
+import { truncateText } from "@/utils/truncate-text";
 
 export default function StudentInfoCard({ studentInfo }) {
   const { translate } = useLanguage();
@@ -7,7 +8,7 @@ export default function StudentInfoCard({ studentInfo }) {
   return (
     <div className="bg-white shadow rounded hover:shadow-lg transition border border-gray-950">
       <div className="bg-navbar-gradient flex justify-between items-center py-2 px-4 rounded-t">
-        <h2 className="text-lg font-semibold text-white">{studentInfo.topic.title}</h2>
+        <h2 className="text-lg font-semibold text-white">{truncateText(studentInfo.topic.title, 20)}</h2>
       </div>
       <div className="p-4">
       <p className="text-gray-700">

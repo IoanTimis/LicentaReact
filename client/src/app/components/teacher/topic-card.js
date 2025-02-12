@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ChevronDownIcon } from "@heroicons/react/24/solid";
 import { useState } from "react";
+import { truncateText } from "@/utils/truncate-text";
 
 export default function TopicCard({ topic, translate, onEdit, onDuplicate, handleOpenConfirmModal }) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -10,14 +11,14 @@ export default function TopicCard({ topic, translate, onEdit, onDuplicate, handl
     <div className="bg-white shadow rounded hover:shadow-lg transition border border-gray-950">
       <Link href={`/teacher/my-topic/${topic.id}`}>
         <div className="bg-navbar-gradient flex justify-between items-center py-2 px-4 rounded-t">
-          <h2 className="text-lg font-semibold text-white">{topic.title}</h2>
+          <h2 className="text-lg font-semibold text-white">{truncateText(topic.title, 20)}</h2>
         </div>
         <div className="p-4">
           <p className="text-gray-700">
             <span className="font-semibold">{translate("Description")}:</span> {topic.description}
           </p>
           <p className="text-sm text-gray-700">
-            <span className="font-semibold">{translate("Keywords")}:</span> {topic.keywords}
+            <span className="font-semibold">{translate("Keywords")}:</span> {truncateText(topic.keywords, 40)}
           </p>
           <p className="text-sm text-gray-700">
             <span className="font-semibold">{translate("Slots")}:</span> {topic.slots}
