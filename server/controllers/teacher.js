@@ -435,7 +435,6 @@ const topicSearchFilter = async (req, res) => {
     if (query) {
       whereCondition[Op.or] = [
         { title: { [Op.like]: `%${query}%` } },
-        { description: { [Op.like]: `%${query}%` } },
         { keywords: { [Op.like]: `%${query}%` } },
       ];
     }

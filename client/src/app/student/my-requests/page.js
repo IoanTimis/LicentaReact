@@ -100,7 +100,6 @@ export default function StudentRequests() {
 
   return (
     <div className="mx-auto flex flex-col lg:flex-row min-h-screen bg-gray-100 p-4">
-
       <FilterBar className="lg:w-1/4 w-full" 
         onSearch={handleSearch} 
         onFilterChange={handleFilterChange} 
@@ -113,8 +112,8 @@ export default function StudentRequests() {
           {filteredRequests.map((request) => (
             <div key={request.id}> 
               <RequestCard 
-              request={request} 
-              handleOpenConfirmModal={handleOpenConfirmModal}
+                request={request} 
+                handleOpenConfirmModal={handleOpenConfirmModal}
               />
             </div>
           ))}

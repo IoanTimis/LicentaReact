@@ -3,7 +3,7 @@ const Faculty = require('../models/faculty')
 const Specialization = require('../models/specialization');
 const SpecializationTopic = require('../models/specializationTopic');
 const User = require('../models/user');
-const { Op } = require('sequelize');
+const { Op, where } = require('sequelize');
 const topicRequest = require('../models/topicRequest');
 const sanitizeHtml = require('sanitize-html');
 const jwt = require('jsonwebtoken');
@@ -479,26 +479,52 @@ const deleteRequest = async (req, res) => {
 
 const topicSearchFilter = async (req, res) => {
   try {
-    const query = req.query.query;
-    const topics = await Topic.findAll({
-      where: {
-        title: {
-          [Op.like]: `%${query}%`
-        }
-      }
-    });
+    const refreshToken = req.cookies.refreshToken;
+    const userDecoded = jwt.decode(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+    const specialization_id = userDecoded.specialization_id;
+    const education_level = userDecoded.education_level;
+    const { query } = req.query;
+    
+    const specialization = await Specialization.findByPk(specialization_id);
 
-    if (!topics) {
-      return res.status(204).json({ message: 'No topics found' });
+    if (!specialization) {
+      return res.status(404).json({ message: 'User specialization not found' });
     }
 
-    return res.json({ topics: topics });
-  }
-  catch (error) {
-    console.error('Error searching topics:', error);
-    res.status(500).json({ message: 'Internal Server Error' });
+    let whereCondition = {
+      education_level: education_level,
+      slots: {
+        [Op.gt]: 0
+      }
+    };
+
+    whereCondition[Op.or] = [
+        { '$user.first_name$': { [Op.like]: `%${query}%` } },
+        { '$user.name$': { [Op.like]: `%${query}%` } },
+        { title: { [Op.like]: `%${query}%` } },
+        { keywords: { [Op.like]: `%${query}%` } }
+    ];
+
+    const topics = await specialization.getTopics({
+      where: whereCondition,
+      include: [{
+        model: User,
+        as: 'user'
+      }]
+    });
+
+    if (topics.length === 0) {
+      return res.status(204).json({ message: "No topics found." });
+    }
+
+    return res.json({ topics });
+  } catch (error) {
+    console.error("Error searching topics:", error);
+    res.status(500).json({ message: "Internal Server Error" });
   }
 };
+
+
 
 module.exports = {
   studentTopics,
@@ -512,5 +538,6 @@ module.exports = {
   isTopicRequested,
   newRequest,
   confirmRequest,
-  deleteRequest
+  deleteRequest,
+  topicSearchFilter
 };

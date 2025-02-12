@@ -171,8 +171,7 @@ export default function TeacherTopics() {
     try {
       const selectedEducationLevel = filter.educationLevel;
       const selectedSlots = filter.slots;
-      console.log("Selected education level:", selectedEducationLevel);
-      console.log("Selected slots:", selectedSlots);
+      
       const response = await axiosInstance.get("/teacher/search-filter/topics", {
         params: {
           query: searchQuery,

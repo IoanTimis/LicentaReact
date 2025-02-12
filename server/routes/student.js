@@ -27,4 +27,6 @@ router.post('/request/add', studentController.newRequest);
 router.put('/request/confirm/:id', studentController.confirmRequest);
 router.delete('/request/delete/:id', studentController.deleteRequest);
 
+router.get('/search-filter/topics', studentController.topicSearchFilter);
+
 module.exports = router;
