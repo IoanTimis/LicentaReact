@@ -11,6 +11,7 @@ export default function MyStudents() {
   const [filteredStudents, setFilteredStudents] = useState([]);
   const { translate } = useLanguage();
   const { setGlobalErrorMessage } = useContext(ErrorContext);
+  const [noMatch, setNoMatch] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -27,24 +28,32 @@ export default function MyStudents() {
   }, []);
 
   const handleSearch = (query) => {
-    setFilteredStudents(students.filter((student) =>
+    const filtered = students.filter((student) =>
       student.student.first_name.toLowerCase().includes(query.toLowerCase()) ||
       student.student.name.toLowerCase().includes(query.toLowerCase()) ||
       student.student.email.toLowerCase().includes(query.toLowerCase()) ||
       student.topic.title.toLowerCase().includes(query.toLowerCase())
-    ));
+    );
+
+    setFilteredStudents(filtered);
+    setNoMatch(filtered.length === 0);
   };
 
   const handleFilterChange = (filter) => {
-    console.log(filter);
-    setFilteredStudents(
-      filter.educationLevel ? students.filter((student) => student.topic.education_level === filter.educationLevel) : students
-    );
+    const filtered = filter.educationLevel ? students.filter((student) => student.topic.education_level === filter.educationLevel) : students
+
+    setFilteredStudents(filtered);
+    setNoMatch(filtered.length === 0);
   };
 
   return (
     <div className="mx-auto flex flex-col lg:flex-row min-h-screen bg-gray-100 p-4">
-      <FilterBar className="lg:w-1/4 w-full" filterOnDatabase={false}  onSearch={handleSearch} onFilterChange={handleFilterChange} />
+      <FilterBar className="lg:w-1/4 w-full" 
+        filterOnDatabase={false}  
+        onSearch={handleSearch} 
+        onFilterChange={handleFilterChange} 
+        noMatch={noMatch} 
+      />
   
       <div className="lg:w-3/4 w-full p-4 flex-grow">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4 gap-y-6">

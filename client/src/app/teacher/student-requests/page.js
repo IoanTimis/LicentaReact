@@ -142,13 +142,21 @@ export default function StudentRequests() {
   return (
     <div className="mx-auto flex flex-col lg:flex-row min-h-screen bg-gray-100 p-4">
 
-      <FilterBar className="lg:w-1/4 w-full" filterOnDatabase={true} filterSearchDatabase={handleSearchAndFilter} noMatch={noMatch} />
+      <FilterBar className="lg:w-1/4 w-full" 
+        filterOnDatabase={true} 
+        filterSearchDatabase={handleSearchAndFilter} 
+        noMatch={noMatch} 
+      />
 
       <div className="lg:w-3/4 w-full p-4 flex-grow">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4 gap-y-6">
           {filteredRequests.map((request) => (
             <div key={request.id}> 
-              <RequestCard request={request} handleOpenConfirmModal={handleOpenConfirmModal}  onResponse={onResponse}/>
+              <RequestCard 
+                request={request} 
+                handleOpenConfirmModal={handleOpenConfirmModal}  
+                onResponse={onResponse}
+              />
             </div>
           ))}
         </div>

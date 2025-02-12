@@ -477,6 +477,29 @@ const deleteRequest = async (req, res) => {
   }
 };
 
+const topicSearchFilter = async (req, res) => {
+  try {
+    const query = req.query.query;
+    const topics = await Topic.findAll({
+      where: {
+        title: {
+          [Op.like]: `%${query}%`
+        }
+      }
+    });
+
+    if (!topics) {
+      return res.status(204).json({ message: 'No topics found' });
+    }
+
+    return res.json({ topics: topics });
+  }
+  catch (error) {
+    console.error('Error searching topics:', error);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+};
+
 module.exports = {
   studentTopics,
   topic,

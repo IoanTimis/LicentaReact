@@ -75,19 +75,23 @@ export default function StudentRequests() {
     }
   };
 
-  //TODO: Toate functiile de cautare ce nu interogheaza baza de date trebuie sa le fac si lor sa activeze "noMatch" daca nu gasesc nimic
   const handleSearch = (query) => {
-    setFilteredRequests(requests.filter((request) =>
+    const filtered = requests.filter((request) =>
       request.topic.title.toLowerCase().includes(query.toLowerCase()) ||
       request.teacher.first_name.toLowerCase().includes(query.toLowerCase()) ||
       request.teacher.name.toLowerCase().includes(query.toLowerCase())    
-    ));
+    );
+  
+    setFilteredRequests(filtered);
+    setNoMatch(filtered.length === 0);
   };
+  
 
   const handleFilterChange = (filter) => {
-    setFilteredRequests(
-      filter.status ? requests.filter((request) => request.status === filter.status) : requests
-    );
+    const filtered = filter.status ? requests.filter((request) => request.status === filter.status) : requests
+    
+    setFilteredRequests(filtered);
+    setNoMatch(filtered.length === 0);
   };
 
   if(requests.length === 0) {
@@ -97,7 +101,12 @@ export default function StudentRequests() {
   return (
     <div className="mx-auto flex flex-col lg:flex-row min-h-screen bg-gray-100 p-4">
 
-      <FilterBar className="lg:w-1/4 w-full" onSearch={handleSearch} onFilterChange={handleFilterChange} filterOnDatabase={false} noMatch={noMatch} />
+      <FilterBar className="lg:w-1/4 w-full" 
+        onSearch={handleSearch} 
+        onFilterChange={handleFilterChange} 
+        filterOnDatabase={false} 
+        noMatch={noMatch} 
+      />
 
       <div className="lg:w-3/4 w-full p-4 flex-grow">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4 gap-y-6">
