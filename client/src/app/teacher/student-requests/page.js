@@ -10,6 +10,7 @@ import ConfirmActionModal from "@/app/components/general/confirm-action-modal";
 import { ErrorContext } from "@/context/errorContext";
 import { useContext } from "react";
 import { sendEmail } from "@/app/api/sendEmail/page"; 
+import { jwtDecode } from "jwt-decode";
 
 export default function StudentRequests() {
   const [requests, setRequests] = useState([]);
@@ -76,7 +77,7 @@ export default function StudentRequests() {
       );
 
       const updatedRequest = requests.find((request) => request.id === selectedRequestId);
-      const subject = translate(`Request ${status} "${updatedRequest.topic.title}"`);
+      const subject = translate(`Request ${status}`);
 
       setRequests((prevRequests) =>
         prevRequests.map((request) => {
@@ -91,10 +92,16 @@ export default function StudentRequests() {
         })
       );
 
+      const accessToken = localStorage.getItem("accessToken");
+      const decodedToken = jwtDecode(accessToken);
+
       const emailData = {
-        to: "ioan.timis02@e-uvt.ro",
-        subject: "Test Email",
-        text: "Acesta este un mesaj de test.",
+        to: `${updatedRequest.student.email}`,
+        subject: subject,
+        message: message,
+        title: updatedRequest.topic.title,
+        professorEmail: decodedToken.email,
+        status: status
       };
       
       sendEmail(emailData)
