@@ -15,10 +15,10 @@ export default function TopicCard({ topic, translate, onEdit, onDuplicate, handl
         </div>
         <div className="p-4">
           <p className="text-gray-700">
-            <span className="font-semibold">{translate("Description")}:</span> {topic.description}
+            <span className="font-semibold">{translate("Description")}:</span> {truncateText(topic.description, 40)}
           </p>
           <p className="text-sm text-gray-700">
-            <span className="font-semibold">{translate("Keywords")}:</span> {truncateText(topic.keywords, 40)}
+            <span className="font-semibold">{translate("Keywords")}:</span> {topic.keywords}
           </p>
           <p className="text-sm text-gray-700">
             <span className="font-semibold">{translate("Slots")}:</span> {topic.slots}

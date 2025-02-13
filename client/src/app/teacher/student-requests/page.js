@@ -22,10 +22,8 @@ export default function StudentRequests() {
   const [localUser, setLocalUser] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
   const [modalAction, setModalAction] = useState("");
-  const { translate } = useLanguage();
+  const { translate, language } = useLanguage();
   const { setGlobalErrorMessage } = useContext(ErrorContext);
-  const { language } = useLanguage();
-  console.log("language", language); 
 
   useEffect(() => {
     const accessToken = localStorage.getItem("accessToken");
@@ -119,8 +117,8 @@ export default function StudentRequests() {
       console.log("emailData", emailData);
       
       sendEmail(emailData)
-        .then((response) => console.log("Răspuns:", response))
-        .catch((error) => console.error("Eroare la trimitere:", error));
+        .then((response) => console.log("Response:", response))
+        .catch((error) => console.error("Error sending:", error));
       
       console.log("Response sent successfully.");
       toggleModal();
@@ -152,8 +150,8 @@ export default function StudentRequests() {
       console.log("emailData", emailData);
 
       sendEmail(emailData)
-        .then((response) => console.log("Răspuns:", response))
-        .catch((error) => console.error("Eroare la trimitere:", error));
+        .then((response) => console.log("Response:", response))
+        .catch((error) => console.error("Error sending:", error));
 
       setRequests((prevRequests) => prevRequests.filter((request) => request.id !== requestId));
       console.log("Request deleted successfully.");

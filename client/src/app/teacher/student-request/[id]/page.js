@@ -10,6 +10,8 @@ import { jwtDecode } from "jwt-decode";
 import { EnvelopeIcon, TrashIcon } from "@heroicons/react/24/solid";
 import { ErrorContext } from "@/context/errorContext";
 import { useContext } from "react";
+import { BuildEmailData } from "@/utils/buildEmailData";
+import { sendEmail } from "@/app/api/sendEmail/page";
 
 export default function TopicDetails() {
   const [request, setRequest] = useState(null);
@@ -20,7 +22,7 @@ export default function TopicDetails() {
   const [localUser, setLocalUser] = useState(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const { setGlobalErrorMessage } = useContext(ErrorContext);
-  const { translate } = useLanguage();
+  const { translate, language } = useLanguage();
   const { id } = useParams();
 
   useEffect(() => {
@@ -31,6 +33,7 @@ export default function TopicDetails() {
 
   const toggleModal = () => {
     setResponseModalOpen((prev) => !prev);
+    setIsDropdownOpen(false);
   };
 
   const openConfirmModal = (action) => {
@@ -60,6 +63,25 @@ export default function TopicDetails() {
   const handleDelete = async (topicId) => {
     try {
       await axiosInstance.delete(`/teacher/student-request/delete/${topicId}`, { withCredentials: true });
+      const to = request.student.email;
+      const title = request.topic.title;
+      const actionMakerEmail = localUser.email;
+      const action = "deleteRequest";
+
+      const data = {
+        to,
+        title,
+        actionMakerEmail,
+        action,
+        language
+      }
+
+      const emailData = BuildEmailData(data);
+
+      sendEmail(emailData)
+        .then((response) => console.log("Response:", response))
+        .catch((error) => console.error("Error sending:", error));
+
       console.log("Theme deleted successfully.");
       setIsRequestDeleted(true);
     } catch (error) {
@@ -76,7 +98,27 @@ export default function TopicDetails() {
 
     try {
       await axiosInstance.put(`/teacher/student-request/response/${request.id}`, { status, message }, { withCredentials: true });
-  
+      setRequest({ ...request, status });
+      
+      const to = request.student.email;
+      const title = request.topic.title;
+      const actionMakerEmail = localUser.email;
+      const action = status === "accepted" ? "acceptRequest" : "rejectRequest";
+
+      const data = {
+        to,
+        title,
+        actionMakerEmail,
+        action,
+        language
+      };
+      
+      const emailData = BuildEmailData(data);
+
+      sendEmail(emailData)
+        .then((response) => console.log("Response:", response))
+        .catch((error) => console.error("Error sending:", error));
+
       console.log("Response sent successfully.");
       toggleModal();
     } catch (error) {
@@ -131,6 +173,15 @@ export default function TopicDetails() {
               <p className="text-gray-700 mb-4">
                 <span className="font-semibold ">{ translate("Education Level") }:</span> {request.topic.education_level}
               </p>
+              {request.status === "pending" ? (
+                <p className="text-yellow-500">{ translate("Pending") }...</p>
+              ) : request.status === "confirmed" ? (
+                <p className="text-green-500">{ translate("Confirmed") }!</p>
+              ) : request.status === "accepted" ? (
+                <p className="text-blue-500">{ translate("Accepted") }!</p>
+              ) : (
+                <p className="text-red-500">{ translate("Rejected") }!</p>
+              )}
             </div>
           </div>
           {/* Actions button */}

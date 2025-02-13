@@ -22,10 +22,14 @@ export default function RequestCard({ request, onResponse, handleOpenConfirmModa
           </div>
           <div className="p-4">
             <p className="text-gray-600 mb-2">
-              { translate("Description") }: {truncateText(request.topic.description, 40)}
+              <span className="font-semibold">{translate("Description")}:</span> {truncateText(request.topic.description, 40)}
             </p>
-            <p className="text-sm text-gray-600 mb-1">{ translate("Slots") }: {request.topic.slots}</p>
-            <p className="text-sm text-gray-600 mb-1">{ translate("Teacher") }: {request.teacher.name} {request.teacher.first_name}</p>
+            <p className="text-sm text-gray-600 mb-1">
+              <span className="font-semibold">{translate("Slots")}:</span> {request.topic.slots}
+            </p>
+            <p className="text-sm text-gray-600 mb-1">
+              <span className="font-semibold">{translate("Teacher")}:</span> {request.teacher.name} {request.teacher.first_name}
+            </p>
             {request.status === "pending" ? (
               <p className="text-yellow-500">{ translate("Pending") }...</p>
             ) : request.status === "confirmed" ? (
@@ -97,10 +101,14 @@ export default function RequestCard({ request, onResponse, handleOpenConfirmModa
           </div>
           <div className="p-4">
             <p className="text-gray-600 mb-2">
-              { translate("Description") }: {truncateText(request.topic.description, 40)}
+              <span className="font-semibold">{translate("Description")}:</span> {truncateText(request.topic.description, 40)}
             </p>
-            <p className="text-sm text-gray-600 mb-1">{ translate("Slots") }: {request.topic.slots}</p>
-            <p className="text-sm text-gray-600 mb-1">{ translate("Student") }: {request.student.name} {request.student.first_name}</p>
+            <p className="text-sm text-gray-600 mb-1">
+              <span className="font-semibold">{translate("Slots")}:</span> {request.topic.slots}
+            </p>
+            <p className="text-sm text-gray-600 mb-1">
+              <span className="font-semibold">{translate("Student")}:</span> {request.student.name} {request.student.first_name}
+            </p>
             {request.status === "pending" ? (
               <p className="text-yellow-500">{ translate("Pending") }...</p>
             ) : request.status === "confirmed" ? (
