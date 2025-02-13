@@ -135,18 +135,21 @@ export default function StudentRequests() {
       await axiosInstance.delete(`/teacher/student-request/delete/${requestId}`, { withCredentials: true });
       const deletedRequest = requests.find((request) => request.id === requestId);
 
-      const message = translate("Your request has been deleted.");
-      const subject = translate("Request deleted");
-      console.log(message);
+      const to = deletedRequest.student.email;
+      const title = deletedRequest.topic.title;
+      const actionMakerEmail = localUser.email;
+      const action = "deleteRequest";
 
-      const emailData = {
-        to: `${deletedRequest.student.email}`,
-        subject: subject,
-        message: message,
-        title: deletedRequest.topic.title,
-        professorEmail: localUser.email,
-        status: "deleted"
+      const data = {
+        to,
+        title,
+        actionMakerEmail,
+        action,
+        language
       };
+
+      const emailData = BuildEmailData(data);
+      console.log("emailData", emailData);
 
       sendEmail(emailData)
         .then((response) => console.log("Răspuns:", response))
