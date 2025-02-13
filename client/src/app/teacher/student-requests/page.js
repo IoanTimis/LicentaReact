@@ -9,6 +9,7 @@ import { useLanguage } from "@/context/Languagecontext";
 import ConfirmActionModal from "@/app/components/general/confirm-action-modal";
 import { ErrorContext } from "@/context/errorContext";
 import { useContext } from "react";
+import { sendEmail } from "@/app/api/sendEmail/page"; 
 
 export default function StudentRequests() {
   const [requests, setRequests] = useState([]);
@@ -68,7 +69,14 @@ export default function StudentRequests() {
         throw new Error("ID not found");
       }
 
-      await axiosInstance.put(`/teacher/student-request/response/${selectedRequestId}`, { status, message }, { withCredentials: true });
+      await axiosInstance.put(
+        `/teacher/student-request/response/${selectedRequestId}`, 
+        { status, message }, 
+        { withCredentials: true }
+      );
+
+      const updatedRequest = requests.find((request) => request.id === selectedRequestId);
+      const subject = translate(`Request ${status} "${updatedRequest.topic.title}"`);
 
       setRequests((prevRequests) =>
         prevRequests.map((request) => {
@@ -81,7 +89,18 @@ export default function StudentRequests() {
           }
           return request;
         })
-      );      
+      );
+
+      const emailData = {
+        to: "ioan.timis02@e-uvt.ro",
+        subject: "Test Email",
+        text: "Acesta este un mesaj de test.",
+      };
+      
+      sendEmail(emailData)
+        .then((response) => console.log("Răspuns:", response))
+        .catch((error) => console.error("Eroare la trimitere:", error));
+      
       console.log("Response sent successfully.");
       toggleModal();
     } catch (error) {

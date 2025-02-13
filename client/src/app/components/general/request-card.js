@@ -129,7 +129,7 @@ export default function RequestCard({ request, onResponse, handleOpenConfirmModa
               className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-20 border border-gray-200"
             >
               <Link
-                href={`/teacher/request-topic/${request.id}`} 
+                href={`/teacher/student-request/${request.id}`} 
                 className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition"
               >
                 {translate("View Request")}
