@@ -107,8 +107,15 @@ export default function StudentRequests() {
       const actionMakerEmail = localUser.email;
       const action = status === "accepted" ? "acceptRequest" : "rejectRequest";
 
+      const data = {
+        to,
+        title,
+        actionMakerEmail,
+        action,
+        language
+      };
 
-      const emailData = BuildEmailData(to, title, actionMakerEmail, action, language);
+      const emailData = BuildEmailData(data);
       console.log("emailData", emailData);
       
       sendEmail(emailData)

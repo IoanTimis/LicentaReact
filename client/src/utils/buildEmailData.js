@@ -1,6 +1,7 @@
-export function BuildEmailData (to, title, actionMakerEmail, _action, language) {
+export function BuildEmailData (data) {
+  const { to, title, actionMakerEmail, action, language } = data;
 
-  if (!to || !title || !actionMakerEmail || !_action || !language) {
+  if (!to || !title || !actionMakerEmail || !action || !language) {
     throw new Error("All fields are required.");
   }
 
@@ -8,7 +9,7 @@ export function BuildEmailData (to, title, actionMakerEmail, _action, language) 
   let message = "";
   let status = "";
 
-  if(_action === "deleteRequest") {
+  if(action === "deleteRequest") {
     if(language === "ro") {
       subject = "Cerere ștearsă";
       message = "Cererea ta a fost ștearsă.";
@@ -30,7 +31,7 @@ export function BuildEmailData (to, title, actionMakerEmail, _action, language) 
     };
 
     return data;
-  } else if (_action === "acceptRequest") {
+  } else if (action === "acceptRequest") {
     if(language === "ro") {
       subject = "Cerere acceptată";
       message = "Cererea ta a fost acceptată.";
@@ -52,7 +53,7 @@ export function BuildEmailData (to, title, actionMakerEmail, _action, language) 
     };
 
     return data;
-  } else if (_action === "rejectRequest") {
+  } else if (action === "rejectRequest") {
     if(language === "ro") {
       subject = "Cerere respinsă";
       message = "Cererea ta a fost respinsă.";
