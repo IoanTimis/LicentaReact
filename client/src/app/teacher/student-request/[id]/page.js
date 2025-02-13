@@ -17,13 +17,17 @@ export default function TopicDetails() {
   const [responseModalOpen, setResponseModalOpen] = useState(false);
   const [modalAction, setModalAction] = useState("");
   const [isRequestDeleted, setIsRequestDeleted] = useState(false);
+  const [localUser, setLocalUser] = useState(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const { setGlobalErrorMessage } = useContext(ErrorContext);
   const { translate } = useLanguage();
   const { id } = useParams();
-  
-  const accessToken = localStorage.getItem("accessToken");
-  const user = jwtDecode(accessToken);
+
+  useEffect(() => {
+    const accessToken = localStorage.getItem("accessToken");
+    const decodedToken = jwtDecode(accessToken);
+    setLocalUser(decodedToken);
+  }, []);
 
   const toggleModal = () => {
     setResponseModalOpen((prev) => !prev);
@@ -104,14 +108,14 @@ export default function TopicDetails() {
               <div className="w-28 h-28 rounded-full overflow-hidden mb-6">
                 <img
                   src="/logo_uvt_profile.png"
-                  alt={`${user.first_name} ${user.name}`}
+                  alt={`${localUser.first_name} ${localUser.name}`}
                   className="w-full h-full object-cover"
                 />
               </div>
               <h2 className="text-2xl font-bold text-gray-800 mb-2">
-                {user.title}. {user.first_name} {user.name}
+                {localUser.title}. {localUser.first_name} {localUser.name}
               </h2>
-              <p className="text-gray-600 mb-4">{user.email}</p>
+              <p className="text-gray-600 mb-4">{localUser.email}</p>
             </div>
 
             {/* Topic Details */}

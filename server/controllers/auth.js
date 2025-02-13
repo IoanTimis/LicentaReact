@@ -8,6 +8,7 @@ const teacherEmail = require('../models/teacherEmail');
 const axios = require('axios');
 const crypto = require('crypto');
 const jwt = require("jsonwebtoken");
+const { title } = require('process');
 
 const checkSession = (req, res) => {
     const authHeader = req.headers["authorization"];
@@ -80,20 +81,35 @@ const refreshAccessToken = (req, res) => {
     const refreshToken = req.cookies.refreshToken;
 
     if (!refreshToken) {
-        return res.status(401).json({ error: "No refresh token provided" });
+      return res.status(401).json({ error: "No refresh token provided" });
     }
+
     const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
 
-    const date = new Date();
+    if (!decoded || !decoded.role) {
+      return res.status(403).json({ error: "Invalid refresh token payload" });
+    }
 
-    // Generează un nou Access Token
-    const newAccessToken = jwt.sign(
-      { id: decoded.id, email: decoded.email, role: decoded.role, complete_profile: decoded.complete_profile },
-      process.env.JWT_SECRET,
-      { expiresIn: "15m" } // Access Token valabil 15 minute
-    );
+    const commonFields = ["id", "name", "first_name", "email", "role", "complete_profile"];
+    let userData = commonFields.reduce((acc, field) => {
+      acc[field] = decoded[field];
+      return acc;
+    }, {});
+
+    if (decoded.role === "student") {
+      userData.faculty_id = decoded.faculty_id;
+      userData.specialization_id = decoded.specialization_id;
+      userData.education_level = decoded.education_level;
+    }
+
+    if (decoded.role === "teacher") {
+      userData.title = decoded.title;
+    }
+
+    const newAccessToken = jwt.sign(userData, process.env.JWT_SECRET, { expiresIn: "15m" });
 
     return res.status(200).json({ accessToken: newAccessToken });
+
   } catch (error) {
     console.error("Invalid or expired refresh token:", error);
     return res.status(403).json({ error: "Refresh Token invalid or expired" });

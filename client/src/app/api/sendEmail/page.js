@@ -3,18 +3,18 @@
 import nodemailer from "nodemailer";
 
 export async function sendEmail(data) {
-  const { to, title, professorEmail, status, message, subject } = data;
+  const { to, title, actionMakerEmail, status, message, subject } = data;
 
-  if (!to || !title || !professorEmail || !status || !message || !subject) {
+  if (!to || !title || !actionMakerEmail || !status || !message || !subject) {
     throw new Error("All fields are required.");
   }
 
   const emailContent = `
     <div style="font-family: 'Arial', sans-serif; color: #333; max-width: 600px; margin: 20px auto; border: 1px solid #ccc; border-radius: 10px; padding: 20px; font-size: 18px;">
-      <h2 style="color: #007BFF; text-align: center; font-size: 26px;">📄 Detalii Tema 🛠️</h2>
+      <h2 style="color: #007BFF; text-align: center; font-size: 26px;">📄 Email Automat Informativ 🛠️</h2>
       <hr style="margin: 20px 0;">
       <p style="margin-bottom: 15px;"><strong>🎯 Titlu Tema:</strong> <span style="font-size: 20px;">${title}</span></p>
-      <p style="margin-bottom: 15px;"><strong>📧 Email Profesor:</strong> <a href="mailto:${professorEmail}" style="font-size: 20px; color: #007BFF;">${professorEmail}</a></p>
+      <p style="margin-bottom: 15px;"><strong>📧 Email Profesor:</strong> <a href="mailto:${actionMakerEmail}" style="font-size: 20px; color: #007BFF;">${actionMakerEmail}</a></p>
       <p style="margin-bottom: 15px;"><strong>📋 Status:</strong> <span style="color: ${status === 'Acceptată' ? 'green' : 'red'}; font-size: 20px;">${status}</span></p>
       <p style="margin-bottom: 15px;"><strong>📝 Mesaj:</strong> <span style="font-size: 20px;">${message}</span></p>
       <hr style="margin: 20px 0;">

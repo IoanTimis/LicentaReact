@@ -11,6 +11,7 @@ import { ErrorContext } from "@/context/errorContext";
 import { useContext } from "react";
 import { sendEmail } from "@/app/api/sendEmail/page"; 
 import { jwtDecode } from "jwt-decode";
+import { BuildEmailData } from "@/utils/buildEmailData";
 
 export default function StudentRequests() {
   const [requests, setRequests] = useState([]);
@@ -18,10 +19,20 @@ export default function StudentRequests() {
   const [noMatch, setNoMatch] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedRequestId, setSelectedRequestId] = useState();
+  const [localUser, setLocalUser] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
   const [modalAction, setModalAction] = useState("");
   const { translate } = useLanguage();
   const { setGlobalErrorMessage } = useContext(ErrorContext);
+  const { language } = useLanguage();
+  console.log("language", language); 
+
+  useEffect(() => {
+    const accessToken = localStorage.getItem("accessToken");
+    const decodedToken = jwtDecode(accessToken);
+    setLocalUser(decodedToken);
+  }, []);
+
 
   useEffect(() => {
     const fetchRequests = async () => {
@@ -77,7 +88,6 @@ export default function StudentRequests() {
       );
 
       const updatedRequest = requests.find((request) => request.id === selectedRequestId);
-      const subject = translate(`Request ${status}`);
 
       setRequests((prevRequests) =>
         prevRequests.map((request) => {
@@ -92,17 +102,14 @@ export default function StudentRequests() {
         })
       );
 
-      const accessToken = localStorage.getItem("accessToken");
-      const decodedToken = jwtDecode(accessToken);
+      const to = updatedRequest.student.email;
+      const title = updatedRequest.topic.title;
+      const actionMakerEmail = localUser.email;
+      const action = status === "accepted" ? "acceptRequest" : "rejectRequest";
 
-      const emailData = {
-        to: `${updatedRequest.student.email}`,
-        subject: subject,
-        message: message,
-        title: updatedRequest.topic.title,
-        professorEmail: decodedToken.email,
-        status: status
-      };
+
+      const emailData = BuildEmailData(to, title, actionMakerEmail, action, language);
+      console.log("emailData", emailData);
       
       sendEmail(emailData)
         .then((response) => console.log("Răspuns:", response))
@@ -119,6 +126,25 @@ export default function StudentRequests() {
   const handleDelete = async (requestId) => {
     try {
       await axiosInstance.delete(`/teacher/student-request/delete/${requestId}`, { withCredentials: true });
+      const deletedRequest = requests.find((request) => request.id === requestId);
+
+      const message = translate("Your request has been deleted.");
+      const subject = translate("Request deleted");
+      console.log(message);
+
+      const emailData = {
+        to: `${deletedRequest.student.email}`,
+        subject: subject,
+        message: message,
+        title: deletedRequest.topic.title,
+        professorEmail: localUser.email,
+        status: "deleted"
+      };
+
+      sendEmail(emailData)
+        .then((response) => console.log("Răspuns:", response))
+        .catch((error) => console.error("Eroare la trimitere:", error));
+
       setRequests((prevRequests) => prevRequests.filter((request) => request.id !== requestId));
       console.log("Request deleted successfully.");
     } catch (error) {

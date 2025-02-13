@@ -1,5 +1,6 @@
 {
     "_comment1-------------------": "Translations for general pages and general components",
+    "Deleted": "Șters",
     "Send": "Trimite",
     "Search": "Caută",
     "Search...": "Caută...",
@@ -27,6 +28,8 @@
     "Options": "Opțiuni",
     "Profile completed successfully": "Profil completat cu succes",
     "_comment2------------------": "Translations for teacher pages",
+    "Request deleted": "Cerere ștearsă",
+    "Your request has been deleted.": "Cererea ta a fost ștearsă.",
     "Request accepted": "Cerere acceptată",
     "Request rejected": "Cerere respinsă",
     "Send Response": "Trimite Răspuns",
