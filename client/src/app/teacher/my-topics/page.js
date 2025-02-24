@@ -202,8 +202,6 @@ export default function TeacherTopics() {
     }
   };
 
-  //TODO: Ca peste tot, am probleme cu actualizarea dinamica in pagina ( la adaugare in acest caz)
-
   if(fetchDataNull) {
     return <p className="text-center text-gray-700">{ translate("You didn't add any themes yet.")}</p>;
   }

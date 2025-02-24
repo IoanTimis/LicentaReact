@@ -6,7 +6,7 @@ import { useLanguage } from "@/context/Languagecontext";
 import { ErrorContext } from "@/context/errorContext";
 import { truncateText } from "@/utils/truncate-text";
 
-export default function TopicCard({ topic, onRequest }) {
+export default function TopicCard({ topic, onRequest, newRequestedTopic }) {
   const { translate } = useLanguage();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isTopicRequested, setIsTopicRequested] = useState(false);
@@ -28,7 +28,7 @@ export default function TopicCard({ topic, onRequest }) {
     };
 
     fetchData();
-  }, [topic.id]);
+  }, [topic.id, newRequestedTopic]);
 
   const handleRequestClick = async () => {
     setIsDropdownOpen(false);

@@ -8,10 +8,14 @@ import FilterBar from "@/app/components/general/filter-bar";
 import { ErrorContext } from "@/context/errorContext";
 import { useContext } from "react";
 import { useLanguage } from "@/context/Languagecontext";
+import { setRequests, addRequest, updateRequest, deleteRequest } from "@/store/features/requests/requestSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 export default function StudentRequests() {
-  const [requests, setRequests] = useState([]);
-  const [filteredRequests, setFilteredRequests] = useState([]);
+  const requests = useSelector((state) => state.requests.list);
+  const [fetchRequestsNull, setFetchRequestsNull] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
   const [selectedRequest, setSelectedRequest] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
   const [modalAction, setModalAction] = useState("");
@@ -27,13 +31,19 @@ export default function StudentRequests() {
 
   useEffect(() => {
     const fetchRequests = async () => {
+      setLoading(true);
       try {
         const response = await axiosInstance.get("/student/fetch/requested-topics", { withCredentials: true });
-        setRequests(response.data.requests);
-        setFilteredRequests(response.data.requests);
+        
+        dispatch(setRequests(response.data.requests));
+        if(response.data.requests.length === 0) {
+          setFetchRequestsNull(true);
+        }
       } catch (error) {
         console.error("Error fetching requests:", error);
         setGlobalErrorMessage(translate(translate("An error occurred while fetching requests. Please try again.")));
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -44,16 +54,7 @@ export default function StudentRequests() {
     try {
       await axiosInstance.put(`/student/request/confirm/${requestId}`, { withCredentials: true });
   
-      setRequests((prevRequests) =>
-        prevRequests
-          .map((request) => {
-            if (request.id === requestId) {
-              return { ...request, status: "confirmed" };
-            }
-            return request;
-          })
-          .filter((request) => request.id === requestId)
-      );
+      dispatch(setRequests([response.data.request]));
   
       console.log("Request confirmed. Other requests were removed.");
     } catch (error) {
@@ -66,8 +67,8 @@ export default function StudentRequests() {
   const handleDelete = async (requestId) => {
     try {
       await axiosInstance.delete(`/student/request/delete/${requestId}`, { withCredentials: true });
-      setRequests((prevRequests) => prevRequests.filter((request) => request.id !== requestId));
-
+      
+      dispatch(deleteRequest(requestId));
       console.log("Request deleted.");
     } catch (error) {
       console.error("Error deleting request:", error);
@@ -94,7 +95,7 @@ export default function StudentRequests() {
     setNoMatch(filtered.length === 0);
   };
 
-  if(requests.length === 0) {
+  if(fetchRequestsNull) {
     return <div className="min-h-screen bg-gray-100 p-8">{ translate("You didn't make any requests yet.") }</div>
   }
 
@@ -109,7 +110,8 @@ export default function StudentRequests() {
 
       <div className="lg:w-3/4 w-full p-4 flex-grow">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4 gap-y-6">
-          {filteredRequests.map((request) => (
+          {loading && <p className="text-center text-gray-700">{translate("Loading...")}</p>}
+          {requests.map((request) => (
             <div key={request.id}> 
               <RequestCard 
                 request={request} 

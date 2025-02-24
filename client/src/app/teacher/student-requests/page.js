@@ -192,7 +192,7 @@ export default function StudentRequests() {
   
   
 
-  if(requests.length === 0) {
+  if(fetchRequestsNull) {
     return (
       <div className="min-h-screen bg-gray-100 p-8">
         <h1 className="text-2xl font-bold text-center text-gray-700">{translate("No requests found.")}</h1>

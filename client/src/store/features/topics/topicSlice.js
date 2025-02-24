@@ -7,7 +7,10 @@ const topicSlice = createSlice({
   },
   reducers: {
     setTopics(state, action) {
-      state.list = action.payload;
+      state.list = action.payload.map(topic => ({
+        ...topic,
+        isRequested: false
+      }));
     },
     addTopic(state, action) {
       state.list.push(action.payload);

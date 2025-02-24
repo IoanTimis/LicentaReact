@@ -8,6 +8,8 @@ import FilterBar from "@/app/components/general/filter-bar";
 import { ErrorContext } from "@/context/errorContext";
 import { useContext } from "react";
 import { useLanguage } from "@/context/Languagecontext";
+import { setTopics } from "@/store/features/topics/topicSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 export default function StudentTopics() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -17,21 +19,31 @@ export default function StudentTopics() {
   const { translate } = useLanguage();
   const { setGlobalErrorMessage } = useContext(ErrorContext);
 
-  const [topics, setTopics] = useState([]);
-  const [filteredTopics, setFilteredTopics] = useState([]);
+  const [newRequestedTopic, setNewRequestedTopic] = useState(null);
+
+  const topics = useSelector((state) => state.topics.list);
+  const dispatch = useDispatch();
+  const [fetchTopicsNull, setFetchTopicsNull] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [noMatch, setNoMatch] = useState(false);
 
   // Fetch data from the server
   useEffect(() => {
+    setLoading(true);
     const fetchData = async () => {
       try {
         const response = await axiosInstance.get("/student/fetch/topics", { withCredentials: true });
 
-        setTopics(response.data.topics);
-        setFilteredTopics(response.data.topics);
+        dispatch(setTopics(response.data.topics));
+
+        if(response.data.topics.length === 0) {
+          setFetchTopicsNull(true);
+        }
       } catch (error) {
         console.error("Error fetching topics:", error);
         setGlobalErrorMessage(translate("An error occurred while fetching topics. Please try again."));
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -71,10 +83,9 @@ export default function StudentTopics() {
       });
   
       console.log("Request sent successfully:", response.data);
+      
+      setNewRequestedTopic(response.data.request);
 
-      //TODO: dinamic update the topics array not working
-      setTopics([...topics]); 
-  
       toggleModal();
     } catch (error) {
       console.error("Error sending request:", error);
@@ -108,7 +119,7 @@ export default function StudentTopics() {
     }
   };
   
-  if(topics.length === 0) {
+  if(fetchTopicsNull) {
     return <div className="flex items-center justify-center h-screen">{translate("No themes available.")}</div>;
   }
 
@@ -122,11 +133,13 @@ export default function StudentTopics() {
 
       <div className="lg:w-3/4 w-full p-4 flex-grow">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4 gap-y-6">
-          {filteredTopics.map((topic) => (
+          {loading && <p className="text-center text-gray-700">{translate("Loading...")}</p>}
+          {topics.map((topic) => (
             <TopicCard
               key={topic.id}
               topic={topic}
               onRequest={onRequest}
+              newRequestedTopic={newRequestedTopic}
             />
           ))}
         </div>
