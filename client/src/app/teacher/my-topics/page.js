@@ -10,7 +10,7 @@ import FilterBar from "@/app/components/general/filter-bar";
 import { checkForDuplicates } from "@/utils/checkForDublicates";
 import { ErrorContext } from "@/context/errorContext";
 import { useContext } from "react";
-import { addTopic, setTopics, updateTopic, deleteTopic } from "@/store/features/topics/topicSlice";
+import { addTopic, setTopics, updateTopic, deleteTopic, setFilteredTopics } from "@/store/features/topics/topicSlice";
 import { useDispatch, useSelector } from "react-redux";
 
 export default function TeacherTopics() {
@@ -21,8 +21,8 @@ export default function TeacherTopics() {
   const [selectedTopic, setSelectedTopic] = useState(null);
   const dispatch = useDispatch();
 
-  const [fetchDataNull, setFetchDataNull] = useState(false);
   const topics = useSelector((state) => state.topics.list);
+  const filteredTopics = useSelector((state) => state.topics.filteredList);
 
   const [isOpen, setIsOpen] = useState(false);
   const [modalAction, setModalAction] = useState("");
@@ -53,11 +53,9 @@ export default function TeacherTopics() {
       setLoading(true)
       try {
         const response = await axiosInstance.get("/teacher/fetch/topics", { withCredentials: true });
+
         setFaculties(response.data.faculties);
         dispatch(setTopics(response.data.teacher.topics));
-        if(response.data.teacher.topics.length === 0) {
-          setFetchDataNull(true);
-        }
       } catch (error) {
         console.error("Error fetching topics:", error);
         setGlobalErrorMessage(translate("An error occurred while fetching topics."));
@@ -194,15 +192,14 @@ export default function TeacherTopics() {
       }
   
       setNoMatch(false);
-      console.log(response.data.topics);
-      dispatch(setTopics(response.data.topics));
+      dispatch(setFilteredTopics(response.data.topics));
     } catch (error) {
       console.error("Error searching requests:", error);
       setGlobalErrorMessage(translate("Error searching for themes. Please try again."));
     }
   };
 
-  if(fetchDataNull) {
+  if(topics.length === 0) {
     return <p className="text-center text-gray-700">{ translate("You didn't add any themes yet.")}</p>;
   }
 
@@ -227,7 +224,7 @@ export default function TeacherTopics() {
         </div>
         {loading && <div className="text-center text-gray-700">Se încarcă...</div>}
         {/* Topic Cards */}
-        {topics.map((topic) => (
+        {filteredTopics.map((topic) => (
           <TopicCard key={topic.id} topic={topic} translate={translate} onEdit={handleEdit} handleOpenConfirmModal={handleOpenConfirmModal} />
         ))}
       </div>

@@ -24,7 +24,6 @@ export default function StudentTopics() {
   const topics = useSelector((state) => state.topics.list);
   const filteredTopics = useSelector((state) => state.topics.filteredList);
   const dispatch = useDispatch();
-  const [fetchTopicsNull, setFetchTopicsNull] = useState(false);
   const [loading, setLoading] = useState(false);
   const [noMatch, setNoMatch] = useState(false);
 
@@ -37,9 +36,6 @@ export default function StudentTopics() {
 
         dispatch(setTopics(response.data.topics));
         dispatch(setFilteredTopics(response.data.topics));
-        if(response.data.topics.length === 0) {
-          setFetchTopicsNull(true);
-        }
       } catch (error) {
         console.error("Error fetching topics:", error);
         setGlobalErrorMessage(translate("An error occurred while fetching topics. Please try again."));

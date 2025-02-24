@@ -12,14 +12,14 @@ import { useContext } from "react";
 import { sendEmail } from "@/app/api/sendEmail/page"; 
 import { jwtDecode } from "jwt-decode";
 import { BuildEmailData } from "@/utils/buildEmailData";
-import { setRequests, addRequest, updateRequest, deleteRequest } from "@/store/features/requests/requestSlice";
+import { setRequests, addRequest, updateRequest, deleteRequest, setFilteredRequests } from "@/store/features/requests/requestSlice";
 import { useDispatch, useSelector } from "react-redux";
 
 export default function StudentRequests() {
   const requests = useSelector((state) => state.requests.list);
+  const filteredRequests = useSelector((state) => state.requests.filteredList);
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
-  const [fetchRequestsNull, setFetchRequestsNull] = useState(false);
   const [noMatch, setNoMatch] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedRequestId, setSelectedRequestId] = useState();
@@ -41,12 +41,8 @@ export default function StudentRequests() {
       setLoading(true);
       try {
         const response = await axiosInstance.get("/teacher/fetch/student-requests", { withCredentials: true });
+      
         dispatch(setRequests(response.data.requests));
-
-        if(response.data.requests.length === 0) {
-          setFetchRequestsNull(true);
-        }
-
       } catch (error) {
         console.error("Error fetching requests:", error);
         setGlobalErrorMessage(translate("An error occurred while fetching requests. Please try again."));
@@ -182,8 +178,7 @@ export default function StudentRequests() {
       }
   
       setNoMatch(false);
-      console.log(response.data.requests);
-      setFilteredRequests(response.data.requests);
+      dispatch(setFilteredRequests(response.data.requests));
     } catch (error) {
       console.error("Error searching requests:", error);
       setGlobalErrorMessage(translate("Error searching for requests. Please try again."));
@@ -192,7 +187,7 @@ export default function StudentRequests() {
   
   
 
-  if(fetchRequestsNull) {
+  if(requests.length === 0) {
     return (
       <div className="min-h-screen bg-gray-100 p-8">
         <h1 className="text-2xl font-bold text-center text-gray-700">{translate("No requests found.")}</h1>
@@ -212,7 +207,7 @@ export default function StudentRequests() {
       <div className="lg:w-3/4 w-full p-4 flex-grow">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4 gap-y-6">
           {loading && <p className="text-center text-gray-700">{translate("Loading...")}</p>}
-          {requests.map((request) => (
+          {filteredRequests.map((request) => (
             <div key={request.id}> 
               <RequestCard 
                 request={request} 
