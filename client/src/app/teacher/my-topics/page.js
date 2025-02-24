@@ -10,15 +10,19 @@ import FilterBar from "@/app/components/general/filter-bar";
 import { checkForDuplicates } from "@/utils/checkForDublicates";
 import { ErrorContext } from "@/context/errorContext";
 import { useContext } from "react";
+import { addTopic, setTopics, updateTopic, deleteTopic } from "@/store/features/topics/topicSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 export default function TeacherTopics() {
   const { translate } = useLanguage();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
   const { setGlobalErrorMessage } = useContext(ErrorContext);
-
-  const [topics, setTopics] = useState([]);
-  const [filteredTopics, setFilteredTopics] = useState([]);
   const [selectedTopic, setSelectedTopic] = useState(null);
+  const dispatch = useDispatch();
+
+  const [fetchDataNull, setFetchDataNull] = useState(false);
+  const topics = useSelector((state) => state.topics.list);
 
   const [isOpen, setIsOpen] = useState(false);
   const [modalAction, setModalAction] = useState("");
@@ -46,14 +50,19 @@ export default function TeacherTopics() {
   // Fetch data from the server
   useEffect(() => {
     const fetchData = async () => {
+      setLoading(true)
       try {
         const response = await axiosInstance.get("/teacher/fetch/topics", { withCredentials: true });
         setFaculties(response.data.faculties);
-        setTopics(response.data.teacher.topics);
-        setFilteredTopics(response.data.teacher.topics);
+        dispatch(setTopics(response.data.teacher.topics));
+        if(response.data.teacher.topics.length === 0) {
+          setFetchDataNull(true);
+        }
       } catch (error) {
         console.error("Error fetching topics:", error);
         setGlobalErrorMessage(translate("An error occurred while fetching topics."));
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -127,7 +136,7 @@ export default function TeacherTopics() {
         withCredentials: true,
       });
 
-      setTopics((prev) => [...prev, response.data.topic]);
+      dispatch(addTopic(response.data.topic));
       
       toggleModal();
       console.log("Theme added successfully!");
@@ -142,13 +151,9 @@ export default function TeacherTopics() {
     try {
       const response = await axiosInstance.put(`/teacher/topic/edit/${topicId}`, { withCredentials: true });
       console.log("Theme edited successfully!");
-      const updatedTopic = response.data.topic;
 
-      setTopics((prevTopics) =>
-      prevTopics.map((topic) =>
-        topic.id === topicId ? { ...topic, ...updatedTopic } : topic
-      )
-    );
+      dispatch(updateTopic(response.data.topic));
+      toggleModal();
     } catch (error) {
       console.error("Error editing theme:", error);
       setGlobalErrorMessage(translate("An error occurred while editing the theme."));
@@ -159,7 +164,8 @@ export default function TeacherTopics() {
   const handleDelete = async (topicId) => {
     try {
       const response = await axiosInstance.delete(`/teacher/topic/delete/${topicId}`, { withCredentials: true });
-      setTopics((prev) => prev.filter((topic) => topic.id !== topicId));
+      
+      dispatch(deleteTopic(topicId));
       console.log("Theme deleted successfully!");
     } catch (error) {
       console.error("Error deleting theme:", error);
@@ -189,7 +195,7 @@ export default function TeacherTopics() {
   
       setNoMatch(false);
       console.log(response.data.topics);
-      setFilteredTopics(response.data.topics);
+      dispatch(setTopics(response.data.topics));
     } catch (error) {
       console.error("Error searching requests:", error);
       setGlobalErrorMessage(translate("Error searching for themes. Please try again."));
@@ -198,7 +204,7 @@ export default function TeacherTopics() {
 
   //TODO: Ca peste tot, am probleme cu actualizarea dinamica in pagina ( la adaugare in acest caz)
 
-  if(topics.length === 0) {
+  if(fetchDataNull) {
     return <p className="text-center text-gray-700">{ translate("You didn't add any themes yet.")}</p>;
   }
 
@@ -221,9 +227,9 @@ export default function TeacherTopics() {
             <PlusCircleIcon className="h-9 w-9 text-gray-400 mx-auto"/>
           </div>
         </div>
-
+        {loading && <div className="text-center text-gray-700">Se încarcă...</div>}
         {/* Topic Cards */}
-        {filteredTopics.map((topic) => (
+        {topics.map((topic) => (
           <TopicCard key={topic.id} topic={topic} translate={translate} onEdit={handleEdit} handleOpenConfirmModal={handleOpenConfirmModal} />
         ))}
       </div>

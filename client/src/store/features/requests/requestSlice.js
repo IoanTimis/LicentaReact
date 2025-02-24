@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  requests: [],
+  list: [],
 };
 
 const requestSlice = createSlice({
@@ -9,7 +9,7 @@ const requestSlice = createSlice({
   initialState,
   reducers: {
     setRequests(state, action) {
-      state.requests = action.payload;
+      state.list = action.payload;
     },
   },
 });
