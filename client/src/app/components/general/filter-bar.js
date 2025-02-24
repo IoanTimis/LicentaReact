@@ -144,7 +144,6 @@ export default function FilterBar({ onSearch, onFilterChange, filterOnDatabase, 
           <option value="">{translate("All")}</option>
           <option value="pending">{translate("Pending")}</option>
           <option value="accepted">{translate("Accepted")}</option>
-          <option value="confirmed">{translate("Confirmed")}</option>
           <option value="rejected">{translate("Rejected")}</option>
         </select>
       </div>
