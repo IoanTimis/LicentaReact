@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   user: null, 
-  isLoading: false, // Pentru a monitoriza încărcarea
+  isLoading: false,
   error: null, 
 };
 
@@ -19,13 +19,10 @@ const userSlice = createSlice({
     },
     setLoading(state, action) {
       state.isLoading = action.payload;
-    },
-    setError(state, action) {
-      state.error = action.payload;
-    },
+    }
   },
 });
 
-export const { setUser, clearUser, setLoading, setError } = userSlice.actions;
+export const { setUser, clearUser, setLoading } = userSlice.actions;
 
 export default userSlice.reducer;
