@@ -8,7 +8,7 @@ import FilterBar from "@/app/components/general/filter-bar";
 import { ErrorContext } from "@/context/errorContext";
 import { useContext } from "react";
 import { useLanguage } from "@/context/Languagecontext";
-import { setTopics } from "@/store/features/topics/topicSlice";
+import { setTopics, setFilteredTopics } from "@/store/features/topics/topicSlice";
 import { useDispatch, useSelector } from "react-redux";
 
 export default function StudentTopics() {
@@ -22,6 +22,7 @@ export default function StudentTopics() {
   const [newRequestedTopic, setNewRequestedTopic] = useState(null);
 
   const topics = useSelector((state) => state.topics.list);
+  const filteredTopics = useSelector((state) => state.topics.filteredList);
   const dispatch = useDispatch();
   const [fetchTopicsNull, setFetchTopicsNull] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -35,7 +36,7 @@ export default function StudentTopics() {
         const response = await axiosInstance.get("/student/fetch/topics", { withCredentials: true });
 
         dispatch(setTopics(response.data.topics));
-
+        dispatch(setFilteredTopics(response.data.topics));
         if(response.data.topics.length === 0) {
           setFetchTopicsNull(true);
         }
@@ -110,8 +111,7 @@ export default function StudentTopics() {
       }
   
       setNoMatch(false);
-      console.log(response.data.topics);
-      setFilteredTopics(response.data.topics);
+      dispatch(setFilteredTopics(response.data.topics));
     } catch (error) {
       console.error("Error searching and filtering topics:", error);
       setGlobalErrorMessage(translate("An error occurred while searching and filtering topics. Please try again."));
@@ -119,7 +119,7 @@ export default function StudentTopics() {
     }
   };
   
-  if(fetchTopicsNull) {
+  if(topics.length === 0) {
     return <div className="flex items-center justify-center h-screen">{translate("No themes available.")}</div>;
   }
 
@@ -134,7 +134,7 @@ export default function StudentTopics() {
       <div className="lg:w-3/4 w-full p-4 flex-grow">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4 gap-y-6">
           {loading && <p className="text-center text-gray-700">{translate("Loading...")}</p>}
-          {topics.map((topic) => (
+          {filteredTopics.map((topic) => (
             <TopicCard
               key={topic.id}
               topic={topic}
