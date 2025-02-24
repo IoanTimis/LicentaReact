@@ -7,7 +7,7 @@ import errorReducer from "./features/error/errorSlice";
 const store = configureStore({
   reducer: {
     user: userReducer,
-    projects: topicReducer,
+    topics: topicReducer,
     requests: requestReducer,
     error: errorReducer,
   },
