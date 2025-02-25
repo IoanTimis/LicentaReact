@@ -115,8 +115,31 @@ export function BuildEmailData (data) {
     };
 
     return data;
-  }
-  else {
+  } else if (action === "newRequest") {
+    if(language === "ro") {
+      subject = "Cerere nouă";
+      message = "Un student a făcut o cerere pentru una dintre temele tale.";
+      status = "Nouă";
+    }
+    else {
+      subject = "New request";
+      message = "A student has made a request for one of your themes.";
+      status = "New";
+    }
+
+    const data = {
+      to,
+      title,
+      actionMakerEmail,
+      status,
+      message,
+      subject,
+      language,
+      role,
+    };
+
+    return data;
+  } else {
     throw new Error("Invalid action.");
   }
 }

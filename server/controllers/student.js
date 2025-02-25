@@ -320,6 +320,10 @@ const newRequest = async (req, res) => {
               attributes: ["id"] 
             }
           ]
+        },
+        {
+          model: User,
+          as: 'user'
         }
       ]
     });
@@ -374,9 +378,7 @@ const newRequest = async (req, res) => {
       return res.status(500).json({ message: 'Error creating request' });
     }
 
-    //TODO:Voi folosi toast redirect
-    //res.redirect(`http://localhost:3000/student/my-request/${request.id}`);
-    res.status(201).json({ message: 'Request created', request: request });
+    res.status(201).json({ message: 'Request created', request: request, topic: topic_data });
   }
   catch (error) {
     console.error('Error creating request:', error);

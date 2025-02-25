@@ -25,10 +25,7 @@ export async function sendEmail(data) {
     strongEmail = language === "ro" ? "Email Student:" : "Student Email:";
   } else {
     strongEmail = language === "ro" ? "Email Profesor:" : "Teacher Email:";
-  }
-
-  //TODO e mereu rosu, trb vazut de ce
-  
+  }  
 
   const emailContent = `
     <div style="font-family: 'Arial', sans-serif; color: #333; max-width: 600px; margin: 20px auto; border: 1px solid #ccc; border-radius: 10px; padding: 20px; font-size: 18px;">

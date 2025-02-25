@@ -10,22 +10,32 @@ import { useContext } from "react";
 import { useLanguage } from "@/context/Languagecontext";
 import { setTopics, setFilteredTopics } from "@/store/features/topics/topicSlice";
 import { useDispatch, useSelector } from "react-redux";
+import { BuildEmailData } from "@/utils/buildEmailData";
+import { sendEmail } from "@/app/api/sendEmail/page";
+import { jwtDecode } from "jwt-decode";
 
 export default function StudentTopics() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [requestedTopicId, setRequestedTopicId] = useState(null);
   const [requestedTopicTeacherId, setRequestedTopicTeacherId] = useState(null);
   const [requestedTopicEducationLevel, setRequestedTopicEducationLevel] = useState(null);
-  const { translate } = useLanguage();
+  const { translate, language } = useLanguage();
   const { setGlobalErrorMessage } = useContext(ErrorContext);
 
   const [newRequestedTopic, setNewRequestedTopic] = useState(null);
+  const [localUser, setLocalUser] = useState(null);
 
   const topics = useSelector((state) => state.topics.list);
   const filteredTopics = useSelector((state) => state.topics.filteredList);
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
   const [noMatch, setNoMatch] = useState(false);
+
+  useEffect(() => {
+    const accessToken = localStorage.getItem("accessToken");
+    const decodedToken = jwtDecode(accessToken);
+    setLocalUser(decodedToken);
+  }, []);
 
   // Fetch data from the server
   useEffect(() => {
@@ -78,6 +88,26 @@ export default function StudentTopics() {
       const response = await axiosInstance.post("/student/request/add", newRequest, {
         withCredentials: true,
       });
+
+      const to = response.data.topic.user.email;
+      const title = response.data.topic.title;
+      const actionMakerEmail = localUser.email;
+      const action = "newRequest";
+      const role = "student";
+      const data = {
+        to,
+        title,
+        actionMakerEmail,
+        action,
+        language,
+        role
+      };
+
+      const emailData = BuildEmailData(data);
+
+      sendEmail(emailData)
+        .then(() => console.log("Email sent."))
+        .catch((error) => console.error("Error sending email:", error));
   
       console.log("Request sent successfully:", response.data);
       
