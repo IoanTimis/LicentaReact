@@ -31,13 +31,13 @@ export default function RequestCard({ request, onResponse, handleOpenConfirmModa
               <span className="font-semibold">{translate("Teacher")}:</span> {request.teacher.name} {request.teacher.first_name}
             </p>
             {request.status === "pending" ? (
-              <p className="text-yellow-500">{ translate("Pending") }...</p>
+              <p className="text-black">{ translate("Pending") }...</p>
             ) : request.status === "confirmed" ? (
-              <p className="text-green-500">{ translate("Confirmed") }!</p>
+              <p className="text-black ">{ translate("Confirmed") }!</p>
             ) : request.status === "accepted" ? (
-              <p className="text-blue-500">{ translate("Accepted") }!</p>
+              <p className="text-black">{ translate("Accepted") }!</p>
             ) : (
-              <p className="text-red-500">{ translate("Rejected") }!</p>
+              <p className="text-black">{ translate("Rejected") }!</p>
             )}
           </div>
         </Link>
@@ -110,13 +110,13 @@ export default function RequestCard({ request, onResponse, handleOpenConfirmModa
               <span className="font-semibold">{translate("Student")}:</span> {request.student.name} {request.student.first_name}
             </p>
             {request.status === "pending" ? (
-              <p className="text-yellow-500">{ translate("Pending") }...</p>
+              <p className="text-black">{ translate("Pending") }...</p>
             ) : request.status === "confirmed" ? (
-              <p className="text-green-500">{ translate("Confirmed") }!</p>
+              <p className="text-black">{ translate("Confirmed") }!</p>
             ) : request.status === "accepted" ? (
-              <p className="text-blue-500">{ translate("Accepted") }!</p>
+              <p className="text-black">{ translate("Accepted") }!</p>
             ) : (
-              <p className="text-red-500">{ translate("Rejected") }!</p>
+              <p className="text-black">{ translate("Rejected") }!</p>
             )}
           </div>
         </Link>

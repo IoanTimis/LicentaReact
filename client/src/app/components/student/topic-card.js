@@ -67,7 +67,7 @@ export default function TopicCard({ topic, onRequest, newRequestedTopic }) {
           <span className="font-semibold">{translate("Teacher Name")}:</span> {topic.user.first_name} {topic.user.name}
         </p>
         <p className="text-gray-700">
-          <span className="font-semibold">{translate("Description")}:</span> {topic.description}
+          <span className="font-semibold">{translate("Description")}:</span> {truncateText(topic.description,40)}
         </p>
         <p className="text-sm text-gray-700">
           <span className="font-semibold">{translate("Keywords")}:</span> {topic.keywords}
