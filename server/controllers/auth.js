@@ -1,14 +1,11 @@
 const sanitizeHtml = require('sanitize-html');
 const bcrypt = require('bcryptjs');
 const User = require('../models/user');
-const Faculty = require('../models/faculty');
-const Specialization = require('../models/specialization');
 const CompleteProfileToken = require('../models/completeProfileToken');
 const teacherEmail = require('../models/teacherEmail');
 const axios = require('axios');
 const crypto = require('crypto');
 const jwt = require("jsonwebtoken");
-const { title } = require('process');
 
 const checkSession = (req, res) => {
     const authHeader = req.headers["authorization"];
@@ -136,10 +133,8 @@ const login = async (req, res) => {
 
         const payload = { id: user.id, email: user.email, role: user.type, complete_profile: user.complete_profile };
 
-        // Generează Access și Refresh Tokens
         const { accessToken, refreshToken } = generateTokens(payload);
 
-        // Trimite token-urile către client
         res.cookie("refreshToken", refreshToken, {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
