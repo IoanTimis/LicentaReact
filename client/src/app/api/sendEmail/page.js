@@ -13,10 +13,13 @@ export async function sendEmail(data) {
   let strongEmail = "";
   let strongStatus = "";
   let strongMessage = "";
+  let statusColor = "";
+  console.log(status,"status")
 
   strongTitle = language === "ro" ? "Titlu Tema" : "Theme Title";
   strongStatus = language === "ro" ? "Stare:" : "Status:";
   strongMessage = language === "ro" ? "Mesaj:" : "Message:";
+  statusColor = ["Rejected", "Respinsă"].includes(status) ? "red" : "green";
 
   if (role === "student") {
     strongEmail = language === "ro" ? "Email Student:" : "Student Email:";
@@ -31,7 +34,7 @@ export async function sendEmail(data) {
       <hr style="margin: 20px 0;">
       <p style="margin-bottom: 15px;"><strong>${strongTitle}</strong> <span style="font-size: 20px;">${title}</span></p>
       <p style="margin-bottom: 15px;"><strong>${strongEmail}</strong> <a href="mailto:${actionMakerEmail}" style="font-size: 20px; color: #007BFF;">${actionMakerEmail}</a></p>
-      <p style="margin-bottom: 15px;"><strong>${strongStatus}</strong> <span style="color: ${status === 'Acceptată' ? 'green' : 'red'}; font-size: 20px;">${status}</span></p>
+      <p style="margin-bottom: 15px;"><strong>${strongStatus}</strong> <span style="color: ${statusColor}; font-size: 20px;">${status}</span></p>
       <p style="margin-bottom: 15px;"><strong>${strongMessage}</strong> <span style="font-size: 20px;">${message}</span></p>
       <hr style="margin: 20px 0;">
       <p style="text-align: center; font-size: 18px;"><a href="https://www.uvt.ro" style="color: #007BFF; text-decoration: none; font-size: 18px;">Platforma UVT</a></p>

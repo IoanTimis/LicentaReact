@@ -60,11 +60,11 @@ export default function StudentRequests() {
 
   const handleConfirm = async (requestId) => {
     try {
-      await axiosInstance.put(`/student/request/confirm/${requestId}`, { withCredentials: true });
+      const response = await axiosInstance.put(`/student/request/confirm/${requestId}`, { withCredentials: true });
       dispatch(setRequests([response.data.request]));
 
       const to = response.data.request.teacher.email;
-      const title = response.data.topic.title;
+      const title = response.data.request.topic.title;
       const actionMakerEmail = localUser.email;
       const action = "confirmRequest";
       const role = "student";
@@ -145,7 +145,11 @@ export default function StudentRequests() {
   };
 
   if(requests.length === 0) {
-    return <div className="min-h-screen bg-gray-100 p-8">{ translate("You didn't make any requests yet.") }</div>
+    return (
+      <div className="min-h-screen bg-gray-100 p-8">
+        <h1 className="text-2xl font-bold text-center text-gray-700">{translate("You didn't make any requests yet.")}</h1>
+      </div>
+    );
   }
 
   return (

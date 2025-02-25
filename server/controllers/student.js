@@ -391,7 +391,19 @@ const confirmRequest = async (req, res) => {
     const student_id = user.id;
     const request_id = req.params.id;
 
-    const request = await topicRequest.findByPk(request_id);
+   const request = await topicRequest.findByPk(request_id,
+     {
+      include: [{
+        model: User,
+        as: 'teacher'
+      },
+      {
+        model: Topic,
+        as: 'topic'
+      }
+    ]
+     }
+   );
 
     if (!request) {
       return res.status(404).json({ message: 'Request not found' });
@@ -443,7 +455,7 @@ const confirmRequest = async (req, res) => {
       return res.status(500).json({ message: 'Error creating teacher new student' });
     };
 
-    res.status(200).json({ message: 'Request Confirmed', request: request, topic: topic });
+    res.status(200).json({ message: 'Request Confirmed', request: request});
   }
   catch (error) {
     console.error('Error confirming request:', error);
