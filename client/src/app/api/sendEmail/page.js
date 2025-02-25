@@ -19,13 +19,14 @@ export async function sendEmail(data) {
   strongTitle = language === "ro" ? "Titlu Tema" : "Theme Title";
   strongStatus = language === "ro" ? "Stare:" : "Status:";
   strongMessage = language === "ro" ? "Mesaj:" : "Message:";
-  statusColor = ["Rejected", "Respinsă"].includes(status) ? "red" : "green";
+  statusColor = ["Rejected", "Respinsă", "Ștearsă", "Deleted"].includes(status) ? "red" : "green";
 
   if (role === "student") {
     strongEmail = language === "ro" ? "Email Student:" : "Student Email:";
   } else {
     strongEmail = language === "ro" ? "Email Profesor:" : "Teacher Email:";
   }
+
   //TODO e mereu rosu, trb vazut de ce
   
 
