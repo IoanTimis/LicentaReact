@@ -7,13 +7,18 @@ import { useLanguage } from "@/context/Languagecontext";
 import ConfirmActionModal from "@/app/components/general/confirm-action-modal";
 import { ErrorContext } from "@/context/errorContext";
 import { useContext } from "react";
+import { BuildEmailData } from "@/utils/buildEmailData";
+import { sendEmail } from "@/app/api/sendEmail/page";
+import { jwtDecode } from "jwt-decode";
 
 export default function TopicDetails() {
   const [request, setRequest] = useState(null);
+  const [isConfirmed, setIsConfirmed] = useState(false);
   const [isRequestDeleted, setIsRequestDeleted] = useState(false);
+  const [localUser, setLocalUser] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
   const [modalAction, setModalAction] = useState("");
-  const { translate } = useLanguage();
+  const { translate, language } = useLanguage();
   const { setGlobalErrorMessage } = useContext(ErrorContext);
   const { id } = useParams();
 
@@ -21,6 +26,12 @@ export default function TopicDetails() {
     setModalAction(action);
     setIsOpen(true);
   };
+
+  useEffect(() => {
+    const accessToken = localStorage.getItem("accessToken");
+    const decodedToken = jwtDecode(accessToken);
+    setLocalUser(decodedToken);
+  }, []);
 
   // Fetch topic details
   useEffect(() => {
@@ -30,6 +41,10 @@ export default function TopicDetails() {
       try {
         const response = await axiosInstance.get(`/student/fetch/requested-topic/${id}`, { withCredentials: true });
         setRequest(response.data.request);
+
+        if (response.data.request.status === "confirmed") {
+          setIsConfirmed(true);
+        }
       } catch (error) {
         console.error("Error fetching request details:", error);
         setGlobalErrorMessage("An error occurred while fetching request details.");
@@ -39,11 +54,61 @@ export default function TopicDetails() {
     fetchRequestDetails();
   }, [id]);
 
+  const confirmRequest = async (requestId) => {
+    try {
+      await axiosInstance.put(`/student/request/confirm/${requestId}`, { withCredentials: true });
+      setIsConfirmed(true);
+      const to = request.teacher.email;
+      const title = request.topic.title;
+      const actionMakerEmail = localUser.email;
+      const action = "confirmRequest";
+      const role = "student";
+
+      const data = {
+        to,
+        title,
+        actionMakerEmail,
+        action,
+        language,
+        role
+      }
+
+      const emailData = BuildEmailData(data);
+      sendEmail(emailData)
+        .then(() => console.log("Email sent successfully."))
+        .catch((error) => console.error("Error sending email:", error));
+
+      console.log("Request confirmed successfully.");
+    } catch (error) {
+      console.error("Error confirming request:", error);
+      setGlobalErrorMessage("An error occurred while confirming the request.");
+    }
+  };
+
   const handleDelete = async (requestId) => {
     try {
       await axiosInstance.delete(`/student/request/delete/${requestId}`, { withCredentials: true });
       console.log("Request deleted successfully.");
       setIsRequestDeleted(true);
+      const to = request.teacher.email;
+      const title = request.topic.title;
+      const actionMakerEmail = localUser.email;
+      const action = "deleteRequest";
+      const role = "student";
+      const data = {
+        to,
+        title,
+        actionMakerEmail,
+        action,
+        language,
+        role
+      }
+
+      const emailData = BuildEmailData(data);
+      sendEmail(emailData)
+        .then(() => console.log("Email sent successfully."))
+        .catch((error) => console.error("Error sending email:", error));
+
     } catch (error) {
       console.error("Error deleting request:", error);
       setGlobalErrorMessage(translate("An error occurred while deleting the request."));
@@ -105,14 +170,34 @@ export default function TopicDetails() {
             </div>
           </div>
           {/* Request button */}
-          <div className="flex justify-center mt-4">
-            <button className="bg-red-500 hover:bg-red-700 text-white font-semibold py-2 px-4 w-[50%] rounded"
-              onClick={() => handleModal("delete")}
-            >
-              {translate("Delete Request")}
-            </button> 
-          </div>
-
+          {request.status === "accepted" ? (
+            <div className="relative flex justify-center mt-4">
+              <button 
+                className="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 w-[50%] rounded"
+                onClick={() => handleModal("confirm")}
+              >
+                {translate("Confirm Request")}
+              </button>
+            </div>
+          ) : request.status === "confirmed" ? (
+            <div className="relative flex justify-center mt-4">
+              <button 
+                className="bg-gray-500 text-white font-semibold py-2 px-4 w-[50%] rounded cursor-not-allowed"
+                disabled
+              >
+                {translate("Confirmed")}
+              </button>
+            </div>
+          ) : (
+            <div className="relative flex justify-center mt-4">
+              <button 
+                className="bg-red-500 hover:bg-red-700 text-white font-semibold py-2 px-4 w-[50%] rounded"
+                onClick={() => handleModal("delete")}
+              >
+                {translate("Delete Request")}
+              </button>
+            </div>
+          )}
           {/* Description */}
           <div className="bg-gray-100 p-6 max-w-7xl mx-auto min-h-screen rounded-bl-lg rounded-br-lg">
             <h2 className="text-2xl font-bold text-gray-800 mb-4 text-center">{ translate("Description") }</h2>
@@ -122,7 +207,7 @@ export default function TopicDetails() {
       )}
 
       <ConfirmActionModal
-        actionFunction={() => modalAction === "delete" ? handleDelete(request.id) : null}
+        actionFunction={() => modalAction === "delete" ? handleDelete(request.id) : confirmRequest(request.id)}
         isOpen={isOpen}
         setIsOpen={setIsOpen}
         action={modalAction}

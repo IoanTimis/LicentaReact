@@ -407,9 +407,6 @@ const confirmRequest = async (req, res) => {
       return res.status(403).json({ message: 'Forbidden' });
     };
 
-    request.status = 'confirmed';
-    await request.save();
-
     const topic_id = request.topic_id;
 
     const topic = await Topic.findByPk(topic_id);
@@ -424,6 +421,9 @@ const confirmRequest = async (req, res) => {
 
     topic.slots -= 1;
     await topic.save();
+
+    request.status = 'confirmed';
+    await request.save();
 
     //Delete any other request the student has made to any other theme
     await topicRequest.destroy({
@@ -443,7 +443,7 @@ const confirmRequest = async (req, res) => {
       return res.status(500).json({ message: 'Error creating teacher new student' });
     };
 
-    res.status(200).json({ message: 'Request Confirmed', request: request });
+    res.status(200).json({ message: 'Request Confirmed', request: request, topic: topic });
   }
   catch (error) {
     console.error('Error confirming request:', error);

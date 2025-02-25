@@ -10,6 +10,9 @@ import { useContext } from "react";
 import { useLanguage } from "@/context/Languagecontext";
 import { setRequests, addRequest, updateRequest, deleteRequest, setFilteredRequests } from "@/store/features/requests/requestSlice";
 import { useDispatch, useSelector } from "react-redux";
+import { BuildEmailData } from "@/utils/buildEmailData";
+import { sendEmail } from "@/app/api/sendEmail/page";
+import { jwtDecode } from "jwt-decode";
 
 export default function StudentRequests() {
   const requests = useSelector((state) => state.requests.list);
@@ -20,14 +23,22 @@ export default function StudentRequests() {
   const [isOpen, setIsOpen] = useState(false);
   const [modalAction, setModalAction] = useState("");
   const { setGlobalErrorMessage } = useContext(ErrorContext);
-  const { translate } = useLanguage();
+  const { translate, language } = useLanguage();
   const [noMatch, setNoMatch] = useState(false);
+  const [localUser, setLocalUser] = useState(null);
+
 
   const handleOpenConfirmModal = (requestId, action) => {
     setSelectedRequest(requestId);
     setModalAction(action);
     setIsOpen(true);
   };
+
+  useEffect(() => {
+      const accessToken = localStorage.getItem("accessToken");
+      const decodedToken = jwtDecode(accessToken);
+      setLocalUser(decodedToken);
+    }, []);
 
   useEffect(() => {
     const fetchRequests = async () => {
@@ -50,8 +61,29 @@ export default function StudentRequests() {
   const handleConfirm = async (requestId) => {
     try {
       await axiosInstance.put(`/student/request/confirm/${requestId}`, { withCredentials: true });
-  
       dispatch(setRequests([response.data.request]));
+
+      const to = response.data.request.teacher.email;
+      const title = response.data.topic.title;
+      const actionMakerEmail = localUser.email;
+      const action = "confirmRequest";
+      const role = "student";
+
+      const data = {
+        to,
+        title,
+        actionMakerEmail,
+        action,
+        language,
+        role
+      }
+
+      const emailData = BuildEmailData(data);
+
+      sendEmail(emailData)
+        .then(() => console.log("Email sent."))
+        .catch((error) => console.error("Error sending email:", error));
+
   
       console.log("Request confirmed. Other requests were removed.");
     } catch (error) {
@@ -64,8 +96,28 @@ export default function StudentRequests() {
   const handleDelete = async (requestId) => {
     try {
       await axiosInstance.delete(`/student/request/delete/${requestId}`, { withCredentials: true });
-      
+      const deletedRequest = requests.find((request) => request.id === requestId);
       dispatch(deleteRequest(requestId));
+
+      const to = deletedRequest.teacher.email;
+      const title = deletedRequest.topic.title;
+      const actionMakerEmail = localUser.email;
+      const action = "deleteRequest";
+      const role = "student";
+      const data = {
+        to,
+        title,
+        actionMakerEmail,
+        action,
+        language,
+        role
+      };
+      const emailData = BuildEmailData(data);
+
+      sendEmail(emailData)
+        .then(() => console.log("Email sent."))
+        .catch((error) => console.error("Error sending email:", error));
+
       console.log("Request deleted.");
     } catch (error) {
       console.error("Error deleting request:", error);

@@ -1,7 +1,7 @@
 export function BuildEmailData (data) {
-  const { to, title, actionMakerEmail, action, language } = data;
+  const { to, title, actionMakerEmail, action, language, role } = data;
 
-  if (!to || !title || !actionMakerEmail || !action || !language) {
+  if (!to || !title || !actionMakerEmail || !action || !language  || !role) {
     throw new Error("All fields are required.");
   }
 
@@ -12,12 +12,22 @@ export function BuildEmailData (data) {
   if(action === "deleteRequest") {
     if(language === "ro") {
       subject = "Cerere ștearsă";
-      message = "Cererea ta a fost ștearsă.";
+      if (role === "student") {
+        message = "Cererea facuta de student a fost ștearsă.";
+      }
+      else {
+        message = "Cererea ta a fost ștearsă de către profesor.";
+      }
       status = "Ștearsă";
     }
     else {
       subject = "Request deleted";
-      message = "Your request has been deleted.";
+      if (role === "student") {
+        message = "The request made by the student has been deleted.";
+      }
+      else {
+        message = "Your request has been deleted by the teacher.";
+      }
       status = "Deleted";
     }
 
@@ -27,7 +37,9 @@ export function BuildEmailData (data) {
       actionMakerEmail,
       status,
       message,
-      subject
+      subject,
+      language,
+      role,
     };
 
     return data;
@@ -49,7 +61,9 @@ export function BuildEmailData (data) {
       actionMakerEmail,
       status,
       message,
-      subject
+      subject,
+      language,
+      role,
     };
 
     return data;
@@ -71,9 +85,38 @@ export function BuildEmailData (data) {
       actionMakerEmail,
       status,
       message,
-      subject
+      subject,
+      language,
+      role,
     };
 
     return data;
+  } else if (action === "confirmRequest") {
+    if(language === "ro") {
+      subject = "Tema confirmată";
+      message = "Un student a confirmat una dintre temele tale.";
+      status = "Confirmată";
+    }
+    else {
+      subject = "Theme confirmed";
+      message = "An student has confirmed one of your themes.";
+      status = "Confirmed";
+    }
+
+    const data = {
+      to,
+      title,
+      actionMakerEmail,
+      status,
+      message,
+      subject,
+      language,
+      role,
+    };
+
+    return data;
+  }
+  else {
+    throw new Error("Invalid action.");
   }
 }
