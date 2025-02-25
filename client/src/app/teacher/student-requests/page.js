@@ -86,13 +86,13 @@ export default function StudentRequests() {
         throw new Error("ID not found");
       }
 
-      await axiosInstance.put(
+      const response = await axiosInstance.put(
         `/teacher/student-request/response/${selectedRequestId}`, 
         { status, message }, 
         { withCredentials: true }
       );
 
-      const updatedRequest = requests.find((request) => request.id === selectedRequestId);
+      const updatedRequest = response.data.request;
 
       dispatch(updateRequest(updatedRequest));
 
@@ -100,13 +100,15 @@ export default function StudentRequests() {
       const title = updatedRequest.topic.title;
       const actionMakerEmail = localUser.email;
       const action = status === "accepted" ? "acceptRequest" : "rejectRequest";
+      const role = "teacher";
 
       const data = {
         to,
         title,
         actionMakerEmail,
         action,
-        language
+        language,
+        role
       };
 
       const emailData = BuildEmailData(data);
@@ -135,13 +137,16 @@ export default function StudentRequests() {
       const title = deletedRequest.topic.title;
       const actionMakerEmail = localUser.email;
       const action = "deleteRequest";
+      const role = "teacher";
+
 
       const data = {
         to,
         title,
         actionMakerEmail,
         action,
-        language
+        language,
+        role
       };
 
       const emailData = BuildEmailData(data);

@@ -26,6 +26,7 @@ export async function sendEmail(data) {
   } else {
     strongEmail = language === "ro" ? "Email Profesor:" : "Teacher Email:";
   }
+  //TODO e mereu rosu, trb vazut de ce
   
 
   const emailContent = `

@@ -281,7 +281,19 @@ const teacherResponse = async (req, res) => {
     const { status, message } = req.body;
     console.log(status, message);
 
-    const request = await topicRequest.findByPk(requestId);
+    const request = await topicRequest.findByPk(requestId,
+      {
+        include: [{
+            model: User,
+            as: 'student',
+          },
+          {
+            model: Topic,
+            as: 'topic'
+          }
+        ]
+      }
+    );
 
     if (!request) {
       return res.status(404).json({ message: 'Request not found' });
@@ -295,7 +307,7 @@ const teacherResponse = async (req, res) => {
     request.teacher_message = message;
     await request.save();
 
-    res.json({ message: 'Response sent', status: status });
+    res.json({ message: 'Response sent', request: request});
   }
   catch (error) {
     console.error('Error responding to request:', error);

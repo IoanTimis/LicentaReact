@@ -67,13 +67,15 @@ export default function TopicDetails() {
       const title = request.topic.title;
       const actionMakerEmail = localUser.email;
       const action = "deleteRequest";
+      const role = "teacher";
 
       const data = {
         to,
         title,
         actionMakerEmail,
         action,
-        language
+        language,
+        role
       }
 
       const emailData = BuildEmailData(data);
@@ -104,13 +106,15 @@ export default function TopicDetails() {
       const title = request.topic.title;
       const actionMakerEmail = localUser.email;
       const action = status === "accepted" ? "acceptRequest" : "rejectRequest";
+      const role = "teacher";
 
       const data = {
         to,
         title,
         actionMakerEmail,
         action,
-        language
+        language,
+        role
       };
       
       const emailData = BuildEmailData(data);
