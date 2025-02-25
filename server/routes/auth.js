@@ -1,18 +1,16 @@
 const express = require('express');
 const router  = express.Router();
 
-const { isCompleteProfile } = require('../middlewares/completeProfile');
-
 const authController = require('../controllers/auth');
 
 router.get('/check-session', authController.checkSession);
 
-router.post('/register/student', isCompleteProfile, authController.registerStudent);
-router.post('/register/teacher', isCompleteProfile, authController.registerTeacher);
+router.post('/register/student', authController.registerStudent);
+router.post('/register/teacher', authController.registerTeacher);
 
 router.post('/refresh', authController.refreshAccessToken);
 
-router.post('/login', isCompleteProfile, authController.login);
+router.post('/login', authController.login);
 router.get('/logout', authController.logout);
 
 router.get('/auth/google', authController.googleLogin);

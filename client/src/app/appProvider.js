@@ -15,9 +15,7 @@ export default function AppProvider({ children }) {
   const pathname = usePathname();
 
   const getNavbar = () => {
-    if (pathname.startsWith("/admin")) {
-      return null;
-    } else if (pathname.startsWith("/teacher")) {
+    if (pathname.startsWith("/teacher")) {
       return <TeacherNavBar />;
     } else if (pathname.startsWith("/student")) {
       return <StudentNavBar />;
@@ -25,6 +23,10 @@ export default function AppProvider({ children }) {
       return <Navbar />;
     }
   };
+
+  if (pathname.startsWith("/admin")) {
+    return <>{children}</>;
+  }
 
   return (
     <Provider store={store}>

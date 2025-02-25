@@ -128,6 +128,7 @@ const login = async (req, res) => {
 
         const user = await User.findOne({ where: { email } });
         if (!user || !(await bcrypt.compare(password, user.password))) {
+            console.log("Invalid email or password");
             return res.status(401).json({ error: "Invalid email or password" });
         }
 
@@ -227,6 +228,7 @@ const googleCallback = async (req, res) => {
       });
 
       const password = generateRandomPassword();
+      console.log('password:  ', password);
       const hashedPassword = await bcrypt.hash(password, 8);
   
       const [user, created] = await User.findOrCreate({
