@@ -178,13 +178,13 @@ export default function TopicDetails() {
                 <span className="font-semibold ">{ translate("Education Level") }:</span> {request.topic.education_level}
               </p>
               {request.status === "pending" ? (
-                <p className="text-yellow-500">{ translate("Pending") }...</p>
+                <p className="text-black">{ translate("Pending") }...</p>
               ) : request.status === "confirmed" ? (
-                <p className="text-green-500">{ translate("Confirmed") }!</p>
+                <p className="text-black">{ translate("Confirmed") }!</p>
               ) : request.status === "accepted" ? (
-                <p className="text-blue-500">{ translate("Accepted") }!</p>
+                <p className="text-black">{ translate("Accepted") }!</p>
               ) : (
-                <p className="text-red-500">{ translate("Rejected") }!</p>
+                <p className="text-black">{ translate("Rejected") }!</p>
               )}
             </div>
           </div>

@@ -79,7 +79,7 @@ export default function TopicCard({ topic, onRequest, newRequestedTopic }) {
           <span className="font-semibold">{translate("Type")}:</span> {topic.education_level}
         </p>
         {isTopicRequested ? (
-          <p className="text-yellow-500">{translate("Requested Theme")}</p>
+          <p className="text-black">{translate("Requested Theme")}</p>
         ) : (
           <p className="text-green-700">{translate("Available Theme")}</p>
         )}

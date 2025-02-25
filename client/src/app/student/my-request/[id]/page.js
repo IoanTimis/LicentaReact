@@ -156,17 +156,25 @@ export default function TopicDetails() {
               </p>
               <p className="text-gray-700 mb-4">
               {request.topic.slots === 0 ? (
-                <span className="text-red-500">{translate("No slots available")}</span>
+                <span className="text-black">{translate("No slots available")}</span>
                 ) : (
                 <span>
                   <span className="font-semibold">{translate("Slots")}:</span> {request.topic.slots}
                 </span>
                 )}
               </p>
-
-              <p className="text-gray-700">
+              <p className="text-gray-700 mb-4">
                 <span className="font-semibold ">{ translate("Education Level") }:</span> {request.topic.education_level}
               </p>
+              {request.status === "pending" ? (
+                <p className="text-black">{ translate("Pending") }...</p>
+              ) : request.status === "confirmed" ? (
+                <p className="text-black">{ translate("Confirmed") }!</p>
+              ) : request.status === "accepted" ? (
+                <p className="text-black">{ translate("Accepted") }!</p>
+              ) : (
+                <p className="text-black">{ translate("Rejected") }!</p>
+              )}
             </div>
           </div>
           {/* Request button */}
