@@ -83,9 +83,7 @@ export default function TeacherTopics() {
   };
 
   const handleEditData = (id) => {
-    console.log("id: ",id);
     const topic = topics.find((topic) => topic.id === id);
-    console.log("topic: ",topic);
     setSelectedTopic(id);
     setFormMode("edit");
     setTitle(topic.title);
@@ -105,16 +103,6 @@ export default function TeacherTopics() {
 
     toggleModal();
   };
-
-
-  useEffect(() => {
-    console.log("selectedFacultyId actualizat:", selectedFacultyId);
-}, [selectedFacultyId]);
-
-useEffect(() => {
-  console.log("specializations actualizat:", selectedSpecializations);
-}, [selectedSpecializations]);
-
 
   // Handle faculty change
   const handleFacultyChange = (facultyId) => {
@@ -141,7 +129,6 @@ useEffect(() => {
   // Toggle modal visibility
   const toggleModal = () => setIsModalOpen((prev) => !prev);
 
-  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -161,7 +148,6 @@ useEffect(() => {
         education_level: formData.get("education_level"),
         specialization_ids: selectedSpecializations.filter((id) => id !== null),
       };
-      console.log(newTopic);
     
       const response = await axiosInstance.post("/teacher/topic/add", newTopic, {
         withCredentials: true,
@@ -177,7 +163,6 @@ useEffect(() => {
     }
   };
 
-  //TODO: Think the edit logic
   const handleEdit = async (e) => {
     e.preventDefault();
     try {

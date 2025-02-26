@@ -9,7 +9,6 @@ const jwt = require('jsonwebtoken');
 const  myStudents = require('../models/myStudents');
 const { Op } = require('sequelize');
 
-
 const teacherTopics = async (req, res) => {
   try{
     const refreshToken = req.cookies.refreshToken;
@@ -153,7 +152,6 @@ const addTopic = async (req, res) => {
   }
 };
 
-
 const editTopic = async (req, res) => {
   try {
     const topicId = req.params.id;
@@ -206,7 +204,6 @@ const editTopic = async (req, res) => {
     res.status(500).json({ message: 'Internal Server Error' });
   }
 };
-
 
 const deleteTopic = async (req, res) => {
   try{
@@ -504,8 +501,6 @@ const topicSearchFilter = async (req, res) => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
-
-
 
 module.exports = {
   teacherTopics,
