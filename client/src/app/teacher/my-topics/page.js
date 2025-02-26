@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import axiosInstance from "@/utils/axiosInstance";
-import { PlusCircleIcon, ChevronDownIcon } from "@heroicons/react/24/solid";
+import { PlusCircleIcon, XMarkIcon } from "@heroicons/react/24/solid";
 import { useLanguage } from "@/context/Languagecontext";
 import TopicCard from "@/app/components/teacher/topic-card";
 import ConfirmActionModal from "@/app/components/general/confirm-action-modal";
@@ -125,6 +125,10 @@ export default function TeacherTopics() {
 
     setDublicateError(null);
   };
+
+  const removeSpecializationField = (index) => {
+    setSelectedSpecializations(prev => prev.filter((_, i) => i !== index));
+  };  
 
   // Toggle modal visibility
   const toggleModal = () => setIsModalOpen((prev) => !prev);
@@ -268,109 +272,107 @@ export default function TeacherTopics() {
 
     {/* Modal */}
     {isModalOpen && (
-  <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-    <div className="bg-white rounded-lg shadow-lg w-full max-w-md sm:max-w-lg md:max-w-xl h-full max-h-screen overflow-y-auto p-6 sm:p-8 relative">
-      
-      {/* Buton de închidere */}
-      <button
-        onClick={toggleModal}
-        className="absolute top-4 right-4 text-gray-500 hover:text-red-500 transition"
-      >
-        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-        </svg>
-      </button>
-
-      <h2 className="text-xl font-bold text-gray-700 mb-4 text-center">
-        {formMode === "add" ? translate("Add Theme") : translate("Edit Theme")}
-      </h2>
-
-      <form onSubmit={formMode === "add" ? handleSubmit : handleEdit} className="space-y-4">
-        
-        <div>
-          <label className="block text-gray-700">{translate("Title")}</label>
-          <input
-            type="text"
-            className="border border-gray-300 text-gray-700 rounded w-full p-2"
-            name="title"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            required
-          />
-        </div>
-
-        <div>
-          <label className="block text-gray-700">{translate("Description")}</label>
-          <textarea
-            className="border border-gray-300 text-gray-700 rounded w-full p-2"
-            name="description"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            required
-          />
-        </div>
-
-        <div>
-          <label className="block text-gray-700">{translate("Keywords")}</label>
-          <input
-            type="text"
-            className="border border-gray-300 text-gray-700 rounded w-full p-2"
-            name="keywords"
-            value={keywords}
-            onChange={(e) => setKeywords(e.target.value)}
-            required
-          />
-          <small className="text-gray-500">{translate("Keywords must be separated by commas.")}</small>
-        </div>
-
-        <div>
-          <label className="block text-gray-700">{translate("Slots")}</label>
-          <input
-            type="number"
-            className="border border-gray-300 text-gray-700 rounded w-full p-2"
-            name="slots"
-            value={slots}
-            onChange={(e) => setSlots(e.target.value)}
-            required
-          />
-        </div>
-
-        <div>
-          <label className="block text-gray-700">{translate("Education Level")}</label>
-          <select
-            className="border border-gray-300 text-gray-700 rounded w-full p-2"
-            name="education_level"
-            value={educationLevel}
-            onChange={(e) => setEducationLevel(e.target.value)}
-            required
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+        <div className="bg-white rounded-lg shadow-lg w-full max-w-md sm:max-w-lg md:max-w-xl h-full max-h-fit overflow-y-auto p-6 sm:p-8 relative">
+          
+          {/* Buton de închidere */}
+          <button
+            onClick={toggleModal}
+            className="absolute top-4 right-4 text-gray-500 hover:text-red-500 transition"
           >
-            <option value="">{translate("Select education level")}</option>
-            <option value="bsc">{translate("Bachelor")}</option>
-            <option value="msc">{translate("Master")}</option>
-          </select>
-        </div>
+            <XMarkIcon className="h-6 w-6" />
+          </button>
 
-        <div>
-          <label className="block text-gray-700">{translate("Faculty")}</label>
-          <select
-            className="border border-gray-300 text-gray-700 rounded w-full p-2"
-            value={selectedFacultyId || ""}
-            onChange={(e) => handleFacultyChange(e.target.value)}
-            required
-          >
-            <option value="">{translate("Select Faculty")}</option>
-            {faculties.map((faculty) => (
-              <option key={faculty.id} value={faculty.id}>
-                {faculty.name}
-              </option>
-            ))}
-          </select>
-        </div>
+          <h2 className="text-xl font-bold text-gray-700 mb-4 text-center">
+            {formMode === "add" ? translate("Add Theme") : translate("Edit Theme")}
+          </h2>
 
-        <div>
+          <form onSubmit={formMode === "add" ? handleSubmit : handleEdit} className="space-y-4">
+            
+            <div>
+              <label className="block text-gray-700">{translate("Title")}</label>
+              <input
+                type="text"
+                className="border border-gray-300 text-gray-700 rounded w-full p-2"
+                name="title"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                required
+              />
+            </div>
+
+            <div>
+              <label className="block text-gray-700">{translate("Description")}</label>
+              <textarea
+                className="border border-gray-300 text-gray-700 rounded w-full p-2"
+                name="description"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                required
+              />
+            </div>
+
+            <div>
+              <label className="block text-gray-700">{translate("Keywords")}</label>
+              <input
+                type="text"
+                className="border border-gray-300 text-gray-700 rounded w-full p-2"
+                name="keywords"
+                value={keywords}
+                onChange={(e) => setKeywords(e.target.value)}
+                required
+              />
+              <small className="text-gray-500">{translate("Keywords must be separated by space.")}</small>
+            </div>
+
+            <div>
+              <label className="block text-gray-700">{translate("Slots")}</label>
+              <input
+                type="number"
+                className="border border-gray-300 text-gray-700 rounded w-full p-2"
+                name="slots"
+                value={slots}
+                onChange={(e) => setSlots(e.target.value)}
+                required
+              />
+            </div>
+
+            <div>
+              <label className="block text-gray-700">{translate("Education Level")}</label>
+              <select
+                className="border border-gray-300 text-gray-700 rounded w-full p-2"
+                name="education_level"
+                value={educationLevel}
+                onChange={(e) => setEducationLevel(e.target.value)}
+                required
+              >
+                <option value="">{translate("Select education level")}</option>
+                <option value="bsc">{translate("Bachelor")}</option>
+                <option value="msc">{translate("Master")}</option>
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-gray-700">{translate("Faculty")}</label>
+              <select
+                className="border border-gray-300 text-gray-700 rounded w-full p-2"
+                value={selectedFacultyId || ""}
+                onChange={(e) => handleFacultyChange(e.target.value)}
+                required
+              >
+                <option value="">{translate("Select Faculty")}</option>
+                {faculties.map((faculty) => (
+                  <option key={faculty.id} value={faculty.id}>
+                    {faculty.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div>
           <label className="block text-gray-700">{translate("Specializations")}</label>
           {selectedSpecializations.map((specialization, index) => (
-            <div key={index} className="flex mb-2">
+            <div key={index} className="flex items-center mb-2">
               <select
                 className={`border ${dublicateError ? "border-red-500" : "border-gray-300"} text-gray-700 rounded w-full p-2`}
                 value={specialization || ""}
@@ -384,6 +386,16 @@ export default function TeacherTopics() {
                   </option>
                 ))}
               </select>
+              {/* Buton de ștergere doar dacă există mai multe specializări */}
+              {selectedSpecializations.length > 1 && (
+                <button
+                  type="button"
+                  onClick={() => removeSpecializationField(index)}
+                  className="ml-2 text-gray-500 hover:text-red-500 transition"
+                >
+                  <XMarkIcon className="h-5 w-5" />
+                </button>
+              )}
             </div>
           ))}
           {dublicateError && <p className="text-red-500 text-sm mt-1">{translate(dublicateError)}</p>}
@@ -396,21 +408,17 @@ export default function TeacherTopics() {
           </button>
         </div>
 
-        {/* Butoane - aliniate compact pentru laptopuri */}
-        <div className="flex flex-col sm:flex-row justify-end sm:space-x-2 sm:mt-0">
-          <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded w-full sm:w-auto">
-            {formMode === "add" ? translate("Add") : translate("Edit")}
-          </button>
+            <div className="flex flex-col sm:flex-row justify-end sm:space-x-2 sm:mt-0">
+              <button type="submit" className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded w-full sm:w-auto">
+                {formMode === "add" ? translate("Add") : translate("Edit")}
+              </button>
+            </div>
+          </form>
         </div>
-      </form>
-    </div>
-  </div>
-)}
+      </div>
+    )}
 
-
-
-
-     <ConfirmActionModal
+    <ConfirmActionModal
       actionFunction={() => modalAction === "delete" ? handleDelete(selectedTopic) : null}
       isOpen={isOpen}
       setIsOpen={setIsOpen}
