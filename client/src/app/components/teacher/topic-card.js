@@ -7,6 +7,8 @@ export default function TopicCard({ topic, translate, onEdit, onDuplicate, handl
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   console.log(topic);
 
+
+
   return (
     <div className="bg-white shadow rounded hover:shadow-lg transition border border-gray-950">
       <Link href={`/teacher/my-topic/${topic.id}`}>
@@ -45,22 +47,21 @@ export default function TopicCard({ topic, translate, onEdit, onDuplicate, handl
             >
               <button
                 className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition"
-                onClick={() => alert("Edit clicked")}
+                onClick={() => {
+                  onEdit(topic.id);
+                  setIsDropdownOpen(false);
+                  }
+                }
               >
                 {translate("Edit")}
-              </button>
-              <button
-                className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition"
-                onClick={() => alert("Duplicate clicked")}
-              >
-                {translate("Duplicate")}
               </button>
               <button
                 className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-red-50 hover:text-red-600 transition"
                 onClick={() => {
                   handleOpenConfirmModal(topic.id, "delete");
                   setIsDropdownOpen(false);
-                }}
+                  }
+                }
               >
                 {translate("Delete")}
               </button>

@@ -41,12 +41,6 @@ export default function TeacherTopics() {
 
   const [noMatch, setNoMatch] = useState(false);
 
-  const handleOpenConfirmModal = (topicId, action) => {
-    setSelectedTopic(topicId);
-    setModalAction(action);
-    setIsOpen(true);
-  };
-
   // Fetch data from the server
   useEffect(() => {
     const fetchData = async () => {
@@ -67,6 +61,12 @@ export default function TeacherTopics() {
     fetchData();
   }, []);
 
+  const handleOpenConfirmModal = (topicId, action) => {
+    setSelectedTopic(topicId);
+    setModalAction(action);
+    setIsOpen(true);
+  };
+
   const handleAddData = () => {
     setTitle("");
     setDescription("");
@@ -76,16 +76,21 @@ export default function TeacherTopics() {
     setSelectedFacultyId(null);
     setSpecializations([]);
     setSelectedSpecializations([null]);
+    setFormMode("add");
     toggleModal();
   };
 
   const handleEditData = (id) => {
     const topic = topics.find((topic) => topic.id === id);
+    setSelectedTopic(id);
+    setFormMode("edit");
     setTitle(topic.title);
     setDescription(topic.description);
     setKeywords(topic.keywords);
     setSlots(topic.slots);
     setEducationLevel(topic.education_level);
+
+
     toggleModal();
   };
 
@@ -94,7 +99,7 @@ export default function TeacherTopics() {
     setSelectedFacultyId(facultyId);
     const faculty = faculties.find((f) => f.id === parseInt(facultyId));
     setSpecializations(faculty ? faculty.specializations : []);
-    setSelectedSpecializations([null]); // Resetează specializările selectate
+    setSelectedSpecializations([null]); 
   };
 
   // Handle adding another specialization field
@@ -115,7 +120,6 @@ export default function TeacherTopics() {
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     try {
       checkForDuplicates(selectedSpecializations);
     
@@ -145,8 +149,10 @@ export default function TeacherTopics() {
   };
 
   //TODO: Think the edit logic
-  const handleEdit = async (topicId) => {
+  const handleEdit = async (e) => {
+    e.preventDefault();
     try {
+      topicId = selectedTopic;
       const response = await axiosInstance.put(`/teacher/topic/edit/${topicId}`, { withCredentials: true });
       console.log("Theme edited successfully!");
 
@@ -155,10 +161,9 @@ export default function TeacherTopics() {
     } catch (error) {
       console.error("Error editing theme:", error);
       setGlobalErrorMessage(translate("An error occurred while editing the theme."));
-  };
-}
+    };
+  }
 
-  //Edit, Duplicate, Delete topics
   const handleDelete = async (topicId) => {
     try {
       const response = await axiosInstance.delete(`/teacher/topic/delete/${topicId}`, { withCredentials: true });
@@ -211,7 +216,7 @@ export default function TeacherTopics() {
     <div className="lg:w-3/4 w-full p-4 flex-grow">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4 gap-y-6">
         {/* Add Topic Card */}
-        <div className="bg-white shadow rounded hover:shadow-lg transition cursor-pointer border border-gray-950" onClick={toggleModal}>
+        <div className="bg-white shadow rounded hover:shadow-lg transition cursor-pointer border border-gray-950" onClick={handleAddData}>
           <div className="bg-navbar-gradient flex justify-between items-center py-2 px-4 rounded-t">
             <h2 className="text-lg text-white font-semibold ">{translate("Add a new theme")}</h2>
           </div>
@@ -225,7 +230,7 @@ export default function TeacherTopics() {
         {loading && <div className="text-center text-gray-700">Se încarcă...</div>}
         {/* Topic Cards */}
         {filteredTopics.map((topic) => (
-          <TopicCard key={topic.id} topic={topic} translate={translate} onEdit={handleEdit} handleOpenConfirmModal={handleOpenConfirmModal} />
+          <TopicCard key={topic.id} topic={topic} translate={translate} onEdit={handleEditData} handleOpenConfirmModal={handleOpenConfirmModal} />
         ))}
       </div>
     </div>

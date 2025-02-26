@@ -36,7 +36,15 @@ const teacherTopics = async (req, res) => {
       include: [
         {
           model: Topic,
-          as: 'topics'
+          as: 'topics',
+          include: {
+            model: Specialization,
+            as: 'specializations',
+            include: {
+              model: Faculty,
+              as: 'faculty'
+            }
+          },
         }
       ]
     });
