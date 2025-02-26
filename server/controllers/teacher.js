@@ -110,106 +110,103 @@ const getSpecializations = async (req, res) => {
 };
 
 const addTopic = async (req, res) => {
-  try{
+  try {
     const refreshToken = req.cookies.refreshToken;
     const user = jwt.decode(refreshToken, process.env.REFRESH_TOKEN_SECRET);
     const teacherId = user.id;
 
-    const { title, description, keywords, slots, education_level, specialization_ids } = req.body;
-    console.log(title, description, keywords, slots, education_level, specialization_ids);
-    sanitizeHtml(title);
-    sanitizeHtml(description);
-    sanitizeHtml(keywords);
+    let { title, description, keywords, slots, education_level, specialization_ids } = req.body;
+
+    title = sanitizeHtml(title);
+    description = sanitizeHtml(description);
+    keywords = sanitizeHtml(keywords);
 
     const topic = await Topic.create({
-      title: title,
-      description: description,
-      keywords: keywords,
-      slots: slots,
+      title,
+      description,
+      keywords,
+      slots,
       user_id: teacherId,
-      education_level: education_level,
+      education_level
     });
 
     if (!topic) {
       return res.status(500).json({ message: 'Error adding topic' });
     }
 
-    for (const specialization_id of specialization_ids) {
-      const specialization_topic = await specializationTopic.create({
-        specialization_id: specialization_id,
-        topic_id: topic.id
-      });
+    const specializations = await Specialization.findAll({
+      where: { id: specialization_ids }
+    });
 
-      if (!specialization_topic) {
-        return res.status(404).json({ message: 'Specialization not found' });
-      }
+    if (specializations.length !== specialization_ids.length) {
+      return res.status(400).json({ message: "One or more specialization IDs are invalid" });
     }
+
+    await topic.setSpecializations(specializations); 
 
     console.log('Topic added:', topic);
 
-    res.status(201).json({ topic: topic });
-  }
-  catch (error) {
+    res.status(201).json({ topic });
+  } catch (error) {
     console.error('Error adding topic:', error);
     res.status(500).send('Internal Server Error');
   }
 };
 
+
 const editTopic = async (req, res) => {
-  try{
+  try {
     const topicId = req.params.id;
     const refreshToken = req.cookies.refreshToken;
     const user = jwt.decode(refreshToken, process.env.REFRESH_TOKEN_SECRET);
-    
-    const { title, description, keywords, slots, education_level, specialization_ids } = req.body;
-    sanitizeHtml(title);
-    sanitizeHtml(description);
-    sanitizeHtml(keywords);
 
-    const topic = await Topic.findByPk(topicId);
+    let { title, description, keywords, slots, education_level, specialization_ids } = req.body;
+    
+    title = sanitizeHtml(title);
+    description = sanitizeHtml(description);
+    keywords = sanitizeHtml(keywords);
+
+    const topic = await Topic.findByPk(topicId, {
+      include: [{ model: Specialization, as: 'specializations' }]
+    });
 
     if (!topic) {
       return res.status(404).json({ message: 'Topic not found' });
     }
 
-    if(user !== null && user.id !== topic.user_id){
+    // Verificare permisiuni
+    if (!user || user.id !== topic.user_id) {
       return res.status(403).json({ message: 'Forbidden' });
     }
 
+    // Actualizează topicul
     topic.title = title;
     topic.description = description;
     topic.keywords = keywords;
     topic.slots = slots;
     topic.education_level = education_level;
-
+    
     await topic.save();
 
-    //Delete all old specializations-topic
-    await specializationTopic.destroy({
-      where: {
-        topic_id: topicId
-      }
+    await topic.setSpecializations([]); 
+
+    const specializations = await Specialization.findAll({
+      where: { id: specialization_ids }
     });
 
-    //Add new specializations-topic
-    for (const specialization_id of specialization_ids) {
-      const specialization_topic = await specializationTopic.create({
-        specialization_id: specialization_id,
-        topic_id: topic.id
-      });
-
-      if (!specialization_topic) {
-        return res.status(404).json({ message: 'Specialization not found' });
-      }
+    if (specializations.length !== specialization_ids.length) {
+      return res.status(400).json({ message: "Invalid specialization IDs" });
     }
 
-    res.json({ topic: topic });
-  }
-  catch (error) {
+    await topic.setSpecializations(specializations); 
+
+    res.json({ topic });
+  } catch (error) {
     console.error('Error editing topic:', error);
     res.status(500).json({ message: 'Internal Server Error' });
   }
 };
+
 
 const deleteTopic = async (req, res) => {
   try{

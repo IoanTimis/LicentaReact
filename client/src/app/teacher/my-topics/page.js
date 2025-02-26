@@ -188,10 +188,18 @@ useEffect(() => {
         return;
       }
 
-      const newSpecializations = {
+      const formData = new FormData(e.target);
+
+      const newTopic = {
+        title: formData.get("title"),
+        description: formData.get("description"),
+        keywords: formData.get("keywords"),
+        slots: formData.get("slots"),
+        education_level: formData.get("education_level"),
         specialization_ids: selectedSpecializations.filter((id) => id !== null),
       };
-      const response = await axiosInstance.put(`/teacher/topic/edit/${selectedTopic}`, newSpecializations, { withCredentials: true });
+
+      const response = await axiosInstance.put(`/teacher/topic/edit/${selectedTopic}`, newTopic, { withCredentials: true });
       console.log("Theme edited successfully!");
 
       dispatch(updateTopic(response.data.topic));
@@ -280,7 +288,7 @@ useEffect(() => {
             <h2 className="text-xl font-bold text-gray-700 mb-4">
               { formMode === "add" ? translate("Add Theme") : translate("Edit Theme") }
             </h2>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={formMode === "add" ? handleSubmit : handleEdit}>
               <div className="mb-4">
                 <label className="block text-gray-700">{ translate("Title") }</label>
                 <input
