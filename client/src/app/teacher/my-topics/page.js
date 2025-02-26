@@ -93,12 +93,28 @@ export default function TeacherTopics() {
     setKeywords(topic.keywords);
     setSlots(topic.slots);
     setEducationLevel(topic.education_level);
-    setSelectedFacultyId(topic.specializations[0].faculty.id);
-    console.log("selectedFacultyId: ", selectedFacultyId);
-    setSelectedSpecializations(topic.specializations.map(spec => spec.id));
-    console.log("specializations: ", selectedSpecializations);
+    
+    const facultyId = topic.specializations[0]?.faculty.id;
+    setSelectedFacultyId(facultyId);
+    
+    handleFacultyChange(facultyId);
+
+    setTimeout(() => {
+        setSelectedSpecializations(topic.specializations.map(spec => spec.id));
+    }, 100);
+
     toggleModal();
   };
+
+
+  useEffect(() => {
+    console.log("selectedFacultyId actualizat:", selectedFacultyId);
+}, [selectedFacultyId]);
+
+useEffect(() => {
+  console.log("specializations actualizat:", selectedSpecializations);
+}, [selectedSpecializations]);
+
 
   // Handle faculty change
   const handleFacultyChange = (facultyId) => {
@@ -327,6 +343,7 @@ export default function TeacherTopics() {
                 <label className="block text-gray-700">{ translate("Faculty") }</label>
                 <select
                   className="border border-gray-300 text-gray-700 rounded w-full p-2"
+                  value={selectedFacultyId || ""}
                   onChange={(e) => handleFacultyChange(e.target.value)}
                   required
                 >
