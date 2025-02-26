@@ -28,6 +28,8 @@ export default function TeacherTopics() {
   const [modalAction, setModalAction] = useState("");
 
   const [ formMode , setFormMode ] = useState("add");
+  const [formError, setFormError] = useState(null);
+  const [dublicateError, setDublicateError] = useState(null);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [keywords, setKeywords] = useState("");
@@ -37,7 +39,7 @@ export default function TeacherTopics() {
   const [faculties, setFaculties] = useState([]);
   const [selectedFacultyId, setSelectedFacultyId] = useState(null);
   const [specializations, setSpecializations] = useState([]);
-  const [selectedSpecializations, setSelectedSpecializations] = useState([null]); 
+  const [selectedSpecializations, setSelectedSpecializations] = useState([null]);
 
   const [noMatch, setNoMatch] = useState(false);
 
@@ -81,7 +83,9 @@ export default function TeacherTopics() {
   };
 
   const handleEditData = (id) => {
+    console.log("id: ",id);
     const topic = topics.find((topic) => topic.id === id);
+    console.log("topic: ",topic);
     setSelectedTopic(id);
     setFormMode("edit");
     setTitle(topic.title);
@@ -89,8 +93,10 @@ export default function TeacherTopics() {
     setKeywords(topic.keywords);
     setSlots(topic.slots);
     setEducationLevel(topic.education_level);
-
-
+    setSelectedFacultyId(topic.specializations[0].faculty.id);
+    console.log("selectedFacultyId: ", selectedFacultyId);
+    setSelectedSpecializations(topic.specializations.map(spec => spec.id));
+    console.log("specializations: ", selectedSpecializations);
     toggleModal();
   };
 
@@ -112,6 +118,8 @@ export default function TeacherTopics() {
     const updatedSpecializations = [...selectedSpecializations];
     updatedSpecializations[index] = value;
     setSelectedSpecializations(updatedSpecializations);
+
+    setDublicateError(null);
   };
 
   // Toggle modal visibility
@@ -121,7 +129,12 @@ export default function TeacherTopics() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      checkForDuplicates(selectedSpecializations);
+      const dublicate = checkForDuplicates(selectedSpecializations);
+
+      if(dublicate) {
+        setDublicateError("You have selected the same specialization multiple times.");
+        return;
+      }
     
       const formData = new FormData(e.target);
       const newTopic = {
@@ -152,8 +165,17 @@ export default function TeacherTopics() {
   const handleEdit = async (e) => {
     e.preventDefault();
     try {
-      topicId = selectedTopic;
-      const response = await axiosInstance.put(`/teacher/topic/edit/${topicId}`, { withCredentials: true });
+      const dublicate = checkForDuplicates(selectedSpecializations);
+
+      if(dublicate) {
+        setDublicateError("You have selected the same specialization multiple times.");
+        return;
+      }
+
+      const newSpecializations = {
+        specialization_ids: selectedSpecializations.filter((id) => id !== null),
+      };
+      const response = await axiosInstance.put(`/teacher/topic/edit/${selectedTopic}`, newSpecializations, { withCredentials: true });
       console.log("Theme edited successfully!");
 
       dispatch(updateTopic(response.data.topic));
@@ -249,6 +271,8 @@ export default function TeacherTopics() {
                   type="text"
                   className="border border-gray-300 text-gray-700 rounded w-full p-2"
                   name="title"
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
                   required
                 />
               </div>
@@ -257,6 +281,8 @@ export default function TeacherTopics() {
                 <textarea
                   className="border border-gray-300 text-gray-700 rounded w-full p-2"
                   name="description"
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
                   required
                 />
               </div>
@@ -266,6 +292,8 @@ export default function TeacherTopics() {
                   type="text"
                   className="border border-gray-300 text-gray-700 rounded w-full p-2"
                   name="keywords"
+                  value={keywords}
+                  onChange={(e) => setKeywords(e.target.value)}
                   required
                 />
                 <small className="text-gray-500">{ translate("Keywords must be separated by commas.") }</small>
@@ -276,6 +304,8 @@ export default function TeacherTopics() {
                   type="number"
                   className="border border-gray-300 text-gray-700 rounded w-full p-2"
                   name="slots"
+                  value={slots}
+                  onChange={(e) => setSlots(e.target.value)}
                   required
                 />
               </div>
@@ -284,6 +314,8 @@ export default function TeacherTopics() {
                 <select
                   className="border border-gray-300 text-gray-700 rounded w-full p-2"
                   name="education_level"
+                  value={educationLevel}
+                  onChange={(e) => setEducationLevel(e.target.value)}
                   required
                 >
                   <option value="">{translate("Select education level")}</option>
@@ -311,7 +343,7 @@ export default function TeacherTopics() {
                 {selectedSpecializations.map((specialization, index) => (
                   <div key={index} className="flex mb-2">
                     <select
-                      className="border border-gray-300 text-gray-700 rounded w-full p-2"
+                      className={`border ${dublicateError ? "border-red-500" : "border-gray-300"} text-gray-700 rounded w-full p-2`}
                       value={specialization || ""}
                       onChange={(e) => handleSpecializationChange(index, e.target.value)}
                       required
@@ -325,6 +357,7 @@ export default function TeacherTopics() {
                     </select>
                   </div>
                 ))}
+                {dublicateError && <p className="text-red-500 text-sm mt-1">{translate(dublicateError)}</p>}
                 <button
                   type="button"
                   className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 mt-2"

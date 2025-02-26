@@ -3,10 +3,10 @@ export function checkForDuplicates(array) {
   
     for (const item of array) {
       if (seen.has(item)) {
-        throw new Error(`S-a găsit un duplicat: ${item}`);
+        return true;
       }
       seen.add(item);
     }
-    return true; // Nicio valoare duplicată
+    return false; 
   }
   

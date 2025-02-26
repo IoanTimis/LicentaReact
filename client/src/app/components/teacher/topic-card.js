@@ -3,11 +3,9 @@ import { ChevronDownIcon } from "@heroicons/react/24/solid";
 import { useState } from "react";
 import { truncateText } from "@/utils/truncate-text";
 
-export default function TopicCard({ topic, translate, onEdit, onDuplicate, handleOpenConfirmModal }) {
+export default function TopicCard({ topic, translate, onEdit, handleOpenConfirmModal }) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   console.log(topic);
-
-
 
   return (
     <div className="bg-white shadow rounded hover:shadow-lg transition border border-gray-950">

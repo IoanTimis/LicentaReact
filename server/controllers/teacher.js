@@ -40,9 +40,11 @@ const teacherTopics = async (req, res) => {
           include: {
             model: Specialization,
             as: 'specializations',
+            attributes: ['id'],
             include: {
               model: Faculty,
-              as: 'faculty'
+              as: 'faculty',
+              attributes: ['id']
             }
           },
         }
@@ -159,7 +161,7 @@ const editTopic = async (req, res) => {
     const refreshToken = req.cookies.refreshToken;
     const user = jwt.decode(refreshToken, process.env.REFRESH_TOKEN_SECRET);
     
-    const { title, description, keywords, slots, education_level } = req.body;
+    const { title, description, keywords, slots, education_level, specialization_ids } = req.body;
     sanitizeHtml(title);
     sanitizeHtml(description);
     sanitizeHtml(keywords);
@@ -181,6 +183,25 @@ const editTopic = async (req, res) => {
     topic.education_level = education_level;
 
     await topic.save();
+
+    //Delete all old specializations-topic
+    await specializationTopic.destroy({
+      where: {
+        topic_id: topicId
+      }
+    });
+
+    //Add new specializations-topic
+    for (const specialization_id of specialization_ids) {
+      const specialization_topic = await specializationTopic.create({
+        specialization_id: specialization_id,
+        topic_id: topic.id
+      });
+
+      if (!specialization_topic) {
+        return res.status(404).json({ message: 'Specialization not found' });
+      }
+    }
 
     res.json({ topic: topic });
   }
