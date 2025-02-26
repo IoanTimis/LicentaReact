@@ -37,8 +37,6 @@ export default function AdminLayout({ children }) {
       <ErrorProvider>
         <div className="flex">
           <FixedSidebar />
-
-          {/* Conținut principal fără margin pe mobil */}
           <main className="w-full min-h-screen p-6 bg-gray-100 lg:ml-64 transition-all">
             <ErrorDiv />
             {children}
