@@ -127,6 +127,41 @@ const addFavoriteTopic = async (req, res) => {
 
     const topic_id  = req.params.id;
 
+    const topic = await Topic.findByPk(topic_id,
+      {
+        include: [
+          {
+            model: Specialization,
+            as: "specializations",
+            attributes: ["id"],
+            include: [
+              {
+                model: Faculty,
+                as: "faculty",
+                attributes: ["id"]
+              }
+            ] 
+          },
+        ]
+      }
+    );
+
+    if (!topic) {
+      return res.status(404).json({ message: 'Topic not found' });
+    };
+
+    const facultyId = topic.specializations?.[0]?.faculty?.id; 
+
+    if (topic.slots === 0 || topic.education_level !== user.education_level || facultyId !== user.faculty_id) {
+      return res.status(403).json({ message: "Forbidden" });
+    }
+
+    const matchSpecialization = topic.specializations.some(specialization => specialization.id === user.specialization_id);
+
+    if (!topic.specializations || !matchSpecialization) {
+      return res.status(403).json({ message: "Forbidden" });
+    }
+
     const favoriteTopic = await FavoriteTopics.create({
       user_id: student_id,
       topic_id: topic_id
@@ -305,7 +340,7 @@ const newRequest = async (req, res) => {
     });
 
     if (requestExists) {
-      return res.status(403).json({ message: 'Forbidden' });
+      return res.status(403).json({ message: 'Forbidden, request exists' });
     };
 
     //Speacialization, faculty, topic to check if the student can apply to the topic
@@ -336,36 +371,20 @@ const newRequest = async (req, res) => {
     };
 
     if(topic_data.slots === 0){
-      return res.status(403).json({ message: 'Forbidden' });
+      return res.status(403).json({ message: 'Forbidden, no slots available' });
     }
 
     //Check student education level
     if (student_data.education_level !== education_level) {
-      return res.status(403).json({ message: 'Forbidden' });
+      return res.status(403).json({ message: 'Forbidden, education lvl do not match' });
     }
 
-    let validReq = false;
+    console.log(topic_data.specializations);
 
-    //Check if the student can apply to the topic (specialization, faculty)
-    if(topic_data.specializations.length > 1){
-      for(let i = 0; i < topic_data.specializations.length; i++) {
-        if( (topic_data.specialization[i] === student_data.specialization_id)
-          && (topic_data.specialization[i].faculty === student_data.faculty_id)
-        )
-        {
-          validReq = true;
-          break;
-        }
-      }
-    } else if( (topic_data.specializations[0].id === student_data.specialization_id)
-      && (topic_data.specializations[0].faculty.id === student_data.faculty_id)
-    ) {
-      validReq = true;
-    }
+    const matchSpecialization = topic_data.specializations.some(specialization => specialization.id === user.specialization_id);
 
-
-    if(!validReq){
-      return res.status(403).json({ message: 'Forbiden' })
+    if (!matchSpecialization) {
+      return res.status(403).json({ message: "Forbidden, specialization do not" });
     }
 
     sanitizeHtml(message);

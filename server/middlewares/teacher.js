@@ -18,8 +18,8 @@ function isTeacher(req, res, next) {
     if (decoded.role !== "teacher") {
       return res.status(403).json({ error: "Access denied" });
     }
-    req.user = decoded; // Adaugă datele utilizatorului în request
-    next(); // Treci la următoarea funcție middleware sau rută
+    req.user = decoded; 
+    next(); 
   });
 };
 

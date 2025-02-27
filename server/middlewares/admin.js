@@ -17,8 +17,8 @@ function isAdmin(req, res, next) {
       return res.status(403).json({ error: "Access denied" });
     }
 
-    req.user = decoded; // Adaugă datele utilizatorului în request
-    next(); // Treci la următoarea funcție middleware sau rută
+    req.user = decoded; 
+    next(); 
   });
 }
 

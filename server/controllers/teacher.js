@@ -174,7 +174,7 @@ const editTopic = async (req, res) => {
 
     // Verificare permisiuni
     if (!user || user.id !== topic.user_id) {
-      return res.status(403).json({ message: 'Forbidden' });
+      return res.status(403).json({ message: 'Forbidden, you are nto the owner of this topic' });
     }
 
     // Actualizează topicul
@@ -217,8 +217,8 @@ const deleteTopic = async (req, res) => {
       return res.status(404).json({ message: 'Topic not found' });
     }
 
-    if(user !== null && user.id !== topic.user_id){
-      return res.status(403).json({ message: 'Forbidden' });
+    if(!user || user.id !== topic.user_id){
+      return res.status(403).json({ message: 'Forbidden, you are not the owner of this topic' });
     }
 
     await topic.destroy();
@@ -325,7 +325,7 @@ const teacherResponse = async (req, res) => {
     }
 
     if(request.teacher_id !== teacherId){
-      return res.status(403).send('Forbidden');
+      return res.status(403).send('Forbidden, you are not the owner of this request');
     }
 
     request.status = status;
@@ -352,8 +352,8 @@ const deleteRequest = async (req, res) => {
       return res.status(404).json({ message: 'Request not found' });
     }
 
-    if(user !== null && user.id !== request.teacher_id){
-      return res.status(403).send('Forbidden');
+    if(!user || user.id !== request.teacher_id){
+      return res.status(403).send('Forbidden, you are not the owner of this request');
     }
 
     await request.destroy();
