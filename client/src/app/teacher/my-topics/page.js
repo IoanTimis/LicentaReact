@@ -131,7 +131,10 @@ export default function TeacherTopics() {
   };  
 
   // Toggle modal visibility
-  const toggleModal = () => setIsModalOpen((prev) => !prev);
+  const toggleModal = () => {
+    setIsModalOpen((prev) => !prev)
+    setDublicateError(null);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -275,7 +278,7 @@ export default function TeacherTopics() {
       <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
         <div className="bg-white rounded-lg shadow-lg w-full max-w-md sm:max-w-lg md:max-w-xl h-full max-h-fit overflow-y-auto p-6 sm:p-8 relative">
           
-          {/* Buton de închidere */}
+          {/* Exit buton */}
           <button
             onClick={toggleModal}
             className="absolute top-4 right-4 text-gray-500 hover:text-red-500 transition"
@@ -370,43 +373,46 @@ export default function TeacherTopics() {
             </div>
 
             <div>
-          <label className="block text-gray-700">{translate("Specializations")}</label>
-          {selectedSpecializations.map((specialization, index) => (
-            <div key={index} className="flex items-center mb-2">
-              <select
-                className={`border ${dublicateError ? "border-red-500" : "border-gray-300"} text-gray-700 rounded w-full p-2`}
-                value={specialization || ""}
-                onChange={(e) => handleSpecializationChange(index, e.target.value)}
-                required
-              >
-                <option value="">{translate("Select Specialization")}</option>
-                {specializations.map((spec) => (
-                  <option key={spec.id} value={spec.id}>
-                    {spec.name}
-                  </option>
-                ))}
-              </select>
-              {/* Buton de ștergere doar dacă există mai multe specializări */}
-              {selectedSpecializations.length > 1 && (
-                <button
-                  type="button"
-                  onClick={() => removeSpecializationField(index)}
-                  className="ml-2 text-gray-500 hover:text-red-500 transition"
+              {/* Specializations */}
+            <label className="block text-gray-700">{translate("Specializations")}</label>
+            {selectedSpecializations.map((specialization, index) => (
+              <div key={index} className="flex items-center mb-2">
+                <select
+                  className={`border ${dublicateError ? "border-red-500" : "border-gray-300"} text-gray-700 rounded w-full p-2`}
+                  value={specialization || ""}
+                  onChange={(e) => handleSpecializationChange(index, e.target.value)}
+                  required
                 >
-                  <XMarkIcon className="h-5 w-5" />
-                </button>
-              )}
-            </div>
-          ))}
-          {dublicateError && <p className="text-red-500 text-sm mt-1">{translate(dublicateError)}</p>}
-          <button
-            type="button"
-            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 mt-2 w-full sm:w-auto"
-            onClick={addSpecializationField}
-          >
-            {translate("Add Specialization")}
-          </button>
-        </div>
+                  <option value="">{translate("Select Specialization")}</option>
+                  {specializations.map((spec) => (
+                    <option key={spec.id} value={spec.id}>
+                      {spec.name}
+                    </option>
+                  ))}
+                </select>
+                {/* Delete specialization camp */}
+                {selectedSpecializations.length > 1 && (
+                  <button
+                    type="button"
+                    onClick={() => removeSpecializationField(index)}
+                    className="ml-2 text-gray-500 hover:text-red-500 transition"
+                  >
+                    <XMarkIcon className="h-5 w-5" />
+                  </button>
+                )}
+              </div>
+            ))}
+            {/* Dublicate error div */}
+            {dublicateError && <p className="text-red-500 text-sm mt-1">{translate(dublicateError)}</p>}
+            {/* Add specialization button */}
+            <button
+              type="button"
+              className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 mt-2 w-full sm:w-auto"
+              onClick={addSpecializationField}
+            >
+              {translate("Add Specialization")}
+            </button>
+          </div>
 
             <div className="flex flex-col sm:flex-row justify-end sm:space-x-2 sm:mt-0">
               <button type="submit" className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded w-full sm:w-auto">

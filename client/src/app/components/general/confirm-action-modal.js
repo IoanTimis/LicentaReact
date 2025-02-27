@@ -25,7 +25,7 @@ export default function ConfirmActionModal({ actionFunction, isOpen, setIsOpen, 
   }
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 p-4">
       <div className="bg-white p-6 rounded shadow-lg w-96">
         <h2 className="text-xl font-bold text-gray-700 mb-4">{ translate(title)}</h2>
         <p className="text-gray-700 mb-4">{ translate(message) }</p>

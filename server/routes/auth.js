@@ -5,9 +5,6 @@ const authController = require('../controllers/auth');
 
 router.get('/check-session', authController.checkSession);
 
-router.post('/register/student', authController.registerStudent);
-router.post('/register/teacher', authController.registerTeacher);
-
 router.post('/refresh', authController.refreshAccessToken);
 
 router.post('/login', authController.login);

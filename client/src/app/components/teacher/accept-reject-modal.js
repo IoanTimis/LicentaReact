@@ -4,7 +4,7 @@ export default function AcceptRejectModal({ isOpen, onClose, onSubmit, translate
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-lg shadow-lg w-full max-w-md p-6">
         <h2 className="text-xl font-bold text-gray-700 mb-4">{translate("Send Response")}</h2>
         <form onSubmit={onSubmit}>

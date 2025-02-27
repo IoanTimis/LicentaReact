@@ -23,56 +23,6 @@ const checkSession = (req, res) => {
     });
 };
 
-const registerStudent = async (req, res) => {
-    try {
-        const { first_name, name, email, password, faculty_id, specialization_id, education_level } = req.body;
-        sanitizeHtml(first_name);
-        sanitizeHtml(name);
-        sanitizeHtml(email);
-
-        const hashedPassword = await bcrypt.hash(password, 8);
-        
-        const userInstance = await User.create({
-            first_name: first_name,
-            name: name,
-            email: email, 
-            password: hashedPassword,
-            faculty_id: faculty_id,
-            specialization_id: specialization_id,
-            education_level: education_level,
-        });
-        res.render('pages/auth/registerSuccess', { user: userInstance });
-    } catch (error) {
-        console.error('Error registering user:', error);
-        res.status(500).send('Internal Server Error');
-    }
-};
-
-const registerTeacher = async (req, res) => {
-    try {
-        const { first_name, name, email, password, title } = req.body;
-        sanitizeHtml(first_name);
-        sanitizeHtml(name);
-        sanitizeHtml(email);
-        sanitizeHtml(title);
-
-        const hashedPassword = await bcrypt.hash(password, 8);
-        
-        const userInstance = await User.create({
-            first_name: first_name,
-            name: name,
-            email: email,
-            title: title,
-            password: hashedPassword,
-            type: 'teacher'
-        });
-        res.render('pages/auth/registerSuccess', { user: userInstance });
-    } catch (error) {
-        console.error('Error registering user:', error);
-        res.status(500).send('Internal Server Error');
-    }
-};
-
 const refreshAccessToken = (req, res) => {
   try {
     const refreshToken = req.cookies.refreshToken;
@@ -436,8 +386,6 @@ const completeProfileTeacher = async (req, res) => {
 
 module.exports = {
     checkSession,
-    registerTeacher,
-    registerStudent,
     refreshAccessToken,
     login,
     logout,

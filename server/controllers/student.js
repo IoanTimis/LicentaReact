@@ -286,7 +286,10 @@ const newRequest = async (req, res) => {
     const user = jwt.decode(refreshToken, process.env.REFRESH_TOKEN_SECRET);
     const student_id = user.id;
 
-    const { topic_id, teacher_id, education_level, message } = req.body;
+    const { topic_id, teacher_id, education_level } = req.body;
+    let { message } = req.body;
+
+    message = sanitizeHtml(message);
 
     const student_data = await User.findByPk(student_id);
 
@@ -537,8 +540,6 @@ const topicSearchFilter = async (req, res) => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
-
-
 
 module.exports = {
   studentTopics,

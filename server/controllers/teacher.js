@@ -301,8 +301,10 @@ const teacherResponse = async (req, res) => {
     const refreshToken = req.cookies.refreshToken;
     const user = jwt.decode(refreshToken, process.env.REFRESH_TOKEN_SECRET);
     const teacherId = user.id;
-    const { status, message } = req.body;
+    let { status, message } = req.body;
     console.log(status, message);
+
+    message = sanitizeHtml(message);
 
     const request = await topicRequest.findByPk(requestId,
       {
