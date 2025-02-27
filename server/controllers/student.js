@@ -152,8 +152,16 @@ const addFavoriteTopic = async (req, res) => {
 
     const facultyId = topic.specializations?.[0]?.faculty?.id; 
 
-    if (topic.slots === 0 || topic.education_level !== user.education_level || facultyId !== user.faculty_id) {
-      return res.status(403).json({ message: "Forbidden" });
+    if (facultyId !== user.faculty_id) {
+      return res.status(403).json({ message: 'Forbidden, faculty do not match' });
+    }
+
+    if(topic.slots === 0){
+      return res.status(403).json({ message: 'Forbidden, no slots available' });
+    }
+
+    if(topic.education_level !== user.education_level){
+      return res.status(403).json({ message: 'Forbidden, education level do not match' });
     }
 
     const matchSpecialization = topic.specializations.some(specialization => specialization.id === user.specialization_id);
@@ -198,7 +206,7 @@ const removeFavoriteTopic = async (req, res) => {
     }
 
     if (favoriteTopic.user_id !== student_id) {
-      return res.status(403).json({ message: 'Forbidden' });
+      return res.status(403).json({ message: 'Forbidden, favorite topic not yours' });
     }
 
     await favoriteTopic.destroy();
@@ -379,7 +387,11 @@ const newRequest = async (req, res) => {
       return res.status(403).json({ message: 'Forbidden, education lvl do not match' });
     }
 
-    console.log(topic_data.specializations);
+    const facultyId = topic_data.specializations?.[0]?.faculty?.id;
+
+    if (facultyId !== student_data.faculty_id) {
+      return res.status(403).json({ message: 'Forbidden, faculty do not match' });
+    }
 
     const matchSpecialization = topic_data.specializations.some(specialization => specialization.id === user.specialization_id);
 
