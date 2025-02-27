@@ -10,25 +10,27 @@ import { jwtDecode } from "jwt-decode";
 export default function SetAccessToken() {
     const { accessToken } = useParams(); 
     const router = useRouter(); 
-    const dispatch = useDispatch(); 
+    const dispatch = useDispatch();
 
     useEffect(() => {
         if (accessToken) {
-            localStorage.setItem("accessToken", accessToken);
+            localStorage.setItem("accessToken", accessToken)
 
             const user = jwtDecode(accessToken);
-            
+            const role = user.role;
+            const lastAttemptedPath = localStorage.getItem("lastAttemptedPath");
+            console.log("attempted path: ", lastAttemptedPath);
+
             dispatch(setUser({ user }));
 
-            const role = user.role;
-            router.push(`/${role}`);
+            router.push(lastAttemptedPath ||`/${role}`);
         } else {
             router.push("/auth/login");
         }
     }, [accessToken, dispatch, router]);
 
     return (
-        <h1 className="text-2xl font-bold text-gray-800 mb-6">
+        <h1 className="text-2xl text-center font-bold text-gray-800">
             Setting Access Token...
         </h1>
     );

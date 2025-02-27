@@ -2,7 +2,7 @@
 
 import FixedSidebar from "@/app/components/admin/fixed-side-bar";
 import { useLayoutEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname} from "next/navigation";
 import { jwtDecode } from "jwt-decode";
 import { Provider } from "react-redux";
 import store from "@/store/page";
@@ -11,21 +11,26 @@ import ErrorDiv from "@/app/components/general/error-div";
 
 export default function AdminLayout({ children }) {
   const router = useRouter();
+  const pathname = usePathname();
 
   useLayoutEffect(() => {
     const accessToken = localStorage.getItem("accessToken");
 
     if (!accessToken) {
+      localStorage.setItem("lastAttemptedPath", pathname);
       router.push("/auth/login");
       return;
     }
 
     try {
       const decoded = jwtDecode(accessToken);
+
       if (decoded.role !== "admin") {
         console.log("Nu ai acces la această pagină, rolul tău este: ", decoded.role);
+        alert("Acces interzis");
         router.push(`/${decoded.role}`);
       }
+
     } catch (error) {
       console.error("Invalid token:", error);
       router.push("/auth/login");

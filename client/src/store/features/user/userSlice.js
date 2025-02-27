@@ -1,5 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+//TODO transofrma in users si aici voi salva userii pt admin dashboard
+
 const initialState = {
   user: null, 
   isLoading: false,

@@ -1,32 +1,33 @@
 "use client";
 
 import { useLayoutEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { jwtDecode } from "jwt-decode";
-console.log("middleware student layout.js");
 
 export default function StudentLayout({ children }) {
   const router = useRouter();
+  const pathname = usePathname();
 
   useLayoutEffect(() => {
     const accessToken = localStorage.getItem("accessToken");
 
     if (!accessToken) {
       router.push("/auth/login"); 
+      localStorage.setItem("lastAttemptedPath", pathname);
       return;
     }
 
     try {
       const decoded = jwtDecode(accessToken);
-      console.log("decoded", decoded);
-      if (decoded.role !== "student") { //Solutie temporara
+
+      if (decoded.role !== "student") { 
         console.error("Invalid role:", decoded.role);
-        alert("Forbidden access");
+        alert("Acces interzis");
         router.push(`/${decoded.role}`); 
       }
+
     } catch (error) {
       console.error("Invalid token:", error);
-      //localStorage.removeItem("accessToken"); TODO: test this
       router.push("/auth/login"); 
     }
   }, [router]);
