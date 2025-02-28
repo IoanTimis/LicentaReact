@@ -12,7 +12,6 @@ import ProfessorDetails from "@/app/components/general/topic-req-profesor-detail
 import RequestDetails from "@/app/components/general/request-details";
 import TopicDescription from "@/app/components/general/topic-description";
 import { jwtDecode } from "jwt-decode";
-import { EnvelopeIcon, TrashIcon } from "@heroicons/react/24/solid";
 import { ErrorContext } from "@/context/errorContext";
 import { useContext } from "react";
 import { BuildEmailData } from "@/utils/buildEmailData";
@@ -29,7 +28,8 @@ export default function TopicDetails() {
   const { setGlobalErrorMessage } = useContext(ErrorContext);
   const { translate, language } = useLanguage();
   const { id } = useParams();
-  const [status, setStatus] = useState("");
+  const [commentMessage, setCommentMessage] = useState("");
+  const [comments, setComments] = useState([]);
 
   useEffect(() => {
     const accessToken = localStorage.getItem("accessToken");
@@ -56,7 +56,7 @@ export default function TopicDetails() {
       try {
         const response = await axiosInstance.get(`/teacher/fetch/student-request/${id}`, { withCredentials: true });
         setRequest(response.data.request);
-        setStatus(response.data.request.status);
+        setComments(response.data.request.comments);
 
       } catch (error) {
         console.error("Error fetching topic details:", error);
@@ -108,7 +108,6 @@ export default function TopicDetails() {
     try {
       await axiosInstance.put(`/teacher/student-request/response/${request.id}`, { status, message }, { withCredentials: true });
       setRequest({ ...request, status });
-      setStatus(status);
       
       const to = request.student.email;
       const title = request.topic.title;
@@ -139,6 +138,19 @@ export default function TopicDetails() {
     }
   };
 
+  const handleAddComment = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axiosInstance.post(`/teacher/student-request/comment/add/${request.id}`, { commentMessage }, { withCredentials: true });
+
+      setComments([...comments, response.data.comment]);
+      setCommentMessage("");
+    } catch (error) {
+      console.error("Error adding comment:", error);
+      setGlobalErrorMessage(translate("An error occurred while adding the comment."));
+    }
+  };
+
   if (isRequestDeleted){
     return (
       <div className="flex justify-center items-center min-h-screen bg-gray-100">
@@ -160,7 +172,7 @@ export default function TopicDetails() {
 
             <RequestDetails 
               topic={request.topic} 
-              status={status} 
+              request={request} 
               toggleConfirmActionModal={toggleConfirmActionModal}
               toggleResponseModal={toggleResponseModal} 
               translate={translate} 
@@ -169,10 +181,19 @@ export default function TopicDetails() {
         </div>
 
           {/* Description */}
-          <div className="bg-gray-100 p-6 max-w-7xl mx-auto min-h-screen rounded-bl-lg rounded-br-lg">
-            <h2 className="text-2xl font-bold text-gray-800 mb-4 text-center">{ translate("Description") }</h2>
-            <p className="text-gray-700 text-center">{request.description}</p>
-          </div>
+          <TopicDescription description={request.topic.description} translate={translate} />
+
+          <hr className="border-t-1 border-gray-400" />
+
+          {/* Comments */}
+          <CommentList comments={comments} language={language} translate={translate}  />
+
+          {/* Add Comment */}
+          <CommentInput
+            commentMessage={commentMessage}
+            setCommentMessage={setCommentMessage}
+            handleAddComment={handleAddComment}
+          />
         </>
       )}
       {/* Modals */}

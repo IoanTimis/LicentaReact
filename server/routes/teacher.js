@@ -22,6 +22,8 @@ router.get('/fetch/student-request/:id', teacherController.studentRequest);
 router.put('/student-request/response/:id', teacherController.teacherResponse);
 router.delete('/student-request/delete/:id', teacherController.deleteRequest);
 
+router.post('/student-request/comment/add/:id', teacherController.addComment);
+
 router.get('/fetch/my-students', teacherController.getMyStudents);
 
 //Filters & search

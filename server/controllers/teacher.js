@@ -8,6 +8,7 @@ const sanitizeHtml = require('sanitize-html');
 const jwt = require('jsonwebtoken');
 const  myStudents = require('../models/myStudents');
 const { Op } = require('sequelize');
+const RequestedTopicComment = require('../models/requestedTopicComment');
 
 const teacherTopics = async (req, res) => {
   try{
@@ -278,6 +279,14 @@ const studentRequest = async (req, res) => {
           {
             model: Topic,
             as: 'topic'
+          },
+          {
+            model: RequestedTopicComment,
+            as: 'comments',
+            include: {
+              model: User,
+              as: 'user'
+            }
           }
         ]
       }
@@ -362,6 +371,54 @@ const deleteRequest = async (req, res) => {
   }
   catch (error) {
     console.error('Error deleting request:', error);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+};
+
+const addComment = async (req, res) => {
+  try {
+    const refreshToken = req.cookies.refreshToken;
+    const user = jwt.decode(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+    const teacher_id = user.id;
+    const request_id = req.params.id;
+    let { commentMessage } = req.body;
+
+    commentMessage = sanitizeHtml(commentMessage);
+
+    const request = await topicRequest.findByPk(request_id,
+      {
+        include: [{
+          model: User,
+          as: 'teacher'
+        },
+      ]
+      }
+    );
+
+    if (!request) {
+      return res.status(404).json({ message: 'Request not found' });
+    }
+
+    if(request.teacher_id !== teacher_id){
+      return res.status(403).json({ message: 'Forbidden, request not yours' });
+    }
+
+    const comment = await RequestedTopicComment.create({
+      user_id: teacher_id,
+      request_id: request_id,
+      message: commentMessage
+    });
+
+    if (!comment) {
+      return res.status(500).json({ message: 'Error creating comment' });
+    }
+
+    const data = { id: comment.id, createdAt: comment.createdAt, user_id: teacher_id, request_id, message: commentMessage, user };
+
+    res.status(201).json({ message: 'Comment created', comment: data });
+  }
+  catch (error) {
+    console.error('Error creating comment:', error);
     res.status(500).json({ message: 'Internal Server Error' });
   }
 };
@@ -515,6 +572,7 @@ module.exports = {
   studentRequest,
   teacherResponse,
   deleteRequest,
+  addComment,
   getMyStudents,
   requestSearchFilter,
   topicSearchFilter

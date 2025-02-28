@@ -1,6 +1,6 @@
 import RequestStatusActions from "../student/request-status-actions";
 
-const RequestDetails = ({ topic, status, toggleConfirmActionModal, translate, role, toggleResponseModal }) => {
+const RequestDetails = ({ topic, request, toggleConfirmActionModal, translate, role, toggleResponseModal }) => {
   return (
     <div className="bg-gray-100 p-6 flex flex-col items-center justify-center">
       <p className="text-gray-700 mb-4">
@@ -16,18 +16,18 @@ const RequestDetails = ({ topic, status, toggleConfirmActionModal, translate, ro
         <span className="font-semibold">{translate("Education Level")}:</span> {topic.education_level}
       </p>
       <p className="text-black">
-        {status === "pending"
+        {request.status === "pending"
           ? translate("Pending") + "..."
-          : status === "confirmed"
+          : request.status === "confirmed"
           ? translate("Confirmed") + "!"
-          : status === "accepted"
+          : request.status === "accepted"
           ? translate("Accepted") + "!"
           : translate("Rejected") + "!"}
       </p>
 
       {/* Butoane de acțiuni */}
       <RequestStatusActions 
-        status={status} 
+        request={request}
         toggleConfirmActionModal={toggleConfirmActionModal} 
         translate={translate} 
         role={role} 

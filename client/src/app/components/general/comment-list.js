@@ -1,5 +1,4 @@
 import { objectAge } from "@/utils/objectAge";
-import { translate } from "googleapis/build/src/apis/translate";
 
 const CommentList = ({ comments, language, translate }) => {
   if (comments.length === 0) return (

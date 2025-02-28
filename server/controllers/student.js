@@ -542,7 +542,9 @@ const addComment = async (req, res) => {
     const user = jwt.decode(refreshToken, process.env.REFRESH_TOKEN_SECRET);
     const student_id = user.id;
     const request_id = req.params.id;
-    const { commentMessage } = req.body;
+    let { commentMessage } = req.body;
+
+    commentMessage = sanitizeHtml(commentMessage);
 
     const request = await topicRequest.findByPk(request_id,
       {

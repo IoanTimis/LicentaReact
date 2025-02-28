@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { CheckCircleIcon, EllipsisVerticalIcon, TrashIcon, PencilIcon } from "@heroicons/react/20/solid";
 
-const RequestStatusActions = ({ status, toggleConfirmActionModal, translate, role, toggleResponseModal }) => {
+const RequestStatusActions = ({ request, toggleConfirmActionModal, translate, role, toggleResponseModal }) => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [tooltipVisible, setTooltipVisible] = useState(false);
 
@@ -9,9 +9,9 @@ const RequestStatusActions = ({ status, toggleConfirmActionModal, translate, rol
     <div className="bg-gray-100 p-6 flex flex-col items-center justify-center relative">
       {role === "student" ? (
         <div className="flex space-x-4 mt-2">
-          {status === "confirmed" ? (
+          {request.status === "confirmed" ? (
             <CheckCircleIcon className="w-6 h-6 text-green-500 cursor-not-allowed" />
-          ) : status === "accepted" ? (
+          ) : request.status === "accepted" ? (
             <div className="relative">
               <button
                 onClick={() => setMenuOpen(!menuOpen)}
@@ -70,7 +70,7 @@ const RequestStatusActions = ({ status, toggleConfirmActionModal, translate, rol
       ) : (
         <div className="flex space-x-4 mt-2">
           {/* Profesor */}
-          {status === "confirmed" ? (
+          {request.status === "confirmed" ? (
             <div
               className="relative flex flex-col items-center"
               onMouseEnter={() => setTooltipVisible(true)}

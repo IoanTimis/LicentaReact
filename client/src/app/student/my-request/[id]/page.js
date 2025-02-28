@@ -18,7 +18,6 @@ import { jwtDecode } from "jwt-decode";
 
 export default function RequestTopicDetails() {
   const [request, setRequest] = useState(null);
-  const [status, setStatus] = useState("");
   const [isRequestDeleted, setIsRequestDeleted] = useState(false);
   const [localUser, setLocalUser] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
@@ -50,7 +49,6 @@ export default function RequestTopicDetails() {
       try {
         const response = await axiosInstance.get(`/student/fetch/requested-topic/${id}`, { withCredentials: true });
         setRequest(response.data.request);
-        setStatus(response.data.request.status);
         setComments(response.data.request.comments);
 
       } catch (error) {
@@ -65,7 +63,7 @@ export default function RequestTopicDetails() {
   const confirmRequest = async (requestId) => {
     try {
       await axiosInstance.put(`/student/request/confirm/${requestId}`, { withCredentials: true });
-      setStatus("confirmed");
+      setRequest({ ...request, status: "confirmed" });
 
       const to = request.teacher.email;
       const title = request.topic.title;
@@ -160,7 +158,7 @@ export default function RequestTopicDetails() {
             {/* Request Details */}
             <RequestDetails 
               topic={request.topic} 
-              status={status} 
+              request={request}
               toggleConfirmActionModal={toggleConfirmActionModal} 
               translate={translate} 
               role={localUser.role} 
