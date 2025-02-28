@@ -18,7 +18,7 @@ export default function RequestCard({ request, onResponse, handleOpenConfirmModa
       <div className="bg-white shadow rounded hover:shadow-lg transition border border-gray-950">
         <Link href={`/student/my-request/${request.id}`}>
           <div className="bg-navbar-gradient flex justify-between items-center py-2 px-4 rounded-t">
-            <h2 className="text-lg font-semibold text-white">{truncateText(request.topic.title, 20)}</h2>
+            <h2 className="text-lg font-semibold text-white">{truncateText(request.topic.title, 27)}</h2>
           </div>
           <div className="p-4">
             <p className="text-gray-600 mb-2">
@@ -97,7 +97,7 @@ export default function RequestCard({ request, onResponse, handleOpenConfirmModa
     <div className="bg-white shadow rounded hover:shadow-lg transition border border-gray-950">
         <Link href={`/teacher/student-request/${request.id}`}>
           <div className="bg-navbar-gradient flex justify-between items-center py-2 px-4 rounded-t">
-            <h2 className="text-lg font-semibold text-white">{request.topic.title}</h2>
+            <h2 className="text-lg font-semibold text-white">{truncateText(request.topic.title, 27)}</h2>
           </div>
           <div className="p-4">
             <p className="text-gray-600 mb-2">

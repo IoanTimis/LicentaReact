@@ -9,6 +9,7 @@ const sanitizeHtml = require('sanitize-html');
 const jwt = require('jsonwebtoken');
 const FavoriteTopics = require('../models/favoriteTopics');
 const MyStudents = require('../models/myStudents');
+const RequestedTopicComment = require('../models/requestedTopicComment');
 
 const studentTopics = async (req, res) => {
   try {
@@ -278,6 +279,7 @@ const getRequestTopics = async (req, res) => {
 const getRequestTopic = async (req, res) => {
   try {
     const request_id = req.params.id;
+    
     const request = await topicRequest.findByPk(request_id, {
       include: [{
         model: User,
@@ -286,7 +288,16 @@ const getRequestTopic = async (req, res) => {
       {
         model: Topic,
         as: 'topic'
-      }]
+      },
+      {
+        model: RequestedTopicComment,
+        as: 'comments',
+        include: [{
+          model: User,
+          as: 'user'
+        }]
+      }
+    ]
     });
 
     if (!request) {
@@ -525,6 +536,47 @@ const deleteRequest = async (req, res) => {
   }
 };
 
+const addComment = async (req, res) => {
+  try {
+    const refreshToken = req.cookies.refreshToken;
+    const user = jwt.decode(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+    const student_id = user.id;
+    const request_id = req.params.id;
+    const { commentMessage } = req.body;
+
+    console.log("----------------------------------------------------------");
+    console.log(commentMessage);
+    console.log(request_id);
+    console.log(student_id);
+
+    const request = await topicRequest.findByPk(request_id);
+
+    if (!request) {
+      return res.status(404).json({ message: 'Request not found' });
+    }
+
+    if(request.student_id !== student_id){
+      return res.status(403).json({ message: 'Forbidden, request not yours' });
+    }
+
+    const comment = await RequestedTopicComment.create({
+      user_id: student_id,
+      request_id: request_id,
+      message: commentMessage
+    });
+
+    if (!comment) {
+      return res.status(500).json({ message: 'Error creating comment' });
+    }
+
+    res.status(201).json({ message: 'Comment created', comment: comment });
+  }
+  catch (error) {
+    console.error('Error creating comment:', error);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+};
+
 const topicSearchFilter = async (req, res) => {
   try {
     const refreshToken = req.cookies.refreshToken;
@@ -585,5 +637,6 @@ module.exports = {
   newRequest,
   confirmRequest,
   deleteRequest,
+  addComment,
   topicSearchFilter
 };

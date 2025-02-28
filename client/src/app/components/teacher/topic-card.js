@@ -10,7 +10,7 @@ export default function TopicCard({ topic, translate, onEdit, handleOpenConfirmM
     <div className="bg-white shadow rounded hover:shadow-lg transition border border-gray-950">
       <Link href={`/teacher/my-topic/${topic.id}`}>
         <div className="bg-navbar-gradient flex justify-between items-center py-2 px-4 rounded-t">
-          <h2 className="text-lg font-semibold text-white">{truncateText(topic.title, 20)}</h2>
+          <h2 className="text-lg font-semibold text-white">{truncateText(topic.title, 27)}</h2>
         </div>
         <div className="p-4">
           <p className="text-gray-700">
