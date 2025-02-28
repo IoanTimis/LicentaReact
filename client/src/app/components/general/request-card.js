@@ -74,16 +74,17 @@ export default function RequestCard({ request, onResponse, handleOpenConfirmModa
                 >
                   {translate("View Request")}
                 </Link>
-                <button
-                  className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-red-600 transition"
-                  onClick={() => {
-                    handleOpenConfirmModal(request.id, "delete")
-                    setIsDropdownOpen(false);
-                  }}
-                >
-                  {translate("Delete Request")}
-                </button>
-
+                {!request.status === "confirmed" && (
+                  <button
+                    className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-red-600 transition"
+                    onClick={() => {
+                      handleOpenConfirmModal(request.id, "delete")
+                      setIsDropdownOpen(false);
+                    }}
+                  >
+                    {translate("Delete Request")}
+                  </button>
+                )}
               </div>
             )}
           </div>
