@@ -279,7 +279,7 @@ const getRequestTopics = async (req, res) => {
 const getRequestTopic = async (req, res) => {
   try {
     const request_id = req.params.id;
-    
+
     const request = await topicRequest.findByPk(request_id, {
       include: [{
         model: User,
@@ -544,12 +544,15 @@ const addComment = async (req, res) => {
     const request_id = req.params.id;
     const { commentMessage } = req.body;
 
-    console.log("----------------------------------------------------------");
-    console.log(commentMessage);
-    console.log(request_id);
-    console.log(student_id);
-
-    const request = await topicRequest.findByPk(request_id);
+    const request = await topicRequest.findByPk(request_id,
+      {
+        include: [{
+          model: User,
+          as: 'student'
+        },
+      ]
+      }
+    );
 
     if (!request) {
       return res.status(404).json({ message: 'Request not found' });
@@ -569,7 +572,9 @@ const addComment = async (req, res) => {
       return res.status(500).json({ message: 'Error creating comment' });
     }
 
-    res.status(201).json({ message: 'Comment created', comment: comment });
+    const data = { id: comment.id, createdAt: comment.createdAt,user_id: student_id, request_id, message: commentMessage, user };
+
+    res.status(201).json({ message: 'Comment created', comment: data });
   }
   catch (error) {
     console.error('Error creating comment:', error);

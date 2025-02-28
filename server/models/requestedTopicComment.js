@@ -10,7 +10,7 @@ const RequestedTopicComment = sequelize.define('requested_topic_comments', {
     autoIncrement: true,
   },
   message: {
-    type: DataTypes.STRING,
+    type: DataTypes.STRING(500),
     allowNull: false,
   },
   user_id: {
