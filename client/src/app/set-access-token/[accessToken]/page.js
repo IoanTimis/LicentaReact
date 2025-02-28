@@ -23,7 +23,14 @@ export default function SetAccessToken() {
 
             dispatch(setUser({ user }));
 
-            router.push(lastAttemptedPath ||`/${role}`);
+            router.push(lastAttemptedPath ||`/${role}`)
+            .then (() => {
+                localStorage.removeItem("lastAttemptedPath");
+            })
+            .catch((error) => {
+                console.error("Error redirecting to last attempted path: ", error);
+            });
+
         } else {
             router.push("/auth/login");
         }
