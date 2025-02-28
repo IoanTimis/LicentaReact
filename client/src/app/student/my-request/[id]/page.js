@@ -31,7 +31,7 @@ export default function RequestTopicDetails() {
 
   console.log("request", request);
 
-  const handleModal = (action) => {
+  const toggleConfirmActionModal = (action) => {
     setModalAction(action);
     setIsOpen(true);
   };
@@ -55,7 +55,7 @@ export default function RequestTopicDetails() {
 
       } catch (error) {
         console.error("Error fetching request details:", error);
-        setGlobalErrorMessage("An error occurred while fetching request details.");
+        setGlobalErrorMessage(translate("An error occurred while fetching request details."));
       }
     };
 
@@ -90,7 +90,7 @@ export default function RequestTopicDetails() {
       console.log("Request confirmed successfully.");
     } catch (error) {
       console.error("Error confirming request:", error);
-      setGlobalErrorMessage("An error occurred while confirming the request.");
+      setGlobalErrorMessage(translate("An error occurred while confirming the request."));
     }
   };
 
@@ -134,7 +134,7 @@ export default function RequestTopicDetails() {
       setCommentMessage("");
     } catch (error) {
       console.error("Error adding comment:", error);
-      setGlobalErrorMessage("An error occurred while adding the comment.");
+      setGlobalErrorMessage(translate("An error occurred while adding the comment."));
     }
   };
 
@@ -158,16 +158,22 @@ export default function RequestTopicDetails() {
             <ProfessorDetails teacher={request.teacher} />
   
             {/* Request Details */}
-            <RequestDetails topic={request.topic} status={status} handleModal={handleModal} translate={translate} />
+            <RequestDetails 
+              topic={request.topic} 
+              status={status} 
+              toggleConfirmActionModal={toggleConfirmActionModal} 
+              translate={translate} 
+              role={localUser.role} 
+            />
           </div>
   
           {/* Description */}
           <TopicDescription description={request.topic.description} translate={translate} />
   
-          <hr className="border-t-1 border-gray-400 my-6" />
+          <hr className="border-t-1 border-gray-400" />
   
           {/* Comments */}
-          <CommentList comments={comments} language={language} />
+          <CommentList comments={comments} language={language} translate={translate}  />
 
           {/* Add Comment */}
           <CommentInput

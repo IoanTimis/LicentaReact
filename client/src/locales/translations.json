@@ -1,6 +1,7 @@
 {
     "_comment1-------------------": "Translations for general pages and general components",
     "You have selected the same specialization multiple times.": "Ai selectat aceeași specializare de mai multe ori.",
+    "Comments on request": "Comentarii la cerere",
     "Type": "Tip",
     "Created by": "Creat de",
     "Deleted": "Șters",
@@ -143,6 +144,8 @@
     "An error occurred while deleting request. Please try again." : "A apărut o eroare la ștergerea cererii. Te rog încearcă din nou.",
     "An error occurred while fetching students." : "A apărut o eroare la preluarea studenților.",
     "Error searching for themes. Please try again." : "Eroare la căutarea temelor. Te rog încearcă din nou.",
-    "Error searching for requests. Please try again." : "Eroare la căutarea cererilor. Te rog încearcă din nou."
+    "Error searching for requests. Please try again." : "Eroare la căutarea cererilor. Te rog încearcă din nou.",
+    "An error occurred while adding the comment.": "A apărut o eroare la adăugarea comentariului.",
+    "An error occurred while confirming the request." : "A apărut o eroare la confirmarea cererii."
 }
   

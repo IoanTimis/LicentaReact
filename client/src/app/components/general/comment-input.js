@@ -2,7 +2,7 @@ import { PaperAirplaneIcon } from "@heroicons/react/24/solid";
 
 const CommentInput = ({ commentMessage, setCommentMessage, handleAddComment }) => {
   return (
-    <div className="bg-gray-100 p-6 max-w-7xl mx-auto">
+    <div className="bg-gray-100 p-3 max-w-7xl mx-auto">
       <form
         className="flex items-center w-full border border-gray-300 rounded-lg p-2 bg-white"
         onSubmit={handleAddComment}

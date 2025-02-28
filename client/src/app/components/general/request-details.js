@@ -1,6 +1,6 @@
 import RequestStatusActions from "../student/request-status-actions";
 
-const RequestDetails = ({ topic, status, handleModal, translate }) => {
+const RequestDetails = ({ topic, status, toggleConfirmActionModal, translate, role, toggleResponseModal }) => {
   return (
     <div className="bg-gray-100 p-6 flex flex-col items-center justify-center">
       <p className="text-gray-700 mb-4">
@@ -26,7 +26,13 @@ const RequestDetails = ({ topic, status, handleModal, translate }) => {
       </p>
 
       {/* Butoane de acțiuni */}
-      <RequestStatusActions status={status} handleModal={handleModal} translate={translate} />
+      <RequestStatusActions 
+        status={status} 
+        toggleConfirmActionModal={toggleConfirmActionModal} 
+        translate={translate} 
+        role={role} 
+        toggleResponseModal={toggleResponseModal}
+      />
     </div>
   );
 };
