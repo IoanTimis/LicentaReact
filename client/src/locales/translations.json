@@ -109,8 +109,8 @@
     "Accept or Reject": "Acceptă sau Respinge",
     "Respond to Request": "Răspunde Cererii",
     "Are you sure you want to delete this request?": "Ești sigur că vrei să ștergi această cerere?",
-    "Are you sure you want to confirm this theme? This action will delete all other requests!": 
-    "Ești sigur că vrei să confirmi această temă? Această acțiune va șterge toate celelalte cereri!",
+    "Are you sure you want to confirm this theme? This action will delete all other requests and only the teacher will be able to delete this request!":
+    "Ești sigur că vrei să confirmi această temă? Această acțiune va șterge toate celelalte cereri și doar profesorul va putea șterge această cerere!",
     "Delete": "Șterge",
     "Confirm": "Confirmă",
     "Confirmed": "Confirmată",

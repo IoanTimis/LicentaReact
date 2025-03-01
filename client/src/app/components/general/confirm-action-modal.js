@@ -20,7 +20,8 @@ export default function ConfirmActionModal({ actionFunction, isOpen, setIsOpen, 
     buttonText = "Delete";
   } else if (action === "confirm") {
     title = "Confirm Theme";
-    message = "Are you sure you want to confirm this theme? This action will delete all other requests!";
+    message = 
+    "Are you sure you want to confirm this theme? This action will delete all other requests and only the teacher will be able to delete this request!";
     buttonText = "Confirm";
   }
 

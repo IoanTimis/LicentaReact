@@ -169,6 +169,8 @@ export default function StudentRequests() {
               <RequestCard 
                 request={request} 
                 handleOpenConfirmModal={handleOpenConfirmModal}
+                userRole="student"
+                translate={translate}
               />
             </div>
           ))}

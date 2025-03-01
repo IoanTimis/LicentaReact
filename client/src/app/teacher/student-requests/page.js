@@ -218,6 +218,8 @@ export default function StudentRequests() {
                 request={request} 
                 handleOpenConfirmModal={handleOpenConfirmModal}  
                 onResponse={onResponse}
+                userRole="teacher"
+                translate={translate}
               />
             </div>
           ))}
