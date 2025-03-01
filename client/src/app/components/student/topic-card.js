@@ -1,17 +1,13 @@
 import Link from "next/link";
 import { ChevronDownIcon, HeartIcon } from "@heroicons/react/24/solid";
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect } from "react";
 import axiosInstance from "@/utils/axiosInstance";
-import { useLanguage } from "@/context/Languagecontext";
-import { ErrorContext } from "@/context/errorContext";
 import { truncateText } from "@/utils/truncate-text";
 
-export default function TopicCard({ topic, onRequest, newRequestedTopic }) {
-  const { translate } = useLanguage();
+export default function TopicCard({ topic, onRequest, newRequestedTopic, translate, setGlobalErrorMessage }) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isTopicRequested, setIsTopicRequested] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
-  const { setGlobalErrorMessage } = useContext(ErrorContext);
 
   useEffect(() => {
     const fetchData = async () => {

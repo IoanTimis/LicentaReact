@@ -170,6 +170,8 @@ export default function StudentTopics() {
               topic={topic}
               onRequest={onRequest}
               newRequestedTopic={newRequestedTopic}
+              translate={translate}
+              setGlobalErrorMessage={setGlobalErrorMessage}
             />
           ))}
         </div>
