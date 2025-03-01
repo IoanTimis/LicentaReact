@@ -3,7 +3,6 @@ const topicRequest = require('../models/topicRequest');
 const Topic = require('../models/topic');
 const Faculty = require('../models/faculty');
 const Specialization = require('../models/specialization');
-const specializationTopic = require('../models/specializationTopic');
 const sanitizeHtml = require('sanitize-html');
 const jwt = require('jsonwebtoken');
 const  myStudents = require('../models/myStudents');
@@ -343,10 +342,7 @@ const teacherResponse = async (req, res) => {
     const refreshToken = req.cookies.refreshToken;
     const user = jwt.decode(refreshToken, process.env.REFRESH_TOKEN_SECRET);
     const teacherId = user.id;
-    let { status, message } = req.body;
-    console.log(status, message);
-
-    message = sanitizeHtml(message);
+    let { status } = req.body;
 
     const request = await topicRequest.findByPk(requestId,
       {
@@ -371,7 +367,6 @@ const teacherResponse = async (req, res) => {
     }
 
     request.status = status;
-    request.teacher_message = message;
     await request.save();
 
     res.json({ message: 'Response sent', request: request});

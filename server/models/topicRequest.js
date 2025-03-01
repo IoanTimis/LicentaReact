@@ -9,14 +9,6 @@ const topicRequest = sequelize.define('topic_requests', {
     primaryKey: true,
     autoIncrement: true,
   },
-  teacher_message: {
-    type: DataTypes.TEXT,
-    allowNull: true,
-  },
-  student_message: {
-    type: DataTypes.TEXT,
-    allowNull: true,
-  },
   status: {
     type: DataTypes.ENUM('pending', 'accepted', 'rejected', 'confirmed'),
     allowNull: false,

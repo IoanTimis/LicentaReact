@@ -1,9 +1,8 @@
 const Topic = require('../models/topic');
 const Faculty = require('../models/faculty')
 const Specialization = require('../models/specialization');
-const SpecializationTopic = require('../models/specializationTopic');
 const User = require('../models/user');
-const { Op, where } = require('sequelize');
+const { Op} = require('sequelize');
 const topicRequest = require('../models/topicRequest');
 const sanitizeHtml = require('sanitize-html');
 const jwt = require('jsonwebtoken');
@@ -341,9 +340,6 @@ const newRequest = async (req, res) => {
     const student_id = user.id;
 
     const { topic_id, teacher_id, education_level } = req.body;
-    let { message } = req.body;
-
-    message = sanitizeHtml(message);
 
     const student_data = await User.findByPk(student_id);
 
@@ -410,13 +406,11 @@ const newRequest = async (req, res) => {
       return res.status(403).json({ message: "Forbidden, specialization do not" });
     }
 
-    sanitizeHtml(message);
-
     const request = await topicRequest.create({
       student_id: student_id,
       teacher_id: teacher_id,
       topic_id: topic_id,
-      student_message: message
+      status: 'pending'
     });
 
     if (!request) {
