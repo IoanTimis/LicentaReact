@@ -4,6 +4,9 @@ const TopicDetails = ({ topic, toggleConfirmActionModal, toggleEditModal, transl
   return (
     <div className="bg-gray-100 p-6 flex flex-col items-center justify-center">
       <p className="text-gray-700 mb-4">
+        <span className="font-semibold">{translate("Keywords")}:</span> {topic.keywords}
+      </p>
+      <p className="text-gray-700 mb-4">
         {topic.slots === 0 ? (
           <span className="text-black">{translate("No slots available")}</span>
         ) : (
@@ -22,7 +25,6 @@ const TopicDetails = ({ topic, toggleConfirmActionModal, toggleEditModal, transl
         }
       </p>)}
 
-      {/* Butoane de acțiuni */}
       <TopicActions
         toggleConfirmActionModal={toggleConfirmActionModal}
         translate={translate}

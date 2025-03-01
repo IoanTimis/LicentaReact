@@ -11,6 +11,8 @@ import { ErrorContext } from "@/context/errorContext";
 import { useContext } from "react";
 import ProfessorDetails from "@/app/components/general/topic-req-profesor-details";
 import TopicDescription from "@/app/components/general/topic-description";
+import { checkForDuplicates } from "@/utils/checkForDublicates";
+import { jwtDecode } from "jwt-decode";
 
 export default function TopicDetailsPage() {
   const [topic, setTopic] = useState(null);
@@ -21,7 +23,6 @@ export default function TopicDetailsPage() {
   const { id } = useParams();
   const { setGlobalErrorMessage } = useContext(ErrorContext);
 
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [ formMode , setFormMode ] = useState("add");
   const [formError, setFormError] = useState(null);
   const [dublicateError, setDublicateError] = useState(null);
@@ -45,19 +46,6 @@ export default function TopicDetailsPage() {
   const toggleEditModal = () => {
     setIsTopicModalOpen((prev) => !prev);
     setDublicateError(null);
-  };
-
-  const handleAddData = () => {
-    setTitle("");
-    setDescription("");
-    setKeywords("");
-    setSlots("");
-    setEducationLevel("");
-    setSelectedFacultyId(null);
-    setSpecializations([]);
-    setSelectedSpecializations([null]);
-    setFormMode("add");
-    toggleEditModal();
   };
 
   // Handle faculty change
@@ -106,7 +94,6 @@ export default function TopicDetailsPage() {
     toggleEditModal();
   };
 
-
   // Fetch topic details
   useEffect(() => {
     if (!id) return;
@@ -115,6 +102,10 @@ export default function TopicDetailsPage() {
       try {
         const response = await axiosInstance.get(`/teacher/fetch/topic/${id}`, { withCredentials: true });
         setTopic(response.data.topic);
+        setFaculties(response.data.faculties);
+        setSelectedFacultyId(response.data.topic.specializations[0]?.faculty.id);
+        setSpecializations(response.data.topic.specializations);
+        setSelectedSpecializations(response.data.topic.specializations.map(spec => spec.id));
 
       } catch (error) {
         console.error("Error fetching topic details:", error);
@@ -125,6 +116,38 @@ export default function TopicDetailsPage() {
     fetchTopicDetails();
   }, [id]);
 
+  const handleEdit = async (e) => {
+    e.preventDefault();
+    try {
+      const dublicate = checkForDuplicates(selectedSpecializations);
+
+      if(dublicate) {
+        setDublicateError("You have selected the same specialization multiple times.");
+        return;
+      }
+
+      const formData = new FormData(e.target);
+
+      const newTopic = {
+        title: formData.get("title"),
+        description: formData.get("description"),
+        keywords: formData.get("keywords"),
+        slots: formData.get("slots"),
+        education_level: formData.get("education_level"),
+        specialization_ids: selectedSpecializations.filter((id) => id !== null),
+      };
+
+      const response = await axiosInstance.put(`/teacher/topic/edit/${topic.id}`, newTopic, { withCredentials: true });
+      console.log("Theme edited successfully!");
+
+      setTopic(response.data.topic);
+      toggleEditModal();
+    } catch (error) {
+      console.error("Error editing theme:", error);
+      setGlobalErrorMessage(translate("An error occurred while editing the theme."));
+    };
+  }
+
   const handleDelete = async (topicId) => {
     try {
       await axiosInstance.delete(`/teacher/topic/delete/${topicId}`, { withCredentials: true });
@@ -134,8 +157,6 @@ export default function TopicDetailsPage() {
       setGlobalErrorMessage(translate("An error occurred while deleting the theme."));
     }
   };
-
-  //TODO: Edit Logic
 
   return (
     <div className="min-h-screen bg-gray-100 p-8">
@@ -194,8 +215,10 @@ export default function TopicDetailsPage() {
         dublicateError={dublicateError}
         setDublicateError={setDublicateError}
         formMode={formMode}
-        handleAddData={handleAddData}
         handleEditData={handleEditData}
+        handleEdit={handleEdit}
+        translate={translate}
+        toggleModal={toggleEditModal}
       />
       
       {/* Modal */}

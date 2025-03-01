@@ -47,7 +47,10 @@ const TopicActions = ({toggleConfirmActionModal, translate, role, toggleEditModa
               {menuOpen && (
                 <div className="absolute right-0 mt-2 w-32 bg-white shadow-lg rounded-md">
                   <button
-                    onClick={() => toggleEditModal()}
+                    onClick={() => {
+                      toggleEditModal()
+                      setMenuOpen(false)
+                    }}
                     className="flex items-center p-2 w-full text-black hover:bg-gray-200 transition duration-200"
                   >
                     <PencilIcon className="w-5 h-5 text-gray-700 mr-2" />

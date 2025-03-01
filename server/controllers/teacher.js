@@ -66,12 +66,23 @@ const teacherTopics = async (req, res) => {
 const teacherTopic = async (req, res) => {
   try{
     const topic_id = req.params.id;
-
     const topic = await Topic.findByPk(topic_id, {
-      include: {
-        model: User,
-        as: 'user'
-      }
+      include: [
+        {
+            model: Specialization,
+            as: 'specializations',
+            attributes: ['id'],
+            include: {
+              model: Faculty,
+              as: 'faculty',
+              attributes: ['id', 'name']
+            }
+        },
+        {
+          model: User,
+          as: 'user',
+        }
+      ]
     }
     );
 
@@ -79,7 +90,18 @@ const teacherTopic = async (req, res) => {
       return res.status(404).json({ message: 'Topic not found' });
     }
 
-    res.json({ topic: topic });
+    const faculties = await Faculty.findAll(
+      {
+        include: [
+          {
+            model: Specialization,
+            as: 'specializations',
+          }
+        ]
+      }
+    );
+
+    res.json({ topic: topic, faculties: faculties });
   }
   catch (error) {
     console.error('Error getting topic:', error);
@@ -199,7 +221,18 @@ const editTopic = async (req, res) => {
 
     await topic.setSpecializations(specializations); 
 
-    res.json({ topic });
+    const updatedTopic = {
+      id: topic.id,
+      title: topic.title,
+      description: topic.description,
+      keywords: topic.keywords,
+      slots: topic.slots,
+      education_level: topic.education_level,
+      specializations: specializations,
+      user: user
+    }
+
+    res.json({ topic: updatedTopic });
   } catch (error) {
     console.error('Error editing topic:', error);
     res.status(500).json({ message: 'Internal Server Error' });
