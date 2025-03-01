@@ -15,6 +15,7 @@ export default function StudentTopics() {
   const [requestedTopicEducationLevel, setRequestedTopicEducationLevel] = useState(null);
   const { translate } = useLanguage();
   const { setGlobalErrorMessage } = useContext(ErrorContext);
+  const [newRequestedTopic, setNewRequestedTopic] = useState(null);
 
   const [topics, setTopics] = useState([]);
 
@@ -69,8 +70,8 @@ export default function StudentTopics() {
   
       console.log("Request sent successfully:", response.data);
 
-      //TODO: dinamic update the topics array not working
       setTopics([...topics]); 
+      setNewRequestedTopic(response.data.request);
   
       toggleModal();
     } catch (error) {
@@ -93,6 +94,9 @@ export default function StudentTopics() {
               key={topic.id}
               topic={topic}
               onRequest={onRequest}
+              translate={translate}
+              setGlobalErrorMessage={setGlobalErrorMessage}
+              newRequestedTopic={newRequestedTopic}
             />
           ))}
         </div>

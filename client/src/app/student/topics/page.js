@@ -21,10 +21,8 @@ export default function StudentTopics() {
   const [requestedTopicEducationLevel, setRequestedTopicEducationLevel] = useState(null);
   const { translate, language } = useLanguage();
   const { setGlobalErrorMessage } = useContext(ErrorContext);
-
   const [newRequestedTopic, setNewRequestedTopic] = useState(null);
   const [localUser, setLocalUser] = useState(null);
-
   const topics = useSelector((state) => state.topics.list);
   const filteredTopics = useSelector((state) => state.topics.filteredList);
   const dispatch = useDispatch();
