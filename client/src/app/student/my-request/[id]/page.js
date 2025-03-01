@@ -135,6 +135,31 @@ export default function RequestTopicDetails() {
 
       setComments([...comments, response.data.comment]);
       setCommentMessage("");
+
+      if(process.env.NEXT_PUBLIC_NODE_ENV !== "production") {
+        const to = request.student.email;
+        const title = request.topic.title;
+        const actionMakerEmail = localUser.email;
+        const action = "newComment";
+        const role = "teacher";
+
+        const data = {
+          to,
+          title,
+          actionMakerEmail,
+          action,
+          language,
+          role,
+          id: request.id,
+        };
+        
+        const emailData = BuildEmailData(data);
+
+        sendEmail(emailData)
+          .then((response) => console.log("Response:", response))
+          .catch((error) => console.error("Error sending:", error));
+      }
+      
     } catch (error) {
       console.error("Error adding comment:", error);
       setGlobalErrorMessage(translate("An error occurred while adding the comment."));
