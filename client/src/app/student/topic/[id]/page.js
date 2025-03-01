@@ -10,16 +10,26 @@ import { useContext } from "react";
 import ProfessorDetails from "@/app/components/general/topic-req-profesor-details";
 import TopicDescription from "@/app/components/general/topic-description";
 import TopicDetails from "@/app/components/general/topic-details";
+import { jwtDecode } from "jwt-decode";
+import { BuildEmailData } from "@/utils/buildEmailData";
+import { sendEmail } from "@/app/api/sendEmail/page";
 
 export default function TopicDetailsPage() {
   const [topic, setTopic] = useState(null);
   const [topicRequested, setTopicRequested] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { translate } = useLanguage();
+  const { translate, language } = useLanguage();
   const { setGlobalErrorMessage } = useContext(ErrorContext);
   const { id } = useParams();
+  const [localUser, setLocalUser] = useState(null);
 
   const toggleRequestModal = () => setIsModalOpen((prev) => !prev);
+
+  useEffect(() => {
+    const accessToken = localStorage.getItem("accessToken");
+    const decodedToken = jwtDecode(accessToken);
+    setLocalUser(decodedToken);
+  }, []);
 
   // Fetch topic details
   useEffect(() => {
@@ -52,13 +62,42 @@ export default function TopicDetailsPage() {
         topic_id: formData.get("topic_id"),
         teacher_id: formData.get("teacher_id"),
         education_level: formData.get("education_level"),
-        message: formData.get("message"),
       };
 
       const response = await axiosInstance.post("/student/request/add", newRequest, { withCredentials: true });
+
+      const commentMessage = formData.get("message");
+      const requestId = response.data.request.id;
+
+      const addComment = await axiosInstance.post(`/student/request/comment/add/${requestId}`, 
+        { commentMessage }, { withCredentials: true });
+
+      if(process.env.NODE_ENV !== "production") {
+        const to = response.data.topic.user.email;
+        const title = response.data.topic.title;
+        const actionMakerEmail = localUser.email;
+        const action = "newRequest";
+        const role = "student";
+
+        const data = {
+          to,
+          title,
+          actionMakerEmail,
+          action,
+          language,
+          role,
+          id: requestId,
+        };
+
+        const emailData = BuildEmailData(data);
+
+        sendEmail(emailData)
+          .then(() => console.log("Email sent."))
+          .catch((error) => console.error("Error sending email:", error));
+      }
+
       console.log("Request response:", response.data);
       setTopicRequested(true);
-
       toggleRequestModal();
     } catch (error) {
       console.error("Error sending request:", error);

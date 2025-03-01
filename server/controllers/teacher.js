@@ -65,6 +65,9 @@ const teacherTopics = async (req, res) => {
 const teacherTopic = async (req, res) => {
   try{
     const topic_id = req.params.id;
+    const refreshToken = req.cookies.refreshToken;
+    const user = jwt.decode(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+    
     const topic = await Topic.findByPk(topic_id, {
       include: [
         {
@@ -87,6 +90,10 @@ const teacherTopic = async (req, res) => {
 
     if (!topic) {
       return res.status(404).json({ message: 'Topic not found' });
+    }
+
+    if(topic.user_id !== user.id){
+      return res.status(403).json({ message: 'Forbidden, topic not yours' });
     }
 
     const faculties = await Faculty.findAll(
@@ -299,9 +306,12 @@ const studentRequests = async (req, res) => {
 }
 
 const studentRequest = async (req, res) => {
-  const requestId = req.params.id;
-
   try{
+    const requestId = req.params.id;
+    const refreshToken = req.cookies.refreshToken;
+    const user = jwt.decode(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+    const teacherId = user.id;
+
     const request = await topicRequest.findByPk(requestId,
       {
         include: [{
@@ -326,6 +336,10 @@ const studentRequest = async (req, res) => {
 
     if (!request) {
       return res.status(404).json({ message: 'Request not found' });
+    }
+
+    if(request.teacher_id !== teacherId){
+      return res.status(403).send('Forbidden, you are not the owner of this request');
     }
 
     res.status(200).json({ request: request });

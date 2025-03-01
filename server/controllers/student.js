@@ -54,19 +54,55 @@ const studentTopics = async (req, res) => {
 const topic = async (req, res) => {
   try {
     const topic_id = req.params.id;
+    const refreshToken = req.cookies.refreshToken;
+    const user = jwt.decode(refreshToken, process.env.REFRESH_TOKEN_SECRET);
   
     const topic = await Topic.findByPk(topic_id, {
-      include: [{
-        model: User,
-        as: 'user'
-      }]
-    });
+      include: [
+        {
+          model: User,
+          as: 'user'
+        },
+        {
+          model: Specialization,
+          as: "specializations",
+          attributes: ["id"],
+          include: [
+            {
+              model: Faculty,
+              as: "faculty",
+              attributes: ["id"]
+            }
+          ]
+        }
+      ]
+    });    
     
     if (!topic) {
       return res.status(404).json({ message: 'Topic not found' });
     }
 
-    topicRequested = await topicRequest.findOne({
+    if (topic.slots === 0) {
+      return res.status(403).json({ message: 'Forbidden, no slots available' });
+    }
+
+    if (topic.education_level !== user.education_level) {
+      return res.status(403).json({ message: 'Forbidden, education level do not match' });
+    }
+
+    const facultyId = topic.specializations?.[0]?.faculty?.id;
+
+    if (facultyId !== user.faculty_id) {
+      return res.status(403).json({ message: 'Forbidden, faculty do not match' });
+    }
+
+    const matchSpecialization = topic.specializations.some(specialization => specialization.id === user.specialization_id);
+
+    if (!topic.specializations || !matchSpecialization) {
+      return res.status(403).json({ message: "Forbidden" });
+    }
+
+    const topicRequested = await topicRequest.findOne({
       where: {
         topic_id: topic_id
       }
@@ -278,6 +314,9 @@ const getRequestTopics = async (req, res) => {
 const getRequestTopic = async (req, res) => {
   try {
     const request_id = req.params.id;
+    const refreshToken = req.cookies.refreshToken;
+    const user = jwt.decode(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+    const student_id = user.id;
 
     const request = await topicRequest.findByPk(request_id, {
       include: [{
@@ -301,6 +340,10 @@ const getRequestTopic = async (req, res) => {
 
     if (!request) {
       return res.status(404).json({ message: 'Request not found' });
+    }
+
+    if (request.student_id !== student_id) {
+      return res.status(403).json({ message: 'Forbidden, not your request' });
     }
 
     return res.json({ request: request });

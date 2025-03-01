@@ -61,18 +61,43 @@ export default function StudentTopics() {
         topic_id: formData.get("topic_id"),
         teacher_id: formData.get("teacher_id"),
         education_level: formData.get("education_level"),
-        message: formData.get("message"),
       };
   
       const response = await axiosInstance.post("/student/request/add", newRequest, {
         withCredentials: true,
       });
+
+      const commentMessage = formData.get("message");
+
+      const addComment = await axiosInstance.post(`/student/request/comment/add/${response.data.request.id}`, 
+        { commentMessage }, { withCredentials: true });
+
+      if(process.env.NODE_ENV !== "production") {
+        const to = response.data.topic.user.email;
+        const title = response.data.topic.title;
+        const actionMakerEmail = localUser.email;
+        const action = "newRequest";
+        const role = "student";
+
+        const data = {
+          to,
+          title,
+          actionMakerEmail,
+          action,
+          language,
+          role
+        };
+
+        const emailData = BuildEmailData(data);
+
+        sendEmail(emailData)
+          .then(() => console.log("Email sent."))
+          .catch((error) => console.error("Error sending email:", error));
+      }
   
       console.log("Request sent successfully:", response.data);
-
       setTopics([...topics]); 
       setNewRequestedTopic(response.data.request);
-  
       toggleModal();
     } catch (error) {
       console.error("Error sending request:", error);

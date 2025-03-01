@@ -65,25 +65,28 @@ export default function RequestTopicDetails() {
       await axiosInstance.put(`/student/request/confirm/${requestId}`, { withCredentials: true });
       setRequest({ ...request, status: "confirmed" });
 
-      const to = request.teacher.email;
-      const title = request.topic.title;
-      const actionMakerEmail = localUser.email;
-      const action = "confirmRequest";
-      const role = "student";
+      if(process.env.NODE_ENV === "production") {
+        const to = request.teacher.email;
+        const title = request.topic.title;
+        const actionMakerEmail = localUser.email;
+        const action = "confirmRequest";
+        const role = "student";
 
-      const data = {
-        to,
-        title,
-        actionMakerEmail,
-        action,
-        language,
-        role
+        const data = {
+          to,
+          title,
+          actionMakerEmail,
+          action,
+          language,
+          role,
+          id: requestId,
+        }
+
+        const emailData = BuildEmailData(data);
+        sendEmail(emailData)
+          .then(() => console.log("Email sent successfully."))
+          .catch((error) => console.error("Error sending email:", error));
       }
-
-      const emailData = BuildEmailData(data);
-      sendEmail(emailData)
-        .then(() => console.log("Email sent successfully."))
-        .catch((error) => console.error("Error sending email:", error));
 
       console.log("Request confirmed successfully.");
     } catch (error) {
@@ -98,24 +101,26 @@ export default function RequestTopicDetails() {
       console.log("Request deleted successfully.");
       setIsRequestDeleted(true);
 
-      const to = request.teacher.email;
-      const title = request.topic.title;
-      const actionMakerEmail = localUser.email;
-      const action = "deleteRequest";
-      const role = "student";
-      const data = {
-        to,
-        title,
-        actionMakerEmail,
-        action,
-        language,
-        role
-      }
+      if(process.env.NODE_ENV === "production") {
+        const to = request.teacher.email;
+        const title = request.topic.title;
+        const actionMakerEmail = localUser.email;
+        const action = "deleteRequest";
+        const role = "student";
+        const data = {
+          to,
+          title,
+          actionMakerEmail,
+          action,
+          language,
+          role
+        }
 
-      const emailData = BuildEmailData(data);
-      sendEmail(emailData)
-        .then(() => console.log("Email sent successfully."))
-        .catch((error) => console.error("Error sending email:", error));
+        const emailData = BuildEmailData(data);
+        sendEmail(emailData)
+          .then(() => console.log("Email sent successfully."))
+          .catch((error) => console.error("Error sending email:", error));
+      }
 
     } catch (error) {
       console.error("Error deleting request:", error);

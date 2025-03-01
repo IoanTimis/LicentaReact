@@ -1,5 +1,7 @@
+import { BuildLink } from "./buildLink";
+
 export function BuildEmailData (data) {
-  const { to, title, actionMakerEmail, action, language, role } = data;
+  const { to, title, actionMakerEmail, action, language, role, newlink, id } = data;
 
   if (!to || !title || !actionMakerEmail || !action || !language  || !role) {
     throw new Error("All fields are required.");
@@ -8,6 +10,18 @@ export function BuildEmailData (data) {
   let subject = "";
   let message = "";
   let status = "";
+  let link = "";
+
+  const noLinkActions = ["deleteRequest"];
+
+  if(!newlink && !noLinkActions.includes(action)) {
+    const linkData = {
+      action,
+      role,
+      id,
+    };
+    link = BuildLink(linkData);
+  }
 
   if(action === "deleteRequest") {
     if(language === "ro") {
@@ -64,6 +78,7 @@ export function BuildEmailData (data) {
       subject,
       language,
       role,
+      link,
     };
 
     return data;
@@ -88,6 +103,7 @@ export function BuildEmailData (data) {
       subject,
       language,
       role,
+      link,
     };
 
     return data;
@@ -112,6 +128,7 @@ export function BuildEmailData (data) {
       subject,
       language,
       role,
+      link,
     };
 
     return data;
@@ -136,6 +153,39 @@ export function BuildEmailData (data) {
       subject,
       language,
       role,
+      link,
+    };
+    
+    return data;
+  } else if (action === "newComment"){
+    if (language === "ro") {
+      subject = "Comentariu nou";
+      if(role === "student") {
+        message = "Un student a adăugat un comentariu la una dintre cererile pentru temele tale.";
+      } else {
+        message = "Un profesor a adăugat un comentariu la una dintre cererile tale.";
+      }
+      status = "Nou";
+    } else {
+      subject = "New comment";
+      if(role === "student") {
+        message = "A student has added a comment to one of the requests for your themes.";
+      } else {
+        message = "A teacher has added a comment to one of your requests.";
+      }
+      status = "New";
+    }
+
+    const data = {
+      to,
+      title,
+      actionMakerEmail,
+      status,
+      message,
+      subject,
+      language,
+      role,
+      link,
     };
 
     return data;
