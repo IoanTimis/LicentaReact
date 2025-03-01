@@ -46,8 +46,8 @@ const MyStudents = sequelize.define('my_students', {
     },
 });
 
-MyStudents.belongsTo(User, { foreignKey: 'teacher_id', as: 'teacher' });
-MyStudents.belongsTo(User, { foreignKey: 'student_id', as: 'student' });
-MyStudents.belongsTo(Topic, { foreignKey: 'topic_id', as: 'topic' });
+MyStudents.belongsTo(User, { foreignKey: 'teacher_id', as: 'teacher', onDelete: 'CASCADE' });
+MyStudents.belongsTo(User, { foreignKey: 'student_id', as: 'student', onDelete: 'CASCADE' });
+MyStudents.belongsTo(Topic, { foreignKey: 'topic_id', as: 'topic', onDelete: 'CASCADE' });
 
 module.exports = MyStudents;
