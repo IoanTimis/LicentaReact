@@ -63,7 +63,7 @@ export default function StudentRequests() {
       const response = await axiosInstance.put(`/student/request/confirm/${requestId}`, { withCredentials: true });
       dispatch(setRequests([response.data.request]));
 
-      if(process.env.NODE_ENV !== "production") {
+      if(process.env.NEXT_PUBLIC_NODE_ENV !== "production") {
         const to = response.data.request.teacher.email;
         const title = response.data.request.topic.title;
         const actionMakerEmail = localUser.email;
@@ -101,7 +101,7 @@ export default function StudentRequests() {
       const deletedRequest = requests.find((request) => request.id === requestId);
       dispatch(deleteRequest(requestId));
 
-      if (process.env.NODE_ENV !== "production") {
+      if (process.env.NEXT_PUBLIC_NODE_ENV !== "production") {
         const to = deletedRequest.teacher.email;
         const title = deletedRequest.topic.title;
         const actionMakerEmail = localUser.email;

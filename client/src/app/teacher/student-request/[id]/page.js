@@ -70,26 +70,30 @@ export default function TopicDetails() {
   const handleDelete = async (topicId) => {
     try {
       await axiosInstance.delete(`/teacher/student-request/delete/${topicId}`, { withCredentials: true });
-      const to = request.student.email;
-      const title = request.topic.title;
-      const actionMakerEmail = localUser.email;
-      const action = "deleteRequest";
-      const role = "teacher";
 
-      const data = {
-        to,
-        title,
-        actionMakerEmail,
-        action,
-        language,
-        role
+      if (process.env.NEXT_PUBLIC_NODE_ENV !== "production") {
+        const to = request.student.email;
+        const title = request.topic.title;
+        const actionMakerEmail = localUser.email;
+        const action = "deleteRequest";
+        const role = "teacher";
+
+        const data = {
+          to,
+          title,
+          actionMakerEmail,
+          action,
+          language,
+          role,
+          id: topicId,
+        }
+
+        const emailData = BuildEmailData(data);
+
+        sendEmail(emailData)
+          .then((response) => console.log("Response:", response))
+          .catch((error) => console.error("Error sending:", error));
       }
-
-      const emailData = BuildEmailData(data);
-
-      sendEmail(emailData)
-        .then((response) => console.log("Response:", response))
-        .catch((error) => console.error("Error sending:", error));
 
       console.log("Theme deleted successfully.");
       setIsRequestDeleted(true);
@@ -109,26 +113,29 @@ export default function TopicDetails() {
       await axiosInstance.put(`/teacher/student-request/response/${request.id}`, { status, message }, { withCredentials: true });
       setRequest({ ...request, status });
       
-      const to = request.student.email;
-      const title = request.topic.title;
-      const actionMakerEmail = localUser.email;
-      const action = status === "accepted" ? "acceptRequest" : "rejectRequest";
-      const role = "teacher";
+      if(process.env.NEXT_PUBLIC_NODE_ENV !== "production") {
+        const to = request.student.email;
+        const title = request.topic.title;
+        const actionMakerEmail = localUser.email;
+        const action = status === "accepted" ? "acceptRequest" : "rejectRequest";
+        const role = "teacher";
 
-      const data = {
-        to,
-        title,
-        actionMakerEmail,
-        action,
-        language,
-        role
-      };
-      
-      const emailData = BuildEmailData(data);
+        const data = {
+          to,
+          title,
+          actionMakerEmail,
+          action,
+          language,
+          role,
+          id: request.id,
+        };
+        
+        const emailData = BuildEmailData(data);
 
-      sendEmail(emailData)
-        .then((response) => console.log("Response:", response))
-        .catch((error) => console.error("Error sending:", error));
+        sendEmail(emailData)
+          .then((response) => console.log("Response:", response))
+          .catch((error) => console.error("Error sending:", error));
+      }
 
       console.log("Response sent successfully.");
       toggleResponseModal();

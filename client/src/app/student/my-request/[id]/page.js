@@ -65,7 +65,7 @@ export default function RequestTopicDetails() {
       await axiosInstance.put(`/student/request/confirm/${requestId}`, { withCredentials: true });
       setRequest({ ...request, status: "confirmed" });
 
-      if(process.env.NODE_ENV === "production") {
+      if(process.env.NEXT_PUBLIC_NODE_ENV === "production") {
         const to = request.teacher.email;
         const title = request.topic.title;
         const actionMakerEmail = localUser.email;

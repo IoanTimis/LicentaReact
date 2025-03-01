@@ -60,7 +60,6 @@ export default function StudentRequests() {
     setIsOpen(true);
   };
 
-  //TODO: if problems: Refactor all ToggleModal functions to reset the "selectedRequestId"
   const toggleModal = () => {
     setIsModalOpen((prev) => !prev);
     if (!isModalOpen) {
@@ -96,27 +95,30 @@ export default function StudentRequests() {
 
       dispatch(updateRequest(updatedRequest));
 
-      const to = updatedRequest.student.email;
-      const title = updatedRequest.topic.title;
-      const actionMakerEmail = localUser.email;
-      const action = status === "accepted" ? "acceptRequest" : "rejectRequest";
-      const role = "teacher";
+      if(process.env.NEXT_PUBLIC_NODE_ENV !== "production") {
+        const to = updatedRequest.student.email;
+        const title = updatedRequest.topic.title;
+        const actionMakerEmail = localUser.email;
+        const action = status === "accepted" ? "acceptRequest" : "rejectRequest";
+        const role = "teacher";
 
-      const data = {
-        to,
-        title,
-        actionMakerEmail,
-        action,
-        language,
-        role
-      };
+        const data = {
+          to,
+          title,
+          actionMakerEmail,
+          action,
+          language,
+          role,
+          id: selectedRequestId,
+        };
 
-      const emailData = BuildEmailData(data);
-      console.log("emailData", emailData);
-      
-      sendEmail(emailData)
-        .then((response) => console.log("Response:", response))
-        .catch((error) => console.error("Error sending:", error));
+        const emailData = BuildEmailData(data);
+        console.log("emailData", emailData);
+        
+        sendEmail(emailData)
+          .then((response) => console.log("Response:", response))
+          .catch((error) => console.error("Error sending:", error));
+      }
       
       console.log("Response sent successfully.");
       toggleModal();
@@ -133,28 +135,29 @@ export default function StudentRequests() {
 
       dispatch(deleteRequest(requestId));
 
-      const to = deletedRequest.student.email;
-      const title = deletedRequest.topic.title;
-      const actionMakerEmail = localUser.email;
-      const action = "deleteRequest";
-      const role = "teacher";
+      if (process.env.NEXT_PUBLIC_NODE_ENV !== "production") {
+        const to = deletedRequest.student.email;
+        const title = deletedRequest.topic.title;
+        const actionMakerEmail = localUser.email;
+        const action = "deleteRequest";
+        const role = "teacher";
 
+        const data = {
+          to,
+          title,
+          actionMakerEmail,
+          action,
+          language,
+          role
+        };
 
-      const data = {
-        to,
-        title,
-        actionMakerEmail,
-        action,
-        language,
-        role
-      };
+        const emailData = BuildEmailData(data);
+        console.log("emailData", emailData);
 
-      const emailData = BuildEmailData(data);
-      console.log("emailData", emailData);
-
-      sendEmail(emailData)
-        .then((response) => console.log("Response:", response))
-        .catch((error) => console.error("Error sending:", error));
+        sendEmail(emailData)
+          .then((response) => console.log("Response:", response))
+          .catch((error) => console.error("Error sending:", error));
+      }
 
       console.log("Request deleted successfully.");
     } catch (error) {
@@ -189,8 +192,6 @@ export default function StudentRequests() {
       setGlobalErrorMessage(translate("Error searching for requests. Please try again."));
     }
   };
-  
-  
 
   if(requests.length === 0) {
     return (

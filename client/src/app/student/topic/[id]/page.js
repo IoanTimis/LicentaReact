@@ -72,7 +72,9 @@ export default function TopicDetailsPage() {
       const addComment = await axiosInstance.post(`/student/request/comment/add/${requestId}`, 
         { commentMessage }, { withCredentials: true });
 
-      if(process.env.NODE_ENV !== "production") {
+      console.log("Process: ",process.env.NEXT_PUBLIC_NODE_ENV);
+
+      if(process.env.NEXT_PUBLIC_NODE_ENV !== "production") {
         const to = response.data.topic.user.email;
         const title = response.data.topic.title;
         const actionMakerEmail = localUser.email;
