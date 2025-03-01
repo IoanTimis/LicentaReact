@@ -2,11 +2,11 @@
 
 import { useState, useEffect } from "react";
 import axiosInstance from "@/utils/axiosInstance";
-import { PlusCircleIcon, XMarkIcon } from "@heroicons/react/24/solid";
 import { useLanguage } from "@/context/Languagecontext";
-import TopicCard from "@/app/components/teacher/topic-card";
 import ConfirmActionModal from "@/app/components/general/confirm-action-modal";
 import FilterBar from "@/app/components/general/filter-bar";
+import TopicList from "@/app/components/teacher/topic-list";
+import TopicModal from "@/app/components/teacher/topic-form-modal";
 import { checkForDuplicates } from "@/utils/checkForDublicates";
 import { ErrorContext } from "@/context/errorContext";
 import { useContext } from "react";
@@ -250,179 +250,46 @@ export default function TeacherTopics() {
     <div className="mx-auto flex flex-col lg:flex-row min-h-screen bg-gray-100 p-4">
      <FilterBar className="lg:w-1/4 w-full" filterOnDatabase={true} filterSearchDatabase={handleSearchAndFilter} noMatch={noMatch} />
 
-      {/* Topics */}
-    <div className="lg:w-3/4 w-full p-4 flex-grow">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4 gap-y-6">
-        {/* Add Topic Card */}
-        <div className="bg-white shadow rounded hover:shadow-lg transition cursor-pointer border border-gray-950" onClick={handleAddData}>
-          <div className="bg-navbar-gradient flex justify-between items-center py-2 px-4 rounded-t">
-            <h2 className="text-lg text-white font-semibold ">{translate("Add a new theme")}</h2>
-          </div>
-          <div className="px-4 py-2">
-            <p className="text-gray-700">{translate("Click here to add a new theme")}</p>
-          </div>
-          <div className="pb-4">
-            <PlusCircleIcon className="h-9 w-9 text-gray-400 mx-auto"/>
-          </div>
-        </div>
-        {loading && <div className="text-center text-gray-700">Se încarcă...</div>}
-        {/* Topic Cards */}
-        {filteredTopics.map((topic) => (
-          <TopicCard key={topic.id} topic={topic} translate={translate} onEdit={handleEditData} handleOpenConfirmModal={handleOpenConfirmModal} />
-        ))}
-      </div>
-    </div>
+     <TopicList 
+      topics={filteredTopics.length > 0 ? filteredTopics : topics}
+      loading={loading}
+      handleOpenConfirmModal={handleOpenConfirmModal}
+      setIsModalOpen={setIsModalOpen}
+      setFormMode={setFormMode}
+      setSelectedTopic={setSelectedTopic}
+      translate={translate}
+      handleEditData={handleEditData}
+      handleAddData={handleAddData}
+     />
 
-    {/* Modal */}
-    {isModalOpen && (
-      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-        <div className="bg-white rounded-lg shadow-lg w-full max-w-md sm:max-w-lg md:max-w-xl h-full max-h-fit overflow-y-auto p-6 sm:p-8 relative">
-          
-          {/* Exit buton */}
-          <button
-            onClick={toggleModal}
-            className="absolute top-4 right-4 text-gray-500 hover:text-red-500 transition"
-          >
-            <XMarkIcon className="h-6 w-6" />
-          </button>
-
-          <h2 className="text-xl font-bold text-gray-700 mb-4 text-center">
-            {formMode === "add" ? translate("Add Theme") : translate("Edit Theme")}
-          </h2>
-
-          <form onSubmit={formMode === "add" ? handleSubmit : handleEdit} className="space-y-4">
-            
-            <div>
-              <label className="block text-gray-700">{translate("Title")}</label>
-              <input
-                type="text"
-                className="border border-gray-300 text-gray-700 rounded w-full p-2"
-                name="title"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                required
-              />
-            </div>
-
-            <div>
-              <label className="block text-gray-700">{translate("Description")}</label>
-              <textarea
-                className="border border-gray-300 text-gray-700 rounded w-full p-2"
-                name="description"
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                required
-              />
-            </div>
-
-            <div>
-              <label className="block text-gray-700">{translate("Keywords")}</label>
-              <input
-                type="text"
-                className="border border-gray-300 text-gray-700 rounded w-full p-2"
-                name="keywords"
-                value={keywords}
-                onChange={(e) => setKeywords(e.target.value)}
-                required
-              />
-              <small className="text-gray-500">{translate("Keywords must be separated by space.")}</small>
-            </div>
-
-            <div>
-              <label className="block text-gray-700">{translate("Slots")}</label>
-              <input
-                type="number"
-                className="border border-gray-300 text-gray-700 rounded w-full p-2"
-                name="slots"
-                value={slots}
-                onChange={(e) => setSlots(e.target.value)}
-                required
-              />
-            </div>
-
-            <div>
-              <label className="block text-gray-700">{translate("Education Level")}</label>
-              <select
-                className="border border-gray-300 text-gray-700 rounded w-full p-2"
-                name="education_level"
-                value={educationLevel}
-                onChange={(e) => setEducationLevel(e.target.value)}
-                required
-              >
-                <option value="">{translate("Select education level")}</option>
-                <option value="bsc">{translate("Bachelor")}</option>
-                <option value="msc">{translate("Master")}</option>
-              </select>
-            </div>
-
-            <div>
-              <label className="block text-gray-700">{translate("Faculty")}</label>
-              <select
-                className="border border-gray-300 text-gray-700 rounded w-full p-2"
-                value={selectedFacultyId || ""}
-                onChange={(e) => handleFacultyChange(e.target.value)}
-                required
-              >
-                <option value="">{translate("Select Faculty")}</option>
-                {faculties.map((faculty) => (
-                  <option key={faculty.id} value={faculty.id}>
-                    {faculty.name}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div>
-              {/* Specializations */}
-            <label className="block text-gray-700">{translate("Specializations")}</label>
-            {selectedSpecializations.map((specialization, index) => (
-              <div key={index} className="flex items-center mb-2">
-                <select
-                  className={`border ${dublicateError ? "border-red-500" : "border-gray-300"} text-gray-700 rounded w-full p-2`}
-                  value={specialization || ""}
-                  onChange={(e) => handleSpecializationChange(index, e.target.value)}
-                  required
-                >
-                  <option value="">{translate("Select Specialization")}</option>
-                  {specializations.map((spec) => (
-                    <option key={spec.id} value={spec.id}>
-                      {spec.name}
-                    </option>
-                  ))}
-                </select>
-                {/* Delete specialization camp */}
-                {selectedSpecializations.length > 1 && (
-                  <button
-                    type="button"
-                    onClick={() => removeSpecializationField(index)}
-                    className="ml-2 text-gray-500 hover:text-red-500 transition"
-                  >
-                    <XMarkIcon className="h-5 w-5" />
-                  </button>
-                )}
-              </div>
-            ))}
-            {/* Dublicate error div */}
-            {dublicateError && <p className="text-red-500 text-sm mt-1">{translate(dublicateError)}</p>}
-            {/* Add specialization button */}
-            <button
-              type="button"
-              className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 mt-2 w-full sm:w-auto"
-              onClick={addSpecializationField}
-            >
-              {translate("Add Specialization")}
-            </button>
-          </div>
-
-            <div className="flex flex-col sm:flex-row justify-end sm:space-x-2 sm:mt-0">
-              <button type="submit" className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded w-full sm:w-auto">
-                {formMode === "add" ? translate("Add") : translate("Edit")}
-              </button>
-            </div>
-          </form>
-        </div>
-      </div>
-    )}
+    {/* Add/edit modal */}
+    <TopicModal
+      isOpen={isModalOpen}
+      toggleModal={toggleModal}
+      formMode={formMode}
+      translate={translate}
+      handleSubmit={handleSubmit}
+      handleEdit={handleEdit}
+      title={title}
+      setTitle={setTitle}
+      description={description}
+      setDescription={setDescription}
+      keywords={keywords}
+      setKeywords={setKeywords}
+      slots={slots}
+      setSlots={setSlots}
+      educationLevel={educationLevel}
+      setEducationLevel={setEducationLevel}
+      faculties={faculties}
+      selectedFacultyId={selectedFacultyId}
+      handleFacultyChange={handleFacultyChange}
+      specializations={specializations}
+      selectedSpecializations={selectedSpecializations}
+      handleSpecializationChange={handleSpecializationChange}
+      removeSpecializationField={removeSpecializationField}
+      addSpecializationField={addSpecializationField}
+      dublicateError={dublicateError}
+    />
 
     <ConfirmActionModal
       actionFunction={() => modalAction === "delete" ? handleDelete(selectedTopic) : null}
