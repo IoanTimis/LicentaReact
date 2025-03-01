@@ -7,8 +7,11 @@ import { useLanguage } from "@/context/Languagecontext";
 import RequestModal from "@/app/components/student/request-modal";
 import { ErrorContext } from "@/context/errorContext";
 import { useContext } from "react";
+import ProfessorDetails from "@/app/components/general/topic-req-profesor-details";
+import TopicDescription from "@/app/components/general/topic-description";
+import TopicDetails from "@/app/components/general/topic-details";
 
-export default function TopicDetails() {
+export default function TopicDetailsPage() {
   const [topic, setTopic] = useState(null);
   const [topicRequested, setTopicRequested] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -16,7 +19,7 @@ export default function TopicDetails() {
   const { setGlobalErrorMessage } = useContext(ErrorContext);
   const { id } = useParams();
 
-  const toggleModal = () => setIsModalOpen((prev) => !prev);
+  const toggleRequestModal = () => setIsModalOpen((prev) => !prev);
 
   // Fetch topic details
   useEffect(() => {
@@ -56,7 +59,7 @@ export default function TopicDetails() {
       console.log("Request response:", response.data);
       setTopicRequested(true);
 
-      toggleModal();
+      toggleRequestModal();
     } catch (error) {
       console.error("Error sending request:", error);
       setGlobalErrorMessage("An error occurred while sending the request.");
@@ -69,68 +72,31 @@ export default function TopicDetails() {
       {topic && (
         <>
           <h2 className="text-5xl font-bold text-center text-gray-800 mb-6">{topic.title}</h2>
+
           <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2">
 
             {/* Professor Details */}
-            <div
-              className={"bg-gray-100 p-6 flex flex-col items-center justify-center"}
-            >
-              <div className="w-28 h-28 rounded-full overflow-hidden mb-6">
-                <img
-                  src="/logo_uvt_profile.png"
-                  alt={`${topic.user.first_name} ${topic.user.name}`}
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              <h2 className="text-2xl font-bold text-gray-800 mb-2">
-                {topic.user.title}. {topic.user.first_name} {topic.user.name}
-              </h2>
-              <p className="text-gray-600 mb-4">{topic.user.email}</p>
-            </div>
+            <ProfessorDetails teacher={topic.user} />
 
             {/* Topic Details */}
-            <div
-              className={"bg-gray-100 p-6 flex flex-col items-center justify-center"}
-            >
-              <p className="text-gray-700 mb-4 ">
-                <span className="font-semibold">{ translate("Keywords") }:</span> {topic.keywords}
-              </p>
-              <p className="text-gray-700 mb-4">
-                <span className="font-semibold ">{ translate("Slots") }:</span> {topic.slots}
-              </p>
-              <p className="text-gray-700 mb-4">
-                <span className="font-semibold ">{ translate("Education Level") }:</span> {topic.education_level}
-              </p>
-              {/* Request button */}
-              
-            </div>
-          </div>
-          {/* Request button */}
-          <div className="flex justify-center mt-4">
-            {topicRequested ? (
-              <button className="bg-gray-400 text-white font-semibold py-2 px-4 w-[50%] rounded cursor-not-allowed" disabled>
-                {translate("Request Sent")}
-              </button>) : (
-              <button className="bg-blue-500 hover:bg-blue-700 text-white font-semibold py-2 px-4 w-[50%] rounded"
-                onClick={toggleModal}
-              >
-                {translate("Request Theme")}
-              </button>
-              )}
+            <TopicDetails
+              topic={topic}
+              role="student"
+              isRequested={topicRequested}
+              toggleRequestModal={toggleRequestModal}
+              translate={translate}
+            />
           </div>
 
           {/* Description */}
-          <div className="bg-gray-100 p-6 max-w-7xl mx-auto min-h-screen rounded-bl-lg rounded-br-lg">
-            <h2 className="text-2xl font-bold text-gray-800 mb-4 text-center">{ translate("Description") }</h2>
-            <p className="text-gray-700 text-center">{topic.description}</p>
-          </div>
+          <TopicDescription description={topic.description} translate={translate} />
         </>
       )}
 
       {/* Modal */}
       <RequestModal
         isOpen={isModalOpen}
-        onClose={toggleModal}
+        onClose={toggleRequestModal}
         onSubmit={handleSubmit}
         requestedTopicId={id}
         requestedTopicTeacherId={topic?.user.id}

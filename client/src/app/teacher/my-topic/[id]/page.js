@@ -12,7 +12,6 @@ import { useContext } from "react";
 import ProfessorDetails from "@/app/components/general/topic-req-profesor-details";
 import TopicDescription from "@/app/components/general/topic-description";
 import { checkForDuplicates } from "@/utils/checkForDublicates";
-import { jwtDecode } from "jwt-decode";
 
 export default function TopicDetailsPage() {
   const [topic, setTopic] = useState(null);

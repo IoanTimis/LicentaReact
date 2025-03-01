@@ -1,6 +1,6 @@
 import TopicActions from "./topic-actions";
 
-const TopicDetails = ({ topic, toggleConfirmActionModal, toggleEditModal, translate, role, isRequested }) => {
+const TopicDetails = ({ topic, toggleConfirmActionModal, toggleEditModal, toggleRequestModal,translate, role, isRequested }) => {
   return (
     <div className="bg-gray-100 p-6 flex flex-col items-center justify-center">
       <p className="text-gray-700 mb-4">
@@ -27,6 +27,8 @@ const TopicDetails = ({ topic, toggleConfirmActionModal, toggleEditModal, transl
 
       <TopicActions
         toggleConfirmActionModal={toggleConfirmActionModal}
+        toggleRequestModal={toggleRequestModal}
+        isRequested={isRequested}
         translate={translate}
         role={role}
         toggleEditModal={toggleEditModal}
