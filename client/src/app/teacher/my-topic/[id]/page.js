@@ -5,27 +5,105 @@ import { useParams } from "next/navigation";
 import axiosInstance from "@/utils/axiosInstance";
 import { useLanguage } from "@/context/Languagecontext";
 import ConfirmActionModal from "@/app/components/general/confirm-action-modal";
+import TopicModal from "@/app/components/teacher/topic-form-modal";
+import TopicDetails from "@/app/components/general/topic-details";
 import { ErrorContext } from "@/context/errorContext";
 import { useContext } from "react";
+import ProfessorDetails from "@/app/components/general/topic-req-profesor-details";
+import TopicDescription from "@/app/components/general/topic-description";
 
-export default function TopicDetails() {
+export default function TopicDetailsPage() {
   const [topic, setTopic] = useState(null);
-  const [isOpen, setIsOpen] = useState(false);
-  const [modalAction, setModalAction] = useState("");
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
+  const [isTopicModalOpen, setIsTopicModalOpen] = useState(false);
+  const [confirmModalAction, setConfirmModalAction] = useState("");
   const { translate } = useLanguage();
   const { id } = useParams();
   const { setGlobalErrorMessage } = useContext(ErrorContext);
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [ formMode , setFormMode ] = useState("add");
+  const [formError, setFormError] = useState(null);
+  const [dublicateError, setDublicateError] = useState(null);
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [keywords, setKeywords] = useState("");
+  const [slots, setSlots] = useState("");
+  const [educationLevel, setEducationLevel] = useState("");
+  
+  const [faculties, setFaculties] = useState([]);
+  const [selectedFacultyId, setSelectedFacultyId] = useState(null);
+  const [specializations, setSpecializations] = useState([]);
+  const [selectedSpecializations, setSelectedSpecializations] = useState([null]);
 
-  const handleEdit = () => {
-    console.log("Edit clicked");
-    setIsDropdownOpen(false); // Închide dropdown-ul
+  const toggleConfirmActionModal = (action) => {
+    setConfirmModalAction(action);
+    setIsConfirmModalOpen((prev) => !prev);
   };
 
-  const openConfirmModal = (action) => {
-    setIsOpen(true);
-    setModalAction(action);
+  // Toggle modal visibility
+  const toggleEditModal = () => {
+    setIsTopicModalOpen((prev) => !prev);
+    setDublicateError(null);
+  };
+
+  const handleAddData = () => {
+    setTitle("");
+    setDescription("");
+    setKeywords("");
+    setSlots("");
+    setEducationLevel("");
+    setSelectedFacultyId(null);
+    setSpecializations([]);
+    setSelectedSpecializations([null]);
+    setFormMode("add");
+    toggleEditModal();
+  };
+
+  // Handle faculty change
+  const handleFacultyChange = (facultyId) => {
+    setSelectedFacultyId(facultyId);
+    const faculty = faculties.find((f) => f.id === parseInt(facultyId));
+    setSpecializations(faculty ? faculty.specializations : []);
+    setSelectedSpecializations([null]); 
+  };
+
+  // Handle adding another specialization field
+  const addSpecializationField = () => {
+    setSelectedSpecializations([...selectedSpecializations, null]);
+  };
+
+  // Handle specialization change
+  const handleSpecializationChange = (index, value) => {
+    const updatedSpecializations = [...selectedSpecializations];
+    updatedSpecializations[index] = value;
+    setSelectedSpecializations(updatedSpecializations);
+
+    setDublicateError(null);
+  };
+
+  const removeSpecializationField = (index) => {
+    setSelectedSpecializations(prev => prev.filter((_, i) => i !== index));
+  };  
+
+  const handleEditData = () => {
+    setFormMode("edit");
+    setTitle(topic.title);
+    setDescription(topic.description);
+    setKeywords(topic.keywords);
+    setSlots(topic.slots);
+    setEducationLevel(topic.education_level);
+    
+    const facultyId = topic.specializations[0]?.faculty.id;
+    setSelectedFacultyId(facultyId);
+    
+    handleFacultyChange(facultyId);
+
+    setTimeout(() => {
+        setSelectedSpecializations(topic.specializations.map(spec => spec.id));
+    }, 100);
+
+    toggleEditModal();
   };
 
 
@@ -65,85 +143,67 @@ export default function TopicDetails() {
       {topic && (
         <>
           <h2 className="text-5xl font-bold text-center text-gray-800 mb-6">{topic.title}</h2>
-          <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2">
 
+          <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2">
             {/* Professor Details */}
-            <div
-              className={"bg-gray-100 p-6 flex flex-col items-center justify-center"}
-            >
-              <div className="w-28 h-28 rounded-full overflow-hidden mb-6">
-                <img
-                  src="/logo_uvt_profile.png"
-                  alt={`${topic.user.first_name} ${topic.user.name}`}
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              <h2 className="text-2xl font-bold text-gray-800 mb-2">
-                {topic.user.title}. {topic.user.first_name} {topic.user.name}
-              </h2>
-              <p className="text-gray-600 mb-4">{topic.user.email}</p>
-            </div>
+            <ProfessorDetails teacher={topic.user} />
 
             {/* Topic Details */}
-            <div
-              className={"bg-gray-100 p-6 flex flex-col items-center justify-center"}
-            >
-              <p className="text-gray-700 mb-4 ">
-                <span className="font-semibold">{ translate("Keywords") }:</span> {topic.keywords}
-              </p>
-              <p className="text-gray-700 mb-4">
-                <span className="font-semibold ">{ translate("Slots") }:</span> {topic.slots}
-              </p>
-              <p className="text-gray-700 mb-4">
-                <span className="font-semibold ">{ translate("Education Level") }:</span> {topic.education_level}
-              </p>
-            </div>
+            <TopicDetails
+              topic={topic}
+              toggleConfirmActionModal={toggleConfirmActionModal}
+              toggleEditModal={handleEditData}
+              translate={translate}
+              role="teacher"
+            />
           </div>
-          {/* Actions button */}
-          <div className="relative flex justify-center mt-4">
-          <button
-            className="bg-blue-500 hover:bg-blue-700 text-white font-semibold py-2 px-4 w-[50%] rounded flex items-center justify-between"
-            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-          >
-            {translate("Actions")}
-            <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7"></path>
-            </svg>
-          </button>
-
-          {/* Dropdown menu */}
-          {isDropdownOpen && (
-            <div className="absolute mt-12 w-[50%] bg-white shadow-lg border rounded-md z-50">
-              <button
-                className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
-                onClick={handleEdit}
-              >
-                ✏️ {translate("Edit")}
-              </button>
-              <button
-                className="block w-full text-left px-4 py-2 text-red-600 hover:bg-gray-100"
-                onClick={() => openConfirmModal("delete")}
-              >
-                🗑️ {translate("Delete")}
-              </button>
-            </div>
-          )}
-        </div>
 
           {/* Description */}
-          <div className="bg-gray-100 p-6 max-w-7xl mx-auto min-h-screen rounded-bl-lg rounded-br-lg">
-            <h2 className="text-2xl font-bold text-gray-800 mb-4 text-center">{ translate("Description") }</h2>
-            <p className="text-gray-700 text-center">{topic.description}</p>
-          </div>
+          <TopicDescription description={topic.description} translate={translate} />
         </>
       )}
+
+      {/* Edit Modal */}
+      <TopicModal
+        isOpen={isTopicModalOpen}
+        setIsOpen={setIsTopicModalOpen}
+        title={title}
+        setTitle={setTitle}
+        description={description}
+        setDescription={setDescription}
+        keywords={keywords}
+        setKeywords={setKeywords}
+        slots={slots}
+        setSlots={setSlots}
+        educationLevel={educationLevel}
+        setEducationLevel={setEducationLevel}
+        faculties={faculties}
+        setFaculties={setFaculties}
+        selectedFacultyId={selectedFacultyId}
+        setSelectedFacultyId={setSelectedFacultyId}
+        specializations={specializations}
+        setSpecializations={setSpecializations}
+        selectedSpecializations={selectedSpecializations}
+        setSelectedSpecializations={setSelectedSpecializations}
+        handleFacultyChange={handleFacultyChange}
+        addSpecializationField={addSpecializationField}
+        handleSpecializationChange={handleSpecializationChange}
+        removeSpecializationField={removeSpecializationField}
+        formError={formError}
+        setFormError={setFormError}
+        dublicateError={dublicateError}
+        setDublicateError={setDublicateError}
+        formMode={formMode}
+        handleAddData={handleAddData}
+        handleEditData={handleEditData}
+      />
       
       {/* Modal */}
       <ConfirmActionModal
         actionFunction={() => modalAction === "delete" ? handleDelete(topic.id) : null}
-        isOpen={isOpen}
-        setIsOpen={setIsOpen}
-        action={modalAction}
+        isOpen={isConfirmModalOpen}
+        setIsOpen={setIsConfirmModalOpen}
+        action={confirmModalAction}
       />
     </div>
   );

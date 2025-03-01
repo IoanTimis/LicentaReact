@@ -82,28 +82,6 @@ export default function TeacherTopics() {
     toggleModal();
   };
 
-  const handleEditData = (id) => {
-    const topic = topics.find((topic) => topic.id === id);
-    setSelectedTopic(id);
-    setFormMode("edit");
-    setTitle(topic.title);
-    setDescription(topic.description);
-    setKeywords(topic.keywords);
-    setSlots(topic.slots);
-    setEducationLevel(topic.education_level);
-    
-    const facultyId = topic.specializations[0]?.faculty.id;
-    setSelectedFacultyId(facultyId);
-    
-    handleFacultyChange(facultyId);
-
-    setTimeout(() => {
-        setSelectedSpecializations(topic.specializations.map(spec => spec.id));
-    }, 100);
-
-    toggleModal();
-  };
-
   // Handle faculty change
   const handleFacultyChange = (facultyId) => {
     setSelectedFacultyId(facultyId);
@@ -134,6 +112,28 @@ export default function TeacherTopics() {
   const toggleModal = () => {
     setIsModalOpen((prev) => !prev)
     setDublicateError(null);
+  };
+
+  const handleEditData = (id) => {
+    const topic = topics.find((topic) => topic.id === id);
+    setSelectedTopic(id);
+    setFormMode("edit");
+    setTitle(topic.title);
+    setDescription(topic.description);
+    setKeywords(topic.keywords);
+    setSlots(topic.slots);
+    setEducationLevel(topic.education_level);
+    
+    const facultyId = topic.specializations[0]?.faculty.id;
+    setSelectedFacultyId(facultyId);
+    
+    handleFacultyChange(facultyId);
+
+    setTimeout(() => {
+        setSelectedSpecializations(topic.specializations.map(spec => spec.id));
+    }, 100);
+
+    toggleModal();
   };
 
   const handleSubmit = async (e) => {
