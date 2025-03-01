@@ -2,7 +2,7 @@ import Link from "next/link";
 import { ChevronDownIcon, HeartIcon } from "@heroicons/react/24/solid";
 import { useState, useEffect } from "react";
 import axiosInstance from "@/utils/axiosInstance";
-import { truncateText } from "@/utils/truncate-text";
+import { truncateText } from "@/utils/truncateText";
 
 export default function TopicCard({ topic, onRequest, newRequestedTopic, translate, setGlobalErrorMessage }) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);

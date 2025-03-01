@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { ChevronDownIcon } from "@heroicons/react/24/solid";
 import { useState } from "react";
-import { truncateText } from "@/utils/truncate-text";
+import { truncateText } from "@/utils/truncateText";
 
 export default function TopicCard({ topic, translate, onEdit, handleOpenConfirmModal }) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);

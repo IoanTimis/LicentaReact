@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { truncateText } from "@/utils/truncate-text";
+import { truncateText } from "@/utils/truncateText";
 import { ChevronDownIcon } from "@heroicons/react/24/solid";
 import { useState } from "react";
 
