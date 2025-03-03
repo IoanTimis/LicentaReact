@@ -6,7 +6,9 @@ export default function StudentInfoCard({ studentInfo }) {
   console.log(studentInfo);
 
   return (
-    <div className="bg-white shadow rounded hover:shadow-lg transition border border-gray-950">
+    <div className="bg-white shadow rounded border border-gray-950
+      hover:shadow-xl hover:-translate-y-1 transition-transform duration-200"
+    >
       <div className="bg-navbar-gradient flex justify-between items-center py-2 px-4 rounded-t">
         <h2 className="text-lg font-semibold text-white">{truncateText(studentInfo.topic.title, 20)}</h2>
       </div>

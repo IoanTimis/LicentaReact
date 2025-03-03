@@ -11,11 +11,12 @@ export default function TopicCard({ topic, translate, onEdit, handleOpenConfirmM
       className="bg-white shadow rounded border border-gray-400 
         hover:shadow-xl hover:-translate-y-1 transition-transform duration-200"
     >
-      {/* Titlu */}
+      {/* Title */}
       <Link href={`/teacher/my-topic/${topic.id}`}>
         <div className="bg-navbar-gradient flex justify-between items-center py-2 px-4 rounded-t">
           <h2 className="text-lg font-semibold text-white">{truncateText(topic.title, 27)}</h2>
         </div>
+
         {/* Details */}
         <div className="p-4">
           <div className="flex text-gray-700">
@@ -34,9 +35,9 @@ export default function TopicCard({ topic, translate, onEdit, handleOpenConfirmM
         </div>
       </Link>
 
-      {/* Butoane acțiuni */}
+      {/* Buttons */}
       <div className="px-4 py-2 flex justify-end space-x-4 bg-gray-50 border-t border-gray-400 rounded-b">
-        {/* Editare */}
+        {/* Edit */}
         <div 
           className="relative flex flex-col items-center"
           onMouseEnter={() => setTooltip("edit")}
@@ -55,7 +56,7 @@ export default function TopicCard({ topic, translate, onEdit, handleOpenConfirmM
           )}
         </div>
 
-        {/* Ștergere */}
+        {/* Delete */}
         <div 
           className="relative flex flex-col items-center"
           onMouseEnter={() => setTooltip("delete")}

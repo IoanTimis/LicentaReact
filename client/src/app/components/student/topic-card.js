@@ -9,6 +9,8 @@ export default function TopicCard({ topic, onRequest, newRequestedTopic, transla
   const [isFavorite, setIsFavorite] = useState(false);
   const [tooltip, setTooltip] = useState(null);
 
+  const statusColors = isTopicRequested ? "bg-red-500" : "bg-green-500";
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -48,7 +50,8 @@ export default function TopicCard({ topic, onRequest, newRequestedTopic, transla
 
   return (
     <div className="bg-white shadow rounded border border-gray-400
-                    hover:shadow-xl hover:-translate-y-1 transition-transform duration-200">
+      hover:shadow-xl hover:-translate-y-1 transition-transform duration-200"
+    >
       {/* Title + Favorite */}
       <div className="bg-navbar-gradient flex justify-between items-center py-2 px-4 rounded-t">
         <Link href={`/student/topic/${topic.id}`} className="flex-grow">
@@ -88,16 +91,15 @@ export default function TopicCard({ topic, onRequest, newRequestedTopic, transla
             <div className="">{topic.education_level}</div>
           </div>
         </div>
-        <div className="flex justify-between text-gray-700">
-          {isTopicRequested ? (
-            <span className="text-gray-700">{translate("Requested Theme")}</span>
-          ) : (
-            <span className="text-green-700">{translate("Available Theme")}</span>
-          )}
+
+        {/* Status */}
+        <div className="flex items-center space-x-2">
+          <div className={`w-3 h-3 rounded-full ${statusColors}`}></div>
+          <span className="text-black">{isTopicRequested ? translate("Requested") : translate("Available")}</span>
         </div>
       </div>
   
-      {/* Button */}
+      {/* Buttons */}
       <div className="px-4 py-2 flex justify-end bg-gray-50 border-t border-gray-400 rounded-b">
         <div
           className="relative flex flex-col items-center"
