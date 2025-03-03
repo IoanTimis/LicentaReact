@@ -1,68 +1,76 @@
 import Link from "next/link";
-import { ChevronDownIcon } from "@heroicons/react/24/solid";
+import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/solid";
 import { useState } from "react";
 import { truncateText } from "@/utils/truncateText";
 
 export default function TopicCard({ topic, translate, onEdit, handleOpenConfirmModal }) {
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [tooltip, setTooltip] = useState(null);
 
   return (
-    <div className="bg-white shadow rounded hover:shadow-lg transition border border-gray-950">
+    <div 
+      className="bg-white shadow rounded border border-gray-400 
+        hover:shadow-xl hover:-translate-y-1 transition-transform duration-200"
+    >
+      {/* Titlu */}
       <Link href={`/teacher/my-topic/${topic.id}`}>
         <div className="bg-navbar-gradient flex justify-between items-center py-2 px-4 rounded-t">
           <h2 className="text-lg font-semibold text-white">{truncateText(topic.title, 27)}</h2>
         </div>
+        {/* Details */}
         <div className="p-4">
-          <p className="text-gray-700">
-            <span className="font-semibold">{translate("Description")}:</span> {truncateText(topic.description, 40)}
-          </p>
-          <p className="text-sm text-gray-700">
-            <span className="font-semibold">{translate("Keywords")}:</span> {topic.keywords}
-          </p>
-          <p className="text-sm text-gray-700">
-            <span className="font-semibold">{translate("Slots")}:</span> {topic.slots}
-          </p>
-          <p className="text-sm text-gray-700">
-            <span className="font-semibold">{translate("Type")}:</span> {topic.education_level}
-          </p>
+          <div className="flex text-gray-700">
+            <div className="flex-col w-1/2">
+              <div className="font-semibold ">{translate("Keywords")}:</div>
+              <div className="font-semibold">{translate("Slots")}:</div>
+              <div className="font-semibold">{translate("Type")}:</div>
+            </div>
+
+            <div className="flex-col w-1/2 mb-2">
+              <div className="">{topic.keywords}</div>
+              <div className="">{topic.slots}</div>
+              <div className="">{topic.education_level}</div>
+            </div>
+          </div>
         </div>
       </Link>
-      {/* Footer */}
-      <div className="px-4 py-2 flex justify-between items-center bg-gray-50 border-t border-gray-200 rounded-b">
-        <span className="text-gray-500">{translate("")}</span>
-        <div className="relative">
-          <button
-            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-            className="flex items-center text-gray-500 hover:text-gray-700 focus:outline-none"
+
+      {/* Butoane acțiuni */}
+      <div className="px-4 py-2 flex justify-end space-x-4 bg-gray-50 border-t border-gray-400 rounded-b">
+        {/* Editare */}
+        <div 
+          className="relative flex flex-col items-center"
+          onMouseEnter={() => setTooltip("edit")}
+          onMouseLeave={() => setTooltip(null)}
+        >
+          <button 
+            onClick={() => onEdit(topic.id)}
+            className="p-2 bg-blue-500 rounded-full hover:bg-blue-600 transition text-white"
           >
-            <span>{translate("Actions")}</span>
-            <ChevronDownIcon className="h-5 w-5 ml-1" />
+            <PencilSquareIcon className="w-5 h-5" />
           </button>
-          {isDropdownOpen && (
-            <div
-              className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-20 border border-gray-200"
-            >
-              <button
-                className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition"
-                onClick={() => {
-                  onEdit(topic.id);
-                  setIsDropdownOpen(false);
-                  }
-                }
-              >
-                {translate("Edit")}
-              </button>
-              <button
-                className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-red-50 hover:text-red-600 transition"
-                onClick={() => {
-                  handleOpenConfirmModal(topic.id, "delete");
-                  setIsDropdownOpen(false);
-                  }
-                }
-              >
-                {translate("Delete")}
-              </button>
-            </div>
+          {tooltip === "edit" && (
+            <span className="absolute top-full mt-1 px-2 py-1 bg-gray-800 text-white text-xs rounded-md">
+              {translate("Edit")}
+            </span>
+          )}
+        </div>
+
+        {/* Ștergere */}
+        <div 
+          className="relative flex flex-col items-center"
+          onMouseEnter={() => setTooltip("delete")}
+          onMouseLeave={() => setTooltip(null)}
+        >
+          <button 
+            onClick={() => handleOpenConfirmModal(topic.id, "delete")}
+            className="p-2 bg-red-500 rounded-full hover:bg-red-600 transition text-white"
+          >
+            <TrashIcon className="w-5 h-5" />
+          </button>
+          {tooltip === "delete" && (
+            <span className="absolute top-full mt-1 px-2 py-1 bg-gray-800 text-white text-xs rounded-md">
+              {translate("Delete")}
+            </span>
           )}
         </div>
       </div>

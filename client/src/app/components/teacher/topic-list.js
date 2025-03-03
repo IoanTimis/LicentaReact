@@ -6,7 +6,8 @@ const TopicList = ({ topics, loading, handleEditData, handleAddData, handleOpenC
     <div className="lg:w-3/4 w-full p-4 flex-grow">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4 gap-y-6">
         {/* Add Topic Card */}
-        <div className="bg-white shadow rounded hover:shadow-lg transition cursor-pointer border border-gray-950" 
+        <div className="bg-white shadow rounded cursor-pointer border border-gray-400
+          hover:shadow-xl hover:-translate-y-1 transition-transform duration-200" 
           onClick={handleAddData}
         >
           <div className="bg-navbar-gradient flex justify-between items-center py-2 px-4 rounded-t">
@@ -16,7 +17,7 @@ const TopicList = ({ topics, loading, handleEditData, handleAddData, handleOpenC
             <p className="text-gray-700">Click here to add a new theme</p>
           </div>
           <div className="pb-4">
-            <PlusCircleIcon className="h-9 w-9 text-gray-400 mx-auto" />
+            <PlusCircleIcon className="h-9 w-9 text-blue-500 mx-auto" />
           </div>
         </div>
 

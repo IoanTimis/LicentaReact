@@ -1,5 +1,6 @@
 {
     "_comment1-------------------": "Translations for general pages and general components",
+    "The message will be posted as comment on the request.": "Mesajul va fi postat ca și comentariu la cerere.",
     "You have selected the same specialization multiple times.": "Ai selectat aceeași specializare de mai multe ori.",
     "Comments on request": "Comentarii la cerere",
     "Type": "Tip",
@@ -79,6 +80,9 @@
     "Edit": "Editează",
     "Add": "Adaugă",
     "_comment3-------------------": "Translations for student pages",
+    "Add to Favorites": "Adaugă la Favorite",
+    "Remove from Favorites": "Șterge din Favorite",
+    "Already Requested": "Deja Cerută",
     "Write your comment here..." : "Scrie-ți comentariul aici...",
     "Add comment" : "Adaugă comentariu",
     "Teacher": "Profesor",

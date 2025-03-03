@@ -39,6 +39,9 @@ export default function RequestModal({ isOpen, onClose, onSubmit, requestedTopic
               name="message"
               required
             />
+            <span className="text-sm text-gray-700 mb-4">
+              {translate("The message will be posted as comment on the request.")}
+            </span>
           </div>
           <div className="mb-4 flex justify-end">
             <button

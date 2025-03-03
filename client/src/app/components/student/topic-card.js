@@ -1,13 +1,13 @@
 import Link from "next/link";
-import { ChevronDownIcon, HeartIcon } from "@heroicons/react/24/solid";
+import { HeartIcon, NewspaperIcon } from "@heroicons/react/24/solid";
 import { useState, useEffect } from "react";
 import axiosInstance from "@/utils/axiosInstance";
 import { truncateText } from "@/utils/truncateText";
 
 export default function TopicCard({ topic, onRequest, newRequestedTopic, translate, setGlobalErrorMessage }) {
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isTopicRequested, setIsTopicRequested] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
+  const [tooltip, setTooltip] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -27,18 +27,17 @@ export default function TopicCard({ topic, onRequest, newRequestedTopic, transla
   }, [topic.id, newRequestedTopic]);
 
   const handleRequestClick = async () => {
-    setIsDropdownOpen(false);
     if (isTopicRequested) return;
     onRequest(topic.id);
   };
 
   const handleFavoriteClick = async () => {
     try {
-      if(!isFavorite) {
-        const response = await axiosInstance.post(`/student/favorite/add/${topic.id}`, {}, { withCredentials: true });
+      if (!isFavorite) {
+        await axiosInstance.post(`/student/favorite/add/${topic.id}`, {}, { withCredentials: true });
         setIsFavorite(true);
       } else {
-        const response = await axiosInstance.delete(`/student/favorite/delete/${topic.id}`, { withCredentials: true });
+        await axiosInstance.delete(`/student/favorite/delete/${topic.id}`, { withCredentials: true });
         setIsFavorite(false);
       }
     } catch (error) {
@@ -48,70 +47,79 @@ export default function TopicCard({ topic, onRequest, newRequestedTopic, transla
   };
 
   return (
-    <div className="bg-white shadow rounded hover:shadow-lg transition border border-gray-950">
+    <div className="bg-white shadow rounded border border-gray-400
+                    hover:shadow-xl hover:-translate-y-1 transition-transform duration-200">
+      {/* Title + Favorite */}
       <div className="bg-navbar-gradient flex justify-between items-center py-2 px-4 rounded-t">
         <Link href={`/student/topic/${topic.id}`} className="flex-grow">
           <h2 className="text-lg font-semibold text-white">{truncateText(topic.title, 20)}</h2>
         </Link>
-        <button onClick={handleFavoriteClick} className="ml-4 focus:outline-none">
-          <HeartIcon className={`h-6 w-6 transition ${isFavorite ? "text-red-500" : "text-white"}`} />
-        </button>
-      </div>
-
-      <div className="p-4">
-        <p className="text-gray-700">
-          <span className="font-semibold">{translate("Teacher Name")}:</span> {topic.user.first_name} {topic.user.name}
-        </p>
-        <p className="text-gray-700">
-          <span className="font-semibold">{translate("Description")}:</span> {truncateText(topic.description,40)}
-        </p>
-        <p className="text-sm text-gray-700">
-          <span className="font-semibold">{translate("Keywords")}:</span> {topic.keywords}
-        </p>
-        <p className="text-sm text-gray-700">
-          <span className="font-semibold">{translate("Slots")}:</span> {topic.slots}
-        </p>
-        <p className="text-sm text-gray-700">
-          <span className="font-semibold">{translate("Type")}:</span> {topic.education_level}
-        </p>
-        {isTopicRequested ? (
-          <p className="text-black">{translate("Requested Theme")}</p>
-        ) : (
-          <p className="text-green-700">{translate("Available Theme")}</p>
-        )}
-      </div>
-
-      {/* Footer */}
-      <div className="px-4 py-2 flex justify-between items-center bg-gray-50 border-t border-gray-200 rounded-b">
-        <div className="relative">
+        <div className="relative flex flex-col items-center">
           <button
-            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-            className="flex items-center text-gray-500 hover:text-gray-700 focus:outline-none"
+            onClick={handleFavoriteClick}
+            className="focus:outline-none"
+            onMouseEnter={() => setTooltip("favorite")}
+            onMouseLeave={() => setTooltip(null)}
           >
-            <span>{translate("Actions")}</span>
-            <ChevronDownIcon className="h-5 w-5 ml-1" />
+            <HeartIcon className={`h-6 w-6 transition ${isFavorite ? "text-red-500" : "text-white"}`} />
           </button>
-          {isDropdownOpen && (
-            <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-20 border border-gray-200">
-              {!isTopicRequested && (
-                <button
-                  className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition"
-                  onClick={handleRequestClick}
-                >
-                  {translate("Request Theme")}
-                </button>
-              )}
+          {tooltip === "favorite" && (
+            <span className="absolute top-full mt-1 px-2 py-1 bg-gray-800 text-white text-xs rounded-md">
+              {isFavorite ? translate("Remove Favorite") : translate("Add to Favorites")}
+            </span>
+          )}
+        </div>
+      </div>
+  
+      {/* Details */}
+      <div className="p-4">
+        <div className="flex text-gray-700">
+          <div className="flex-col w-1/2">
+            <div className="font-semibold">{translate("Teacher")}:</div>
+            <div className="font-semibold ">{translate("Keywords")}:</div>
+            <div className="font-semibold">{translate("Slots")}:</div>
+            <div className="font-semibold">{translate("Type")}:</div>
+          </div>
 
-              <Link
-                href={`/student/topic/${topic.id}`}
-                className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition"
-              >
-                {translate("View Theme")}
-              </Link>
-            </div>
+          <div className="flex-col w-1/2 mb-2">
+            <div className="">{topic.user.first_name} {topic.user.name}</div>
+            <div className="">{topic.keywords}</div>
+            <div className="">{topic.slots}</div>
+            <div className="">{topic.education_level}</div>
+          </div>
+        </div>
+        <div className="flex justify-between text-gray-700">
+          {isTopicRequested ? (
+            <span className="text-gray-700">{translate("Requested Theme")}</span>
+          ) : (
+            <span className="text-green-700">{translate("Available Theme")}</span>
+          )}
+        </div>
+      </div>
+  
+      {/* Button */}
+      <div className="px-4 py-2 flex justify-end bg-gray-50 border-t border-gray-400 rounded-b">
+        <div
+          className="relative flex flex-col items-center"
+          onMouseEnter={() => setTooltip("request")}
+          onMouseLeave={() => setTooltip(null)}
+        >
+          <button
+            onClick={handleRequestClick}
+            disabled={isTopicRequested}
+            className={`p-2 rounded-full transition text-white ${
+              isTopicRequested ? "bg-gray-400 cursor-not-allowed" : "bg-blue-500 hover:bg-blue-600"
+            }`}
+          >
+            <NewspaperIcon className="w-5 h-5" />
+          </button>
+          {tooltip === "request" && (
+            <span className="absolute top-full mt-1 px-2 py-1 bg-gray-800 text-white text-xs rounded-md">
+              {isTopicRequested ? translate("Already Requested") : translate("Request Theme")}
+            </span>
           )}
         </div>
       </div>
     </div>
-  );
+  );  
 }
