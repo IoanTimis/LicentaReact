@@ -4,8 +4,6 @@ export default function CardDetails({ request, topic,translate, isTopicRequested
   let name = ""
   const data = request?.topic || topic
 
-  console.log("data:", data);
-
   if (topic) {
     first_name = topic.user.first_name
     name = topic.user.name

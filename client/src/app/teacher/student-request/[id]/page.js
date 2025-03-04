@@ -205,8 +205,8 @@ export default function TopicDetails() {
       {request && (
         <>
           <h2 className="text-5xl font-bold text-center text-gray-800 mb-6">{request.topic.title}</h2>
+          
           <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2">
-
             {/* Professor Details */}
             <ProfessorDetails teacher={localUser} />
 

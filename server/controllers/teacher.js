@@ -145,6 +145,8 @@ const addTopic = async (req, res) => {
     const user = jwt.decode(refreshToken, process.env.REFRESH_TOKEN_SECRET);
     const teacherId = user.id;
 
+    console.log('User:', user);
+
     let { title, description, keywords, slots, education_level, specialization_ids } = req.body;
 
     title = sanitizeHtml(title);
@@ -174,9 +176,20 @@ const addTopic = async (req, res) => {
 
     await topic.setSpecializations(specializations); 
 
+    const data = {
+      id: topic.id,
+      title: topic.title,
+      description: topic.description,
+      keywords: topic.keywords,
+      slots: topic.slots,
+      education_level: topic.education_level,
+      specializations: specializations,
+      user: user
+    }
+
     console.log('Topic added:', topic);
 
-    res.status(201).json({ topic });
+    res.status(201).json({ topic: data });
   } catch (error) {
     console.error('Error adding topic:', error);
     res.status(500).send('Internal Server Error');

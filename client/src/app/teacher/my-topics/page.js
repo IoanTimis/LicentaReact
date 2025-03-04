@@ -147,6 +147,7 @@ export default function TeacherTopics() {
       }
     
       const formData = new FormData(e.target);
+
       const newTopic = {
         title: formData.get("title"),
         description: formData.get("description"),
@@ -159,6 +160,8 @@ export default function TeacherTopics() {
       const response = await axiosInstance.post("/teacher/topic/add", newTopic, {
         withCredentials: true,
       });
+
+      console.log("Theme added successfully!", response.data.topic);
 
       dispatch(addTopic(response.data.topic));
       
