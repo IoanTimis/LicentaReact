@@ -30,11 +30,11 @@ export default function TeacherNavBar() {
     try {
       await axios.get("http://localhost:8080/logout", { withCredentials: true });
 
+      router.push("/auth/login");
       dispatch(clearUser());
       localStorage.removeItem("accessToken");
       console.log("Logout successful");
 
-      router.push("/auth/login");
     } catch (error) {
       console.error("Error at logout:", error);
       setGlobalErrorMessage(translate("An error occurred while logging out. Please try again."));

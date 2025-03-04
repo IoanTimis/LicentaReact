@@ -1,5 +1,5 @@
 import axios from "axios";
-import store from "@/store/page";
+import {store, persistor} from "@/store/page";
 import { setUser, clearUser } from "@/store/features/user/userSlice";
 import { jwtDecode } from "jwt-decode";
 
@@ -40,15 +40,12 @@ axiosInstance.interceptors.response.use(
           throw new Error("Refresh token response missing access token");
         }
 
-        // Decodăm utilizatorul și actualizăm Redux
         const user = jwtDecode(accessToken);
         store.dispatch(setUser({ user }));
 
-        // Actualizăm token-ul în localStorage și antetul Authorization
         localStorage.setItem("accessToken", accessToken);
         axiosInstance.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
 
-        // Retrimitem cererea originală
         originalRequest.headers["Authorization"] = `Bearer ${accessToken}`;
         return axiosInstance(originalRequest);
       } catch (refreshError) {

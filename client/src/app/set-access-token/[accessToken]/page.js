@@ -15,22 +15,13 @@ export default function SetAccessToken() {
     useEffect(() => {
         if (accessToken) {
             localStorage.setItem("accessToken", accessToken)
-
             const user = jwtDecode(accessToken);
+            dispatch(setUser({ user }));
             const role = user.role;
             const lastAttemptedPath = localStorage.getItem("lastAttemptedPath");
-            console.log("attempted path: ", lastAttemptedPath);
 
-            dispatch(setUser({ user }));
-
-            router.push(lastAttemptedPath ||`/${role}`)
-            .then (() => {
-                localStorage.removeItem("lastAttemptedPath");
-            })
-            .catch((error) => {
-                console.error("Error redirecting to last attempted path: ", error);
-            });
-
+            router.push(lastAttemptedPath || `/${role}`);
+            localStorage.removeItem("lastAttemptedPath");
         } else {
             router.push("/auth/login");
         }

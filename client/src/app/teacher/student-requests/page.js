@@ -18,23 +18,16 @@ import { useDispatch, useSelector } from "react-redux";
 export default function StudentRequests() {
   const requests = useSelector((state) => state.requests.list);
   const filteredRequests = useSelector((state) => state.requests.filteredList);
+  const localUser = useSelector((state) => state.user.data.user);
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
   const [noMatch, setNoMatch] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedRequestId, setSelectedRequestId] = useState();
-  const [localUser, setLocalUser] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
   const [modalAction, setModalAction] = useState("");
   const { translate, language } = useLanguage();
   const { setGlobalErrorMessage } = useContext(ErrorContext);
-
-  useEffect(() => {
-    const accessToken = localStorage.getItem("accessToken");
-    const decodedToken = jwtDecode(accessToken);
-    setLocalUser(decodedToken);
-  }, []);
-
 
   useEffect(() => {
     const fetchRequests = async () => {
@@ -219,7 +212,7 @@ export default function StudentRequests() {
                 request={request} 
                 handleOpenConfirmModal={handleOpenConfirmModal}  
                 onResponse={onResponse}
-                userRole="teacher"
+                userRole={"teacher"}
                 translate={translate}
               />
             </div>

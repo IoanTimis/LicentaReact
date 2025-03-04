@@ -3,6 +3,8 @@
 import { useLayoutEffect } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { jwtDecode } from "jwt-decode";
+import { store } from "@/store/page";
+import { clearUser } from "@/store/features/user/userSlice";
 
 export default function TeacherLayout({ children }) {
   const router = useRouter();
@@ -28,6 +30,8 @@ export default function TeacherLayout({ children }) {
 
     } catch (error) {
       console.error("Invalid token:", error);
+      localStorage.removeItem("accessToken");
+      store.dispatch(clearUser());
       router.push("/auth/login"); 
     }
   }, [router]);

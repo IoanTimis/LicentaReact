@@ -3,13 +3,12 @@ import { HeartIcon, NewspaperIcon } from "@heroicons/react/24/solid";
 import { useState, useEffect } from "react";
 import axiosInstance from "@/utils/axiosInstance";
 import { truncateText } from "@/utils/truncateText";
+import CardDetails from "../general/card-details";
 
 export default function TopicCard({ topic, onRequest, newRequestedTopic, translate, setGlobalErrorMessage }) {
   const [isTopicRequested, setIsTopicRequested] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
   const [tooltip, setTooltip] = useState(null);
-
-  const statusColors = isTopicRequested ? "bg-red-500" : "bg-green-500";
 
   useEffect(() => {
     const fetchData = async () => {
@@ -75,29 +74,7 @@ export default function TopicCard({ topic, onRequest, newRequestedTopic, transla
       </div>
   
       {/* Details */}
-      <div className="p-4">
-        <div className="flex text-gray-700">
-          <div className="flex-col w-1/2">
-            <div className="font-semibold">{translate("Teacher")}:</div>
-            <div className="font-semibold ">{translate("Keywords")}:</div>
-            <div className="font-semibold">{translate("Slots")}:</div>
-            <div className="font-semibold">{translate("Type")}:</div>
-          </div>
-
-          <div className="flex-col w-1/2 mb-2">
-            <div className="">{topic.user.first_name} {topic.user.name}</div>
-            <div className="">{topic.keywords}</div>
-            <div className="">{topic.slots}</div>
-            <div className="">{topic.education_level}</div>
-          </div>
-        </div>
-
-        {/* Status */}
-        <div className="flex items-center space-x-2">
-          <div className={`w-3 h-3 rounded-full ${statusColors}`}></div>
-          <span className="text-black">{isTopicRequested ? translate("Requested") : translate("Available")}</span>
-        </div>
-      </div>
+      <CardDetails topic={topic} translate={translate} isTopicRequested={isTopicRequested} userRole={"student"} />
   
       {/* Buttons */}
       <div className="px-4 py-2 flex justify-end bg-gray-50 border-t border-gray-400 rounded-b">

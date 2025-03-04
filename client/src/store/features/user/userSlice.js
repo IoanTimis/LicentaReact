@@ -1,30 +1,21 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-//TODO transofrma in users si aici voi salva userii pt admin dashboard
-
 const initialState = {
-  user: null, 
-  isLoading: false,
-  error: null, 
+  data: null,
 };
 
 const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
-    setUser(state, action) {
-      state.user = action.payload;
-      console.log("Am setat user in userSlice");
+    setUser: (state, action) => {
+      state.data = action.payload;
     },
-    clearUser(state) {
-      state.user = null;
-    },
-    setLoading(state, action) {
-      state.isLoading = action.payload;
+    clearUser: (state) => {
+      state.data = null;
     }
   },
 });
 
-export const { setUser, clearUser, setLoading } = userSlice.actions;
-
+export const { setUser, clearUser } = userSlice.actions;
 export default userSlice.reducer;

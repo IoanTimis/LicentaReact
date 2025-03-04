@@ -25,20 +25,13 @@ export default function StudentRequests() {
   const { setGlobalErrorMessage } = useContext(ErrorContext);
   const { translate, language } = useLanguage();
   const [noMatch, setNoMatch] = useState(false);
-  const [localUser, setLocalUser] = useState(null);
-
+  const localUser = useSelector((state) => state.user.data.user);
 
   const handleOpenConfirmModal = (requestId, action) => {
     setSelectedRequest(requestId);
     setModalAction(action);
     setIsOpen(true);
   };
-
-  useEffect(() => {
-      const accessToken = localStorage.getItem("accessToken");
-      const decodedToken = jwtDecode(accessToken);
-      setLocalUser(decodedToken);
-    }, []);
 
   useEffect(() => {
     const fetchRequests = async () => {
@@ -173,8 +166,8 @@ export default function StudentRequests() {
               <RequestCard 
                 request={request} 
                 handleOpenConfirmModal={handleOpenConfirmModal}
-                userRole="student"
                 translate={translate}
+                userRole="student"
               />
             </div>
           ))}

@@ -2,9 +2,11 @@ import Link from "next/link";
 import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/solid";
 import { useState } from "react";
 import { truncateText } from "@/utils/truncateText";
+import CardDetails from "../general/card-details";
 
 export default function TopicCard({ topic, translate, onEdit, handleOpenConfirmModal }) {
   const [tooltip, setTooltip] = useState(null);
+
 
   return (
     <div 
@@ -14,25 +16,11 @@ export default function TopicCard({ topic, translate, onEdit, handleOpenConfirmM
       {/* Title */}
       <Link href={`/teacher/my-topic/${topic.id}`}>
         <div className="bg-navbar-gradient flex justify-between items-center py-2 px-4 rounded-t">
-          <h2 className="text-lg font-semibold text-white">{truncateText(topic.title, 27)}</h2>
+          <h2 className="text-lg font-semibold text-white truncate">{topic.title}</h2>
         </div>
 
         {/* Details */}
-        <div className="p-4">
-          <div className="flex text-gray-700">
-            <div className="flex-col w-1/2">
-              <div className="font-semibold ">{translate("Keywords")}:</div>
-              <div className="font-semibold">{translate("Slots")}:</div>
-              <div className="font-semibold">{translate("Type")}:</div>
-            </div>
-
-            <div className="flex-col w-1/2 mb-2">
-              <div className="">{topic.keywords}</div>
-              <div className="">{topic.slots}</div>
-              <div className="">{topic.education_level}</div>
-            </div>
-          </div>
-        </div>
+        <CardDetails topic={topic} translate={translate} isTopic={true} userRole={"teacher"} />
       </Link>
 
       {/* Buttons */}

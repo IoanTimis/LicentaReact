@@ -5,7 +5,8 @@ import { useLayoutEffect } from "react";
 import { useRouter, usePathname} from "next/navigation";
 import { jwtDecode } from "jwt-decode";
 import { Provider } from "react-redux";
-import store from "@/store/page";
+import { store, persistor } from "@/store/page";
+import { clearUser } from "@/store/features/user/userSlice";
 import { ErrorProvider } from "@/context/errorContext";
 import ErrorDiv from "@/app/components/general/error-div";
 
@@ -33,6 +34,8 @@ export default function AdminLayout({ children }) {
 
     } catch (error) {
       console.error("Invalid token:", error);
+      localStorage.removeItem("accessToken");
+      store.dispatch(clearUser());
       router.push("/auth/login");
     }
   }, [router]);

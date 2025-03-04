@@ -31,30 +31,32 @@ const teacherTopics = async (req, res) => {
       return res.status(404).json({ message: 'Faculties not found' });
     }
 
-    const teacher = await User.findByPk(teacherId, {
+    const topics = await Topic.findAll({
+      where: {
+        user_id: teacherId
+      },
       include: [
         {
-          model: Topic,
-          as: 'topics',
+          model: Specialization,
+          as: 'specializations',
           include: {
-            model: Specialization,
-            as: 'specializations',
-            attributes: ['id'],
-            include: {
-              model: Faculty,
-              as: 'faculty',
-              attributes: ['id']
-            }
-          },
+            model: Faculty,
+            as: 'faculty',
+            attributes: ['id']
+          }
+        },
+        {
+          model: User,
+          as: 'user'
         }
       ]
     });
     
-    if (!teacher) {
-      return res.status(404).json({ message: 'Teacher not found' });
+    if (!topics) {
+      return res.status(404).json({ message: 'Topics not found' });
     }
 
-    res.json({ teacher: teacher, faculties: faculties });
+    res.json({ topics, faculties: faculties });
   }
   catch (error) {
     console.error('Error getting topics:', error);

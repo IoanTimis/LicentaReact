@@ -51,7 +51,7 @@ export default function TeacherTopics() {
         const response = await axiosInstance.get("/teacher/fetch/topics", { withCredentials: true });
 
         setFaculties(response.data.faculties);
-        dispatch(setTopics(response.data.teacher.topics));
+        dispatch(setTopics(response.data.topics));
       } catch (error) {
         console.error("Error fetching topics:", error);
         setGlobalErrorMessage(translate("An error occurred while fetching topics."));

@@ -2,9 +2,11 @@ import Link from "next/link";
 import { CheckIcon, PaperAirplaneIcon, TrashIcon } from "@heroicons/react/24/solid";
 import { useState } from "react";
 import { truncateText } from "@/utils/truncateText";
+import CardDetails from "./card-details";
 
 export default function RequestCard({ request, onResponse, handleOpenConfirmModal, translate, userRole }) {
   const [isConfirmed, setIsConfirmed] = useState(request.status === "confirmed");
+  console.log("request:", request);
 
   const statusColors = {
     pending: "bg-yellow-400",
@@ -31,38 +33,7 @@ export default function RequestCard({ request, onResponse, handleOpenConfirmModa
         </div>
 
         {/* Details */}
-        <div className="p-4">
-          <div className="flex text-gray-700">
-            <div className="flex-col w-1/2">
-              {userRole === "student" ? (
-                <div className="font-semibold">{translate("Teacher")}:</div>
-              ) : (
-                <div className="font-semibold">{translate("Student")}:</div>
-              )}
-              <div className="font-semibold">{translate("Keywords")}:</div>
-              <div className="font-semibold">{translate("Slots")}:</div>
-              <div className="font-semibold">{translate("Type")}:</div>
-            </div>
-
-            <div className="flex-col w-1/2 mb-2">
-              {userRole === "student" ? (
-                <div className="">{request.teacher.first_name} {request.teacher.name}</div>
-              ) : (
-                <div className="">{request.student.first_name} {request.student.name}</div>
-              )}
-              <div className="">{request.topic.keywords}</div>
-              <div className="">{request.topic.slots}</div>
-              <div className="">{request.topic.education_level}</div>
-            </div>
-          </div>
-
-          {/* Status */}
-        <div className="flex items-center space-x-2">
-          <div className={`w-3 h-3 rounded-full ${statusColors[requestStatus]}`}></div>
-          <span className="text-black">{translate(requestStatus.charAt(0).toUpperCase() + requestStatus.slice(1))}</span>
-        </div>
-         
-        </div>
+        <CardDetails request={request} translate={translate} requestStatus={requestStatus} userRole={userRole} />
       </Link>
 
       {/* Student Buttons */}
