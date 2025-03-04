@@ -26,6 +26,7 @@ export default function StudentRequests() {
   const { translate, language } = useLanguage();
   const [noMatch, setNoMatch] = useState(false);
   const localUser = useSelector((state) => state.user.data.user);
+  const [isConfirmed, setIsConfirmed] = useState(false);
 
   const handleOpenConfirmModal = (requestId, action) => {
     setSelectedRequest(requestId);
@@ -55,6 +56,7 @@ export default function StudentRequests() {
     try {
       const response = await axiosInstance.put(`/student/request/confirm/${requestId}`, { withCredentials: true });
       dispatch(setRequests([response.data.request]));
+      setIsConfirmed(true);
 
       if(process.env.NEXT_PUBLIC_NODE_ENV !== "production") {
         const to = response.data.request.teacher.email;
@@ -168,6 +170,7 @@ export default function StudentRequests() {
                 handleOpenConfirmModal={handleOpenConfirmModal}
                 translate={translate}
                 userRole="student"
+                newConfirmedRequest={isConfirmed}
               />
             </div>
           ))}

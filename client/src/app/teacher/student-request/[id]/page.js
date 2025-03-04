@@ -104,14 +104,22 @@ export default function TopicDetails() {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    const formData = new FormData(e.target);
-    const status = formData.get("status");
-    const message = formData.get("message");
-
     try {
-      await axiosInstance.put(`/teacher/student-request/response/${request.id}`, { status, message }, { withCredentials: true });
+      e.preventDefault();
+      const formData = new FormData(e.target);
+      const status = formData.get("status");
+      const message = formData.get("message");
+
+      const response = await axiosInstance.put(`/teacher/student-request/response/${request.id}`, { status }, { withCredentials: true });
       setRequest({ ...request, status });
+
+      const commentMessage = formData.get("message");
+      const requestId = response.data.request.id;
+
+      const addComment = await axiosInstance.post(`/teacher/student-request/comment/add/${requestId}`, 
+        { commentMessage }, { withCredentials: true });
+
+      setComments([...comments, addComment.data.comment]);
       
       if(process.env.NEXT_PUBLIC_NODE_ENV !== "production") {
         const to = request.student.email;

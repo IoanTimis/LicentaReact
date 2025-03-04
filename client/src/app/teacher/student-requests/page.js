@@ -69,9 +69,6 @@ export default function StudentRequests() {
     e.preventDefault();
     const formData = new FormData(e.target);
     const status = formData.get("status");
-    const message = formData.get("message");
-    console.log("status", status);
-    console.log("message", message);
 
     try {
       if(!selectedRequestId) {
@@ -80,9 +77,15 @@ export default function StudentRequests() {
 
       const response = await axiosInstance.put(
         `/teacher/student-request/response/${selectedRequestId}`, 
-        { status, message }, 
+        { status }, 
         { withCredentials: true }
       );
+
+      const commentMessage = formData.get("message");
+      const requestId = response.data.request.id;
+
+      const addComment = await axiosInstance.post(`/teacher/student-request/comment/add/${requestId}`, 
+        { commentMessage }, { withCredentials: true });
 
       const updatedRequest = response.data.request;
 

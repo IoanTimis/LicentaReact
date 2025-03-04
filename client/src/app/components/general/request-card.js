@@ -4,8 +4,9 @@ import { useState } from "react";
 import { truncateText } from "@/utils/truncateText";
 import CardDetails from "./card-details";
 
-export default function RequestCard({ request, onResponse, handleOpenConfirmModal, translate, userRole }) {
-  const [isConfirmed, setIsConfirmed] = useState(request.status === "confirmed");
+export default function RequestCard({ request, onResponse, handleOpenConfirmModal, translate, userRole, newConfirmedRequest }) {
+  
+  const isConfirmed = request.status === "confirmed";
   console.log("request:", request);
 
   const statusColors = {
@@ -40,12 +41,10 @@ export default function RequestCard({ request, onResponse, handleOpenConfirmModa
       <div className="px-4 py-2 flex justify-end space-x-2 bg-gray-50 border-t border-gray-200 rounded-b">
         {userRole === "student" ? (
           <>
-            {/* Buton de confirmare doar dacă statusul este "accepted" */}
-            {!isConfirmed && requestStatus === "accepted" && (
+            {(!isConfirmed && !newConfirmedRequest ) && requestStatus === "accepted" && (
               <button
                 onClick={() => {
                   handleOpenConfirmModal(request.id, "confirm");
-                  setIsConfirmed(true);
                 }}
                 className="p-2 bg-green-500 rounded-full hover:bg-green-600 transition text-white"
               >
@@ -55,9 +54,9 @@ export default function RequestCard({ request, onResponse, handleOpenConfirmModa
 
             <button
               onClick={() => handleOpenConfirmModal(request.id, "delete")}
-              disabled={isConfirmed}
+              disabled={(isConfirmed || newConfirmedRequest)}
               className={`p-2 rounded-full transition ${
-                isConfirmed ? "bg-gray-400 cursor-not-allowed text-white" : "bg-red-500 hover:bg-red-600 text-white"
+                (isConfirmed || newConfirmedRequest) ? "bg-gray-400 cursor-not-allowed text-white" : "bg-red-500 hover:bg-red-600 text-white"
               }`}
             >
               <TrashIcon className="w-5 h-5" />
