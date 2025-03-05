@@ -1,6 +1,6 @@
 import { useLanguage } from "@/context/Languagecontext";
 
-export default function ConfirmActionModal({ actionFunction, isOpen, setIsOpen, action }) {
+export default function ConfirmActionModal({ actionFunction, isOpen, setIsOpen, action}) {
   if (!isOpen) return null;
 
   const { translate } = useLanguage();

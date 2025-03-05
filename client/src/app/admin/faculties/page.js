@@ -6,7 +6,7 @@ import FacultyForm from "@/app/components/admin/faculty-form";
 import axiosInstance from "@/utils/axiosInstance";
 import { useEffect, useState } from "react";
 import { PencilIcon, TrashIcon } from "@heroicons/react/24/solid";
-import ConfirmActionModal from "@/app/components/general/confirm-action-modal";
+import ConfirmActionModal from "@/app/components/admin/confirm-action-modal";
 
 export default function AdminFacultiesPage() {
   const [faculties, setFaculties] = useState([]);
@@ -93,7 +93,7 @@ export default function AdminFacultiesPage() {
   ];
   
   return (
-    <div className="p-6">
+    <div className="">
       <Table data={faculties} columns={columns} actions={actions} />
         <AddButton onClick={handleAdd} />
 
@@ -106,7 +106,7 @@ export default function AdminFacultiesPage() {
       )}
 
       <ConfirmActionModal 
-        action={"delete"} 
+        objName={"faculty"}
         actionFunction={() => deleteFaculty(selectedFaculty) } 
         isOpen={showConfirmModal} 
         setIsOpen={setShowConfirmModal} 

@@ -6,7 +6,7 @@ import TeacherForm from "@/app/components/admin/teacher-form";
 import axiosInstance from "@/utils/axiosInstance";
 import { useEffect, useState } from "react";
 import { PencilIcon, TrashIcon } from "@heroicons/react/24/solid";
-import ConfirmActionModal from "@/app/components/general/confirm-action-modal";
+import ConfirmActionModal from "@/app/components/admin/confirm-action-modal";
 
 export default function AdminTeacherspage() {
   const [teachers, setTeachers] = useState([]);
@@ -92,7 +92,7 @@ export default function AdminTeacherspage() {
   ];
 
   return (
-    <div className="p-6">
+    <div className="">
       <Table data={teachers} columns={columns} actions={actions} />
         <AddButton onClick={handleAdd} />
 
@@ -105,10 +105,10 @@ export default function AdminTeacherspage() {
       )}
 
       <ConfirmActionModal 
-        action={"delete"} 
+        objName={"teacher"}
         actionFunction={() => deleteTeacher(selectedTeacher) } 
-        isOpen={showConfirmModal} 
         setIsOpen={setShowConfirmModal} 
+        isOpen={showConfirmModal}
       />
     </div>
   );

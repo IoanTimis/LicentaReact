@@ -16,6 +16,23 @@ const getFaculties = async (req, res) => {
   }
 };
 
+const getFacultiesSpecializations = async (req, res) => {
+  try {
+    const faculties = await Faculty.findAll({
+      include: { model: Specialization, as: 'specializations' }
+    });
+
+    if (!faculties) {
+      return res.status(404).json({ error: 'Faculties not found' });
+    }
+
+    res.json(faculties);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Server error' });
+  }
+};
+
 const getFaculty = async (req, res) => {
   try {
     const faculty = await Faculty.findByPk(req.params.id);
@@ -144,7 +161,20 @@ const deleteSpecialization = async (req, res) => {
 const getUsers = async (req, res) => {
   try {
     const users = await User.findAll();
-    res.json(users);
+
+    if (!users) {
+      return res.status(404).json({ error: 'Users not found' });
+    }
+
+    const faculties = await Faculty.findAll({
+      include: { model: Specialization, as: 'specializations' }
+    });
+
+    if (!faculties) {
+      return res.status(404).json({ error: 'Faculties not found' });
+    }
+
+    res.json({ users, faculties });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Server error' });
@@ -180,13 +210,40 @@ const getUser = async (req, res) => {
   }
 };
 
+const addUser = async (req, res) => {
+  try {
+    const { name, first_name, email, title, education_level, type, faculty_id, specialization_id } = req.body;
+    const password = await bcrypt.hash(req.body.password, 8);
+    
+
+    const user = await User.create({
+      name,
+      first_name,
+      email,
+      password,
+      title,
+      education_level,
+      type,
+      complete_profile: true,
+      faculty_id,
+      specialization_id,
+    });
+
+    res.status(201).json(user);
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Server error' });
+  }
+};
+
 const editUser = async (req, res) => {
   try {
     const user = await User.findByPk(req.params.id);
     if (!user) return res.status(404).json({ error: 'User not found' });
 
     if (req.body.password) {
-      req.body.password = await bcrypt.hash(req.body.password, 10);
+      req.body.password = await bcrypt.hash(req.body.password, 8);
     }
 
     await user.update(req.body);
@@ -281,6 +338,7 @@ const deleteTeacher = async (req, res) => {
 module.exports = {
   getFaculties,
   getFaculty,
+  getFacultiesSpecializations,
   addFaculty,
   updateFaculty,
   deleteFaculty,
@@ -292,6 +350,7 @@ module.exports = {
   deleteSpecialization,
   getUsers,
   getUser,
+  addUser,
   editUser,
   deleteUser,
   getTeachers,
