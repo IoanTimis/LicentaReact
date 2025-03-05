@@ -26,5 +26,11 @@ router.get('/user/get/:id', adminController.getUser);
 router.put('/user/edit/:id', adminController.editUser);
 router.delete('/user/delete/:id', adminController.deleteUser);
 
+router.get('/teachers', adminController.getTeachers);
+router.get('/teacher/get/:id', adminController.getTeacher);
+router.post('/teacher/add', adminController.addTeacher);
+router.put('/teacher/edit/:id', adminController.editTeacher);
+router.delete('/teacher/delete/:id', adminController.deleteTeacher);
+
 module.exports = router;
 

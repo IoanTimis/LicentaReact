@@ -1,6 +1,7 @@
 const User = require('../models/user');
 const Faculty = require('../models/faculty');
 const Specialization = require('../models/specialization');
+const TeacherEmail = require('../models/teacherEmail');
 const { Op } = require('sequelize');
 const bcrypt = require('bcryptjs');
 
@@ -206,6 +207,77 @@ const deleteUser = async (req, res) => {
   }
 };
 
+const getTeachers = async (req, res) => {
+  try {
+    const teachers = await TeacherEmail.findAll();
+
+    if (!teachers) {
+      return res.status(404).json({ error: 'Teachers not found' });
+    }
+
+    res.json(teachers);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Server error' });
+  } 
+};
+
+const getTeacher = async (req, res) => {
+  try {
+    const teacher = await TeacherEmail.findByPk(req.params.id);
+
+    if (!teacher) {
+      return res.status(404).json({ error: 'Teacher not found' });
+    }
+
+    res.json(teacher);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Server error' });
+  }
+};
+
+const addTeacher = async (req, res) => {
+  try {
+    const teacher = await TeacherEmail.create(req.body);
+
+    if(!teacher) {
+      return res.status(404).json({ error: 'Teacher not found' });
+    }
+    
+    res.status(201).json(teacher);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Server error' });
+  }
+};
+
+const editTeacher = async (req, res) => {
+  try {
+    const teacher = await TeacherEmail.findByPk(req.params.id);
+
+    if (!teacher) {
+      return res.status(404).json({ error: 'Teacher not found' });
+    }
+
+    await teacher.update(req.body);
+    res.json(teacher);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Server error' });
+  }
+};
+
+const deleteTeacher = async (req, res) => {
+  try {
+    const teacher = await TeacherEmail.destroy({ where: { id: req.params.id }  });
+    res.json({ success: teacher ? true : false });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Server error' });
+  }
+};
+
 module.exports = {
   getFaculties,
   getFaculty,
@@ -221,5 +293,10 @@ module.exports = {
   getUsers,
   getUser,
   editUser,
-  deleteUser
+  deleteUser,
+  getTeachers,
+  getTeacher,
+  addTeacher,
+  editTeacher,
+  deleteTeacher,
 };
