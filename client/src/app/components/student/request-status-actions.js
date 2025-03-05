@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { CheckCircleIcon, EllipsisVerticalIcon, TrashIcon, PencilIcon } from "@heroicons/react/20/solid";
+import { CheckCircleIcon, EllipsisVerticalIcon, TrashIcon, PencilIcon, PaperAirplaneIcon } from "@heroicons/react/20/solid";
 
 const RequestStatusActions = ({ request, toggleConfirmActionModal, translate, role, toggleResponseModal }) => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -108,8 +108,8 @@ const RequestStatusActions = ({ request, toggleConfirmActionModal, translate, ro
                     }}
                     className="flex items-center p-2 w-full text-black hover:bg-gray-200 transition duration-200"
                   >
-                    <PencilIcon className="w-5 h-5 text-gray-700 mr-2" />
-                    {translate("Edit")}
+                    <PaperAirplaneIcon className="w-5 h-5 text-blue-700 mr-2" />
+                    {translate("Respond")}
                   </button>
                   <button
                     onClick={() => {
