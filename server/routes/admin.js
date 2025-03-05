@@ -8,13 +8,6 @@ router.use([isAdmin]);
 
 const adminController = require('../controllers/admin'); 
 
-//General Pages
-router.get('/', adminController.home);
-router.get('/about', adminController.about);
-
-//Dashboard Pages
-router.get('/dashboard', adminController.dashboard);
-
 router.get('/faculties', adminController.getFaculties);
 router.get('/faculty/get/:id', adminController.getFaculty);
 router.post('/faculty/add', adminController.addFaculty);

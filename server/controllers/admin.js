@@ -8,30 +8,16 @@ const { Op } = require('sequelize');
 const { response } = require('express');
 const bcrypt = require('bcryptjs');
 
-//geralPages
-const home = (req, res) => {
-  res.render('pages/admin/generalPages/index');
-};
-
-const about = (req, res) => {
-  res.render('pages/admin/generalPages/about');
-};
-
-//dashboard
-const dashboard = (req, res) => {
-  res.render('pages/admin/dashboard');
-};
-
 //Faculties---------------------------------------------------------------------------------------------------
 const getFaculties = async (req, res) => {
   try {
-    const faculties = await Faculty.findAll({});
+    const faculties = await Faculty.findAll();
 
     if (!faculties) {
       return res.status(404).send('No faculties found');
     }
 
-    res.render('pages/admin/faculties', { faculties: faculties });
+    res.json(faculties);
   } catch (error) {
     console.error(error);
     res.status(500).send('Server error');
@@ -367,9 +353,6 @@ const deleteUser = async (req, res) => {
 };
 
 module.exports = {
-  home,
-  about,
-  dashboard,
   getFaculties,
   getFaculty,
   addFaculty,

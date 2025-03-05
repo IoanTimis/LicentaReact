@@ -2,7 +2,7 @@
 
 import FixedSidebar from "@/app/components/admin/fixed-side-bar";
 import { useLayoutEffect } from "react";
-import { useRouter, usePathname} from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { jwtDecode } from "jwt-decode";
 import { Provider } from "react-redux";
 import { store, persistor } from "@/store/page";
@@ -43,14 +43,14 @@ export default function AdminLayout({ children }) {
   return (
     <Provider store={store}>
       <ErrorProvider>
-        <div className="flex">
+        <div className="flex min-h-screen">
           <FixedSidebar />
-          <main className="w-full min-h-screen p-6 bg-gray-100 lg:ml-64 transition-all">
+          <main className="w-full min-h-screen p-6 bg-gray-100 ml-64">
             <ErrorDiv />
             {children}
           </main>
         </div>
       </ErrorProvider>
     </Provider>
-  );
+  ); 
 }
