@@ -6,12 +6,14 @@ import FacultyForm from "@/app/components/admin/faculty-form";
 import axiosInstance from "@/utils/axiosInstance";
 import { useEffect, useState } from "react";
 import { PencilIcon, TrashIcon } from "@heroicons/react/24/solid";
+import ConfirmActionModal from "@/app/components/general/confirm-action-modal";
 
 export default function AdminFacultiesPage() {
   const [faculties, setFaculties] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showForm, setShowForm] = useState(false);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [selectedFaculty, setSelectedFaculty] = useState(null);
 
   useEffect(() => {
@@ -41,7 +43,12 @@ export default function AdminFacultiesPage() {
     setShowForm(true);
   };
 
-  const handleDelete = async (faculty) => {
+  const handleDelete = (faculty) => {
+    setSelectedFaculty(faculty);
+    setShowConfirmModal(true);
+  }
+
+  const deleteFaculty = async (faculty) => {
     try {
       await axiosInstance.delete(`http://localhost:8080/admin/faculty/delete/${faculty.id}`, { withCredentials: true });
       fetchFaculties();
@@ -99,6 +106,13 @@ export default function AdminFacultiesPage() {
           onSave={handleSave}
         />
       )}
+
+      <ConfirmActionModal 
+        action={"delete"} 
+        actionFunction={() => deleteFaculty(selectedFaculty) } 
+        isOpen={showConfirmModal} 
+        setIsOpen={setShowConfirmModal} 
+      />
     </div>
   );
 }

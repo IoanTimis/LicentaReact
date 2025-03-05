@@ -1,7 +1,7 @@
 import { useLanguage } from "@/context/Languagecontext";
 
 export default function ConfirmActionModal({ actionFunction, isOpen, setIsOpen, action }) {
-  if (!isOpen) return null; // Modalul nu trebuie să fie afișat dacă `isOpen` este fals
+  if (!isOpen) return null;
 
   const { translate } = useLanguage();
 
