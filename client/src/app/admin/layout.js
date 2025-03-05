@@ -12,7 +12,7 @@ import ErrorDiv from "@/app/components/general/error-div";
 
 export default function AdminLayout({ children }) {
   const router = useRouter();
-  const pathname = usePathname();
+  const pathname = usePathname() || "";
 
   useLayoutEffect(() => {
     const accessToken = localStorage.getItem("accessToken");

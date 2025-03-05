@@ -16,7 +16,7 @@ export default function FacultyForm({ faculty, onClose, onSave }) {
 
     try {
       if (faculty) {
-        await axiosInstance.put(`http://localhost:8080/admin/faculties/edit/${faculty.id}`, {
+        await axiosInstance.put(`http://localhost:8080/admin/faculty/edit/${faculty.id}`, {
           name,
           description,
         }, { withCredentials: true });

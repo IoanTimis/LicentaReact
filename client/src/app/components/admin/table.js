@@ -1,4 +1,5 @@
 import { useState } from "react";
+import React from "react";
 
 export default function Table({ data, columns, actions }) {
   if (!data || data.length === 0) {
@@ -7,7 +8,6 @@ export default function Table({ data, columns, actions }) {
 
   const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
 
-  // Funcția de sortare a datelor
   const sortedData = [...data].sort((a, b) => {
     if (!sortConfig.key) return 0;
     const valA = a[sortConfig.key];
@@ -39,7 +39,7 @@ export default function Table({ data, columns, actions }) {
                 {col.label} {sortConfig.key === col.key ? (sortConfig.direction === "asc" ? "↑" : "↓") : ""}
               </th>
             ))}
-            {actions && <th className="px-4 py-2 text-left">Acțiuni</th>}
+            {actions && <th className="px-4 py-2 border-b-2 border-gray-900 text-left">Acțiuni</th>}
           </tr>
         </thead>
         <tbody>
@@ -58,7 +58,7 @@ export default function Table({ data, columns, actions }) {
                       className={`px-2 py-1 rounded ${action.className}`}
                       onClick={() => action.onClick(row)}
                     >
-                      {action.label}
+                      {React.cloneElement(action.icon)}
                     </button>
                   ))}
                 </td>

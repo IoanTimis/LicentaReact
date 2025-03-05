@@ -5,6 +5,7 @@ import AddButton from "@/app/components/admin/add-button";
 import FacultyForm from "@/app/components/admin/faculty-form";
 import axiosInstance from "@/utils/axiosInstance";
 import { useEffect, useState } from "react";
+import { PencilIcon, TrashIcon } from "@heroicons/react/24/solid";
 
 export default function AdminFacultiesPage() {
   const [faculties, setFaculties] = useState([]);
@@ -24,7 +25,7 @@ export default function AdminFacultiesPage() {
       setFaculties(response.data);
     } catch (error) {
       console.error("Fetch faculties error:", error);
-      setError(error);
+      
     } finally {
       setLoading(false);
     }
@@ -39,6 +40,16 @@ export default function AdminFacultiesPage() {
     setSelectedFaculty(faculty);
     setShowForm(true);
   };
+
+  const handleDelete = async (faculty) => {
+    try {
+      await axiosInstance.delete(`http://localhost:8080/admin/faculty/delete/${faculty.id}`, { withCredentials: true });
+      fetchFaculties();
+    } catch (error) {
+      console.error("Delete faculty error:", error);
+      setError(error);
+    }
+  }
 
   const handleSave = () => {
     setShowForm(false);
@@ -59,23 +70,26 @@ export default function AdminFacultiesPage() {
     { key: "description", label: "Descriere" },
     { key: "createdAt", label: "Creat la" },
     { key: "updatedAt", label: "Actualizat la" },
+  ];
+
+  const actions = [
     { 
-      key: "actions",
-      label: "Acțiuni",
-      render: (faculty) => (
-        <button 
-          className="text-blue-600 underline" 
-          onClick={() => handleEdit(faculty)}
-        >
-          Editează
-        </button>
-      ),
+      className: "bg-blue-500 hover:bg-blue-700 text-white",
+      onClick: handleEdit,
+      icon: <PencilIcon className="h-5 w-5" />
+    },
+    { 
+      className: "bg-red-500 hover:bg-red-700 text-white",
+      onClick: handleDelete,
+      icon: <TrashIcon className="h-5 w-5" />
     },
   ];
+  
+
 
   return (
     <div className="p-6">
-      <Table data={faculties} columns={columns} />
+      <Table data={faculties} columns={columns} actions={actions} />
         <AddButton onClick={handleAdd} />
 
       {showForm && (
