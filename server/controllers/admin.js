@@ -66,7 +66,18 @@ const getSpecializations = async (req, res) => {
     const specializations = await Specialization.findAll({
       include: { model: Faculty, as: 'faculty' }
     });
-    res.json(specializations);
+
+    if(!specializations) {
+      return res.status(404).json({ error: 'Specializations not found' });
+    }
+
+    const faculties = await Faculty.findAll();
+
+    if(!faculties) {
+      return res.status(404).json({ error: 'Faculties not found' });
+    }
+
+    res.json({ specializations, faculties });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Server error' });

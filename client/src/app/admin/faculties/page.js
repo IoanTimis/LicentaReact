@@ -48,6 +48,11 @@ export default function AdminFacultiesPage() {
     setShowConfirmModal(true);
   }
 
+  const handleSave = () => {
+    setShowForm(false);
+    fetchFaculties();
+  };
+
   const deleteFaculty = async (faculty) => {
     try {
       await axiosInstance.delete(`http://localhost:8080/admin/faculty/delete/${faculty.id}`, { withCredentials: true });
@@ -57,11 +62,6 @@ export default function AdminFacultiesPage() {
       setError(error);
     }
   }
-
-  const handleSave = () => {
-    setShowForm(false);
-    fetchFaculties();
-  };
 
   if (loading) {
     return <p className="text-gray-500 text-center">Se încarcă...</p>;
@@ -92,8 +92,6 @@ export default function AdminFacultiesPage() {
     },
   ];
   
-
-
   return (
     <div className="p-6">
       <Table data={faculties} columns={columns} actions={actions} />
