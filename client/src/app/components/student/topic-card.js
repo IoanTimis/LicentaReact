@@ -5,7 +5,7 @@ import axiosInstance from "@/utils/axiosInstance";
 import { truncateText } from "@/utils/truncateText";
 import CardDetails from "../general/card-details";
 
-export default function TopicCard({ topic, onRequest, newRequestedTopic, translate, setGlobalErrorMessage }) {
+export default function TopicCard({ topic, onRequest, newRequestedTopic, translate, setGlobalErrorMessage, hasConfirmedRequest }) {
   const [isTopicRequested, setIsTopicRequested] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
   const [tooltip, setTooltip] = useState(null);
@@ -74,7 +74,7 @@ export default function TopicCard({ topic, onRequest, newRequestedTopic, transla
       </div>
   
       {/* Details */}
-      <CardDetails topic={topic} translate={translate} isTopicRequested={isTopicRequested} userRole={"student"} />
+      <CardDetails topic={topic} translate={translate} isTopicRequested={(isTopicRequested)} hasConfirmedRequest={hasConfirmedRequest} userRole={"student"} />
   
       {/* Buttons */}
       <div className="px-4 py-2 flex justify-end bg-gray-50 border-t border-gray-400 rounded-b">
@@ -85,16 +85,18 @@ export default function TopicCard({ topic, onRequest, newRequestedTopic, transla
         >
           <button
             onClick={handleRequestClick}
-            disabled={isTopicRequested}
+            disabled={isTopicRequested || hasConfirmedRequest}
             className={`p-2 rounded-full transition text-white ${
-              isTopicRequested ? "bg-gray-400 cursor-not-allowed" : "bg-blue-500 hover:bg-blue-600"
+              (isTopicRequested || hasConfirmedRequest) ? "bg-gray-400 cursor-not-allowed" : "bg-blue-500 hover:bg-blue-600"
             }`}
           >
             <NewspaperIcon className="w-5 h-5" />
           </button>
           {tooltip === "request" && (
             <span className="absolute top-full mt-1 px-2 py-1 bg-gray-800 text-white text-xs rounded-md">
-              {isTopicRequested ? translate("Already Requested") : translate("Request Theme")}
+              {(isTopicRequested && hasConfirmedRequest) 
+              ? translate("Already Confirmed a Theme") : hasConfirmedRequest ? 
+              translate("Already Confirmed a Theme") : isTopicRequested ? translate("Already Requested") :translate("Request Theme")}
             </span>
           )}
         </div>

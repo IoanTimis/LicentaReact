@@ -10,6 +10,22 @@ const FavoriteTopics = require('../models/favoriteTopics');
 const MyStudents = require('../models/myStudents');
 const RequestedTopicComment = require('../models/requestedTopicComment');
 
+const userHasConfirmedRequest = async (student_id) => {
+  try {
+    const confirmedRequest = await topicRequest.findOne({
+      where: {
+        student_id: student_id,
+        status: "confirmed",
+      },
+    });
+
+    return !!confirmedRequest; 
+  } catch (error) {
+    console.error("Error getting confirmed request:", error);
+    throw new Error("Internal Server Error");
+  }
+};
+
 const studentTopics = async (req, res) => {
   try {
 
@@ -42,7 +58,9 @@ const studentTopics = async (req, res) => {
       return res.status(404).json({ message: 'Topics not found' });
     };
 
-   return res.status(200).json({ topics: topics });
+    const hasConfirmedRequest = await userHasConfirmedRequest(user.id);
+
+    return res.status(200).json({ topics: topics, hasConfirmedRequest });
 
   }
   catch (error) {
@@ -108,11 +126,13 @@ const topic = async (req, res) => {
       }
     });
 
+    const hasConfirmedRequest = await userHasConfirmedRequest(user.id);
+
     if (topicRequested) {
-      return res.status(200).json({ topic: topic, requested: true });
+      return res.status(200).json({ topic: topic, requested: true, hasConfirmedRequest: hasConfirmedRequest });
     }
 
-    res.status(200).json({ topic: topic, requested: false });
+    res.status(200).json({ topic: topic, requested: false, hasConfirmedRequest: hasConfirmedRequest });
   }
   catch (error) {
     console.error('Error getting topic:', error);
@@ -125,6 +145,8 @@ const getFavoriteTopics = async (req, res) => {
     const refreshToken = req.cookies.refreshToken;
     const user = jwt.decode(refreshToken, process.env.REFRESH_TOKEN_SECRET);
     const student_id = user.id;
+
+    const hasConfirmedRequest = await userHasConfirmedRequest(student_id);
 
     const favoriteTopics = await FavoriteTopics.findAll({
       where: {
@@ -147,7 +169,7 @@ const getFavoriteTopics = async (req, res) => {
     const topics = favoriteTopics.map(favoriteTopic => favoriteTopic.topic);
     console.log(topics);
 
-    return res.json({ topics: topics });
+    return res.json({ topics: topics, hasConfirmedRequest });
   }
   catch (error) {
     console.error('Error getting favorite topics:', error);
@@ -400,6 +422,18 @@ const newRequest = async (req, res) => {
     if (requestExists) {
       return res.status(403).json({ message: 'Forbidden, request exists' });
     };
+
+    const confirmedRequest = await
+      topicRequest.findOne({
+        where: {
+          student_id: student_id,
+          status: 'confirmed'
+        }
+    });
+
+    if (confirmedRequest) {
+      return res.status(403).json({ message: 'Forbidden, you already have a confirmed request' });
+    }
 
     //Speacialization, faculty, topic to check if the student can apply to the topic
     const topic_data = await Topic.findOne({

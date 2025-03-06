@@ -16,6 +16,7 @@ import { sendEmail } from "@/app/api/sendEmail/page";
 
 export default function TopicDetailsPage() {
   const [topic, setTopic] = useState(null);
+  const [hasConfirmedRequest, setHasConfirmedRequest] = useState(false);
   const [topicRequested, setTopicRequested] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { translate, language } = useLanguage();
@@ -38,7 +39,9 @@ export default function TopicDetailsPage() {
     const fetchTopicDetails = async () => {
       try {
         const response = await axiosInstance.get(`/student/fetch/topic/${id}`, { withCredentials: true });
+        console.log("Response:", response.data);
         setTopic(response.data.topic);
+        setHasConfirmedRequest(response.data.hasConfirmedRequest);
 
         const topicRequestedResponse = await axiosInstance.get(`/student/is-topic-requested/${id}`, { withCredentials: true });
         setTopicRequested(topicRequestedResponse.data.requested);
@@ -51,6 +54,8 @@ export default function TopicDetailsPage() {
 
     fetchTopicDetails();
   }, [id]);
+
+  console.log("confirmed:", hasConfirmedRequest);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -125,6 +130,7 @@ export default function TopicDetailsPage() {
               role="student"
               isRequested={topicRequested}
               toggleRequestModal={toggleRequestModal}
+              hasConfirmedRequest={hasConfirmedRequest}
               translate={translate}
             />
           </div>

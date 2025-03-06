@@ -19,6 +19,7 @@ export default function StudentTopics() {
   const [requestedTopicId, setRequestedTopicId] = useState(null);
   const [requestedTopicTeacherId, setRequestedTopicTeacherId] = useState(null);
   const [requestedTopicEducationLevel, setRequestedTopicEducationLevel] = useState(null);
+  const [hasConfirmedRequest, setHasConfirmedRequest] = useState(false);
   const { translate, language } = useLanguage();
   const { setGlobalErrorMessage } = useContext(ErrorContext);
   const [newRequestedTopic, setNewRequestedTopic] = useState(null);
@@ -41,7 +42,9 @@ export default function StudentTopics() {
     const fetchData = async () => {
       try {
         const response = await axiosInstance.get("/student/fetch/topics", { withCredentials: true });
+        console.log("Response:", response.data);
 
+        setHasConfirmedRequest(response.data.hasConfirmedRequest);
         dispatch(setTopics(response.data.topics));
         dispatch(setFilteredTopics(response.data.topics));
       } catch (error) {
@@ -179,6 +182,7 @@ export default function StudentTopics() {
               topic={topic}
               onRequest={onRequest}
               newRequestedTopic={newRequestedTopic}
+              hasConfirmedRequest={hasConfirmedRequest}
               translate={translate}
               setGlobalErrorMessage={setGlobalErrorMessage}
             />

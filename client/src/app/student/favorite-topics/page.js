@@ -11,6 +11,7 @@ import { useLanguage } from "@/context/Languagecontext";
 export default function StudentTopics() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [requestedTopicId, setRequestedTopicId] = useState(null);
+  const [hasConfirmedRequest, setHasConfirmedRequest] = useState(false);
   const [requestedTopicTeacherId, setRequestedTopicTeacherId] = useState(null);
   const [requestedTopicEducationLevel, setRequestedTopicEducationLevel] = useState(null);
   const { translate } = useLanguage();
@@ -25,6 +26,7 @@ export default function StudentTopics() {
       try {
         const response = await axiosInstance.get("/student/fetch/favorite-topics", { withCredentials: true });
 
+        setHasConfirmedRequest(response.data.hasConfirmedRequest);
         setTopics(response.data.topics);
       } catch (error) {
         console.error("Error fetching topics:", error);
@@ -121,6 +123,7 @@ export default function StudentTopics() {
               onRequest={onRequest}
               translate={translate}
               setGlobalErrorMessage={setGlobalErrorMessage}
+              hasConfirmedRequest={hasConfirmedRequest}
               newRequestedTopic={newRequestedTopic}
             />
           ))}

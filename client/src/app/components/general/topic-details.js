@@ -1,6 +1,7 @@
 import TopicActions from "./topic-actions";
 
-const TopicDetails = ({ topic, toggleConfirmActionModal, toggleEditModal, toggleRequestModal, translate, role, isRequested }) => {
+const TopicDetails = ({ topic, toggleConfirmActionModal, toggleEditModal, toggleRequestModal, translate, role, isRequested, hasConfirmedRequest }) => {
+  console.log("TOpic:", hasConfirmedRequest)
   return (
     <div className="bg-gray-100 p-6 max-w-2xl mx-auto">
       <div className="grid grid-cols-[40%_60%] gap-y-4 text-gray-700">
@@ -17,8 +18,12 @@ const TopicDetails = ({ topic, toggleConfirmActionModal, toggleEditModal, toggle
         {role === "student" && (
           <>
             <span className="font-semibold">{translate("Status")}:</span>
-            <span className={`font-semibold ${isRequested ? "text-yellow-500" : "text-green-500"}`}>
-              {isRequested ? translate("Requested Theme") : translate("Available Theme")}
+            <span className="font-semibold text-gray-700"
+            >
+              {(hasConfirmedRequest && isRequested ) ? translate("Confirmed Theme") 
+              : isRequested ? translate("Requested Theme") 
+              : hasConfirmedRequest ? translate("Already Confirmed a Theme") 
+              : translate("Available Theme")}
             </span>
           </>
         )}
@@ -30,6 +35,7 @@ const TopicDetails = ({ topic, toggleConfirmActionModal, toggleEditModal, toggle
           toggleConfirmActionModal={toggleConfirmActionModal}
           toggleRequestModal={toggleRequestModal}
           isRequested={isRequested}
+          hasConfirmedRequest={hasConfirmedRequest}
           translate={translate}
           role={role}
           toggleEditModal={toggleEditModal}

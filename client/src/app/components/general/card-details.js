@@ -1,5 +1,5 @@
 
-export default function CardDetails({ request, topic,translate, isTopicRequested, requestStatus, userRole }) {
+export default function CardDetails({ request, topic,translate, isTopicRequested, requestStatus, userRole, hasConfirmedRequest }) {
   let first_name = ""
   let name = ""
   const data = request?.topic || topic
@@ -58,8 +58,22 @@ export default function CardDetails({ request, topic,translate, isTopicRequested
         {topic ? (
           userRole === "student" ? (
             <>
-              <div className={`w-3 h-3 rounded-full ${isTopicRequested ? "bg-yellow-400" : "bg-green-500"}`}></div>
-              <span className="text-black">{isTopicRequested ? translate("Requested") : translate("Available")}</span>
+              {( hasConfirmedRequest && isTopicRequested ) ? (
+                <>
+                  <div className={`w-3 h-3 rounded-full bg-green-500`}></div>
+                  <span className="text-black">{translate("Confirmed")}</span>
+                </>
+              ) : hasConfirmedRequest ? (
+                <>
+                  <div className={`w-3 h-3 rounded-full bg-yellow-500`}></div>
+                  <span className="text-black">{translate("Already Confirmed a Theme")}.</span>
+                </>
+              ) : (
+                <>
+                  <div className={`w-3 h-3 rounded-full ${isTopicRequested ? "bg-yellow-400" : "bg-green-500"}`}></div>
+                  <span className="text-black">{isTopicRequested ? translate("Requested") : translate("Available")}</span>
+                </>  
+              )}
             </>
           ) : null
         ) : (

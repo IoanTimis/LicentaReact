@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { CheckIcon, EllipsisVerticalIcon, TrashIcon, PencilIcon, NewspaperIcon } from "@heroicons/react/20/solid";
 
-const TopicActions = ({toggleConfirmActionModal, translate, role, toggleEditModal, toggleRequestModal, isRequested }) => {
+const TopicActions = ({toggleConfirmActionModal, translate, role, toggleEditModal, toggleRequestModal, isRequested, hasConfirmedRequest }) => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [tooltipVisible, setTooltipVisible] = useState(false);
 
@@ -9,7 +9,7 @@ const TopicActions = ({toggleConfirmActionModal, translate, role, toggleEditModa
     <div className="bg-gray-100 p-6 flex flex-col items-center justify-center relative">
       {role === "student" ? (
         <div className="flex space-x-4 mt-2">
-          {isRequested ? (
+          {( isRequested || hasConfirmedRequest) ? (
             <CheckIcon className="w-6 h-6 text-green-500 cursor-not-allowed" />
           ) : (
             <div
