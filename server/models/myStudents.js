@@ -1,7 +1,7 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../config/database"); 
 const User = require("./user");
-const Topic = require("./topic");
+const topicRequest = require("./topicRequest");
 
 const MyStudents = sequelize.define('my_students', {
     id: {
@@ -13,7 +13,7 @@ const MyStudents = sequelize.define('my_students', {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-            model: 'User', 
+            model: 'users', 
             key: 'id',
         },
         onDelete: 'CASCADE',
@@ -22,20 +22,19 @@ const MyStudents = sequelize.define('my_students', {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-            model: 'User', 
+            model: 'users', 
             key: 'id',
         },
-        onDelete: 'CASCADE',
     },
-    topic_id: {
+    request_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-            model: 'Topic', 
+            model: 'topic_requests', 
             key: 'id',
         },
-        onDelete: 'CASCADE',
     },
+
     createdAt: {
         type: DataTypes.DATE,
         defaultValue: DataTypes.NOW,
@@ -48,6 +47,6 @@ const MyStudents = sequelize.define('my_students', {
 
 MyStudents.belongsTo(User, { foreignKey: 'teacher_id', as: 'teacher', onDelete: 'CASCADE' });
 MyStudents.belongsTo(User, { foreignKey: 'student_id', as: 'student', onDelete: 'CASCADE' });
-MyStudents.belongsTo(Topic, { foreignKey: 'topic_id', as: 'topic', onDelete: 'CASCADE' });
+MyStudents.belongsTo(topicRequest, { foreignKey: 'request_id', as: 'request', onDelete: 'CASCADE' });
 
 module.exports = MyStudents;

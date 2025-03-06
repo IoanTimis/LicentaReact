@@ -496,8 +496,12 @@ const getMyStudents = async (req, res) => {
           as: 'student'
         },
         {
-          model: Topic,
-          as: 'topic'
+          model: topicRequest,
+          as: 'request',
+          include: {
+            model: Topic,
+            as: 'topic'
+          }
         }
       ]
     });

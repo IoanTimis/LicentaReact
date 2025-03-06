@@ -555,7 +555,7 @@ const confirmRequest = async (req, res) => {
     const teacherNewStudent = await MyStudents.create({
       teacher_id: request.teacher_id,
       student_id: student_id,
-      topic_id: topic_id
+      request_id: request_id
     });
 
     if (!teacherNewStudent) {

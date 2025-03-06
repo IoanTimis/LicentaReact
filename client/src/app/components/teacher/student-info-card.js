@@ -10,7 +10,7 @@ export default function StudentInfoCard({ studentInfo }) {
       hover:shadow-xl hover:-translate-y-1 transition-transform duration-200"
     >
       <div className="bg-navbar-gradient flex justify-between items-center py-2 px-4 rounded-t">
-        <h2 className="text-lg font-semibold text-white">{truncateText(studentInfo.topic.title, 20)}</h2>
+        <h2 className="text-lg font-semibold text-white truncate">{studentInfo.request.topic.title}</h2>
       </div>
       <div className="p-4">
       <p className="text-gray-700">

@@ -246,7 +246,11 @@ export default function TeacherTopics() {
   };
 
   if(topics.length === 0) {
-    return <p className="text-center text-gray-700">{ translate("You didn't add any themes yet.")}</p>;
+    return (
+      <div className="min-h-screen bg-gray-100 p-8">
+        <h1 className="text-2xl font-bold text-center text-gray-700">{translate("You didn't add any themes yet.")}</h1>
+      </div>
+    );
   }
 
   return (
