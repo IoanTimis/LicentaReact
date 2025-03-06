@@ -59,7 +59,8 @@ const teacherTopics = async (req, res) => {
       return res.status(404).json({ message: 'Topics not found' });
     }
 
-    res.json({ topics, faculties: faculties });
+    console.log('Topics:', topics);
+    res.status(200).json({ topics, faculties: faculties });
   }
   catch (error) {
     console.error('Error getting topics:', error);

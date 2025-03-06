@@ -5,10 +5,10 @@ describe("Student API Tests", () => {
       });
   });
 
-  it("✅ Should return available student topics", function () {
+  it("Should return available student topics", function () {
       cy.request({
           method: "GET",
-          url: "/student/fetch/topics",  // ← Actualizat conform routerului
+          url: "/student/fetch/topics", 
           headers: {  
               Authorization: `Bearer ${this.student.validAccessToken}` 
           }
@@ -18,10 +18,10 @@ describe("Student API Tests", () => {
       });
   });
 
-  it("✅ Should add a topic to favorites", function () {
+  it("Should add a topic to favorites", function () {
       cy.request({
           method: "POST",
-          url: `/student/favorite/add/${this.student.validTopicId}`,  // ← Actualizat conform routerului
+          url: `/student/favorite/add/${this.student.validTopicId}`,
           headers: {  
               Authorization: `Bearer ${this.student.validAccessToken}` 
           }
@@ -31,10 +31,10 @@ describe("Student API Tests", () => {
       });
   });
 
-  it("❌ Should fail to add a non-existent topic to favorites", function () {
+  it("Should fail to add a non-existent topic to favorites", function () {
       cy.request({
           method: "POST",
-          url: `/student/favorite/add/9999`,  // ← Actualizat conform routerului
+          url: `/student/favorite/add/9999`,
           headers: {  
               Authorization: `Bearer ${this.student.validAccessToken}` 
           },

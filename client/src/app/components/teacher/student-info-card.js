@@ -1,5 +1,4 @@
 import { useLanguage } from "@/context/Languagecontext";
-import { truncateText } from "@/utils/truncateText";
 
 export default function StudentInfoCard({ studentInfo }) {
   const { translate } = useLanguage();

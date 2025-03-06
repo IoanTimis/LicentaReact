@@ -1,8 +1,6 @@
 const jwt = require("jsonwebtoken");
-const Faculty = require("../models/faculty");
 
 function isStudent(req, res, next) {
-  console.log("isStudent middleware");
   if (process.env.NODE_ENV === "test") {
     console.log("Test environment detected. Skipping authentication...");
     req.user = { id: 1, role: "student", faculty_id: 1, specialization_id: 1, education_level: "bsc" };
