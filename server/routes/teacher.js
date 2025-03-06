@@ -8,6 +8,8 @@ router.use([isTeacher]);
 
 const teacherController = require('../controllers/teacher'); 
 
+router.get(`/api/only-teachers`, teacherController.onlyTeachers);
+
 router.get('/fetch/topics', teacherController.teacherTopics);
 router.get('/fetch/topic/:id', teacherController.teacherTopic);
 router.get('/fetch/getSpecializations/:id', teacherController.getSpecializations);

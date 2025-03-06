@@ -32,9 +32,9 @@ export default function CardDetails({ request, topic,translate, isTopicRequested
           ) : (
             <div className="font-semibold">{userRole === "teacher" ? translate("Student") : translate("Teacher")}:</div>
           )}
-          <div className="font-semibold">{translate("Keywords")}:</div>
-          <div className="font-semibold">{translate("Slots")}:</div>
-          <div className="font-semibold">{translate("Type")}:</div>
+          <div className="truncate font-semibold">{translate("Keywords")}:</div>
+          <div className="truncate font-semibold">{translate("Slots")}:</div>
+          <div className="truncate font-semibold">{translate("Type")}:</div>
         </div>
 
         <div className="flex-col w-1/2 mb-2">

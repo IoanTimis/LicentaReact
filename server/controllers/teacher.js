@@ -9,6 +9,10 @@ const  myStudents = require('../models/myStudents');
 const { Op } = require('sequelize');
 const RequestedTopicComment = require('../models/requestedTopicComment');
 
+const onlyTeachers = async (req, res, next) => { 
+  res.json({ onlyTeacher: process.env.ONLYTEACHERS === "true" });
+};
+
 const teacherTopics = async (req, res) => {
   try{
     const refreshToken = req.cookies.refreshToken;
@@ -203,7 +207,7 @@ const editTopic = async (req, res) => {
     const user = jwt.decode(refreshToken, process.env.REFRESH_TOKEN_SECRET);
 
     let { title, description, keywords, slots, education_level, specialization_ids } = req.body;
-    
+
     title = sanitizeHtml(title);
     description = sanitizeHtml(description);
     keywords = sanitizeHtml(keywords);
@@ -212,35 +216,43 @@ const editTopic = async (req, res) => {
       include: [{ model: Specialization, as: 'specializations' }]
     });
 
+    console.log('Topic:', topic);
+
     if (!topic) {
       return res.status(404).json({ message: 'Topic not found' });
     }
 
-    // Verificare permisiuni
     if (!user || user.id !== topic.user_id) {
-      return res.status(403).json({ message: 'Forbidden, you are nto the owner of this topic' });
+      return res.status(403).json({ message: 'Forbidden, you are not the owner of this topic' });
     }
 
-    // Actualizează topicul
-    topic.title = title;
-    topic.description = description;
-    topic.keywords = keywords;
-    topic.slots = slots;
-    topic.education_level = education_level;
-    
+    if (process.env.ONLYTEACHERS === "false") {
+      topic.slots = slots;
+      topic.education_level = topic.education_level;  
+      topic.title = topic.title;
+      topic.description = topic.description;
+      topic.keywords = topic.keywords;
+    } else {
+      topic.title = title;
+      topic.description = description;
+      topic.keywords = keywords;
+      topic.slots = slots;
+      topic.education_level = education_level; 
+
+      await topic.setSpecializations([]); 
+
+      const specializations = await Specialization.findAll({
+        where: { id: specialization_ids }
+      });
+
+      if (specializations.length !== specialization_ids.length) {
+        return res.status(400).json({ message: "Invalid specialization IDs" });
+      }
+
+      await topic.setSpecializations(specializations);
+    }
+
     await topic.save();
-
-    await topic.setSpecializations([]); 
-
-    const specializations = await Specialization.findAll({
-      where: { id: specialization_ids }
-    });
-
-    if (specializations.length !== specialization_ids.length) {
-      return res.status(400).json({ message: "Invalid specialization IDs" });
-    }
-
-    await topic.setSpecializations(specializations); 
 
     const updatedTopic = {
       id: topic.id,
@@ -249,9 +261,9 @@ const editTopic = async (req, res) => {
       keywords: topic.keywords,
       slots: topic.slots,
       education_level: topic.education_level,
-      specializations: specializations,
+      specializations: await topic.getSpecializations(),
       user: user
-    }
+    };
 
     res.json({ topic: updatedTopic });
   } catch (error) {
@@ -619,6 +631,7 @@ const topicSearchFilter = async (req, res) => {
 };
 
 module.exports = {
+  onlyTeachers,
   teacherTopics,
   teacherTopic,
   getSpecializations,

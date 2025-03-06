@@ -1,3 +1,7 @@
+"use client";
+
+import { useState, useEffect } from "react";
+import axiosInstance from "@/utils/axiosInstance";
 import { XMarkIcon } from "@heroicons/react/24/solid";
 
 const TopicModal = ({
@@ -27,6 +31,22 @@ const TopicModal = ({
   addSpecializationField,
   dublicateError
 }) => {
+
+  const [onlyTeacher, setOnlyTeacher] = useState(false);
+
+  useEffect(() => {
+    const fetchSettings = async () => {
+      try {
+        const response = await axiosInstance.get("/teacher/api/only-teachers", { withCredentials: true });
+        setOnlyTeacher(response.data.onlyTeacher);
+        console.log("ONLYTEACHER setting:", response.data.onlyTeacher);
+      } catch (error) {
+        console.error("Error fetching ONLYTEACHER setting:", error);
+      }
+    };
+    fetchSettings();
+  }, []);
+
   if (!isOpen) return null;
 
   return (
@@ -55,6 +75,7 @@ const TopicModal = ({
               name="title"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
+              disabled={!onlyTeacher}
               required
             />
           </div>
@@ -65,6 +86,7 @@ const TopicModal = ({
               className="border border-gray-300 text-gray-700 rounded w-full p-2"
               name="description"
               value={description}
+              disabled={!onlyTeacher}
               onChange={(e) => setDescription(e.target.value)}
               required
             />
@@ -77,6 +99,7 @@ const TopicModal = ({
               className="border border-gray-300 text-gray-700 rounded w-full p-2"
               name="keywords"
               value={keywords}
+              disabled={!onlyTeacher}
               onChange={(e) => setKeywords(e.target.value)}
               required
             />
@@ -101,6 +124,7 @@ const TopicModal = ({
               className="border border-gray-300 text-gray-700 rounded w-full p-2"
               name="education_level"
               value={educationLevel}
+              disabled={!onlyTeacher}
               onChange={(e) => setEducationLevel(e.target.value)}
               required
             >
@@ -115,6 +139,7 @@ const TopicModal = ({
             <select
               className="border border-gray-300 text-gray-700 rounded w-full p-2"
               value={selectedFacultyId || ""}
+              disabled={!onlyTeacher}
               onChange={(e) => handleFacultyChange(e.target.value)}
               required
             >
@@ -135,6 +160,7 @@ const TopicModal = ({
                 <select
                   className={`border ${dublicateError ? "border-red-500" : "border-gray-300"} text-gray-700 rounded w-full p-2`}
                   value={specialization || ""}
+                  disabled={!onlyTeacher}
                   onChange={(e) => handleSpecializationChange(index, e.target.value)}
                   required
                 >
@@ -149,6 +175,7 @@ const TopicModal = ({
                 {selectedSpecializations.length > 1 && (
                   <button
                     type="button"
+                    disabled={!onlyTeacher}
                     onClick={() => removeSpecializationField(index)}
                     className="ml-2 text-gray-500 hover:text-red-500 transition"
                   >
@@ -161,12 +188,18 @@ const TopicModal = ({
             {dublicateError && <p className="text-red-500 text-sm mt-1">{translate(dublicateError)}</p>}
             {/* Add specialization button */}
             <button
-              type="button"
-              className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 mt-2 w-full sm:w-auto"
-              onClick={addSpecializationField}
-            >
-              {translate("Add Specialization")}
-            </button>
+            type="button"
+            className={`px-4 py-2 rounded mt-2 w-full sm:w-auto transition ${
+              onlyTeacher 
+                ? "bg-blue-500 text-white hover:bg-blue-600" 
+                : "bg-gray-300 text-gray-500 cursor-not-allowed"
+            }`}
+            onClick={onlyTeacher ? addSpecializationField : null}
+            disabled={!onlyTeacher}
+          >
+            {translate("Add Specialization")}
+          </button>
+
           </div>
 
           <div className="flex flex-col sm:flex-row justify-end sm:space-x-2 sm:mt-0">
