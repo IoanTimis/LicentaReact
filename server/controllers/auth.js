@@ -193,7 +193,6 @@ const googleCallback = async (req, res) => {
       });
   
       if (!created && user.complete_profile) {
-        // Utilizator existent și profil complet
         let payload;
         if(user.type === 'teacher') {
             payload = { 
@@ -236,13 +235,19 @@ const googleCallback = async (req, res) => {
         res.cookie("refreshToken", refreshToken, {
           httpOnly: true,
           secure: process.env.NODE_ENV === "production",
-          maxAge: 30 * 24 * 60 * 60 * 1000, // 30 zile
+          maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
         });
 
+        console.log("usertype: ", user.type, " ,process.env.ONLYTEACHERS: ", process.env.ONLYTEACHERS);
+        if(process.env.ONLYTEACHERS === "true" && user.type !== "teacher") {
+            console.log('redirect to only teachers page');
+            return res.status(204).redirect('http://localhost:3000/only-teachers');
+        }
+
+        console.log('redirect to home page');
         return res.status(200).redirect(`http://localhost:3000/set-access-token/${accessToken}`);
       }
   
-      // Utilizator nou sau profil incomplet
       const token = await generateTokenAndScheduleDeletion(user.id);
       if (!token) {
         throw new Error('Failed to generate token Google callback');
@@ -251,11 +256,15 @@ const googleCallback = async (req, res) => {
       const userEmail = user.email;
       const verifyEmail = await teacherEmail.findOne({ where: { email: userEmail } });
 
+      if(process.env.ONLYTEACHERS === "true" && !verifyEmail) {
+        return res.status(204).redirect('http://localhost:3000/only-teachers');
+      } else {
         if (verifyEmail) {
             res.redirect(`http://localhost:3000/google-auth/complete-profile-teacher/${token}`);
         } else {
             res.redirect(`http://localhost:3000/google-auth/complete-profile-student/${token}`);
         }
+    }
 
     } catch (error) {
       console.error("Error during Google callback:", error);
