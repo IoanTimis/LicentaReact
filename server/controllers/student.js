@@ -29,8 +29,7 @@ const userHasConfirmedRequest = async (student_id) => {
 const studentTopics = async (req, res) => {
   try {
 
-    const refreshToken = req.cookies.refreshToken;
-    const user = jwt.decode(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+    const user = req.user;
     const specialization_id = user.specialization_id;
     const education_level = user.education_level;
 
@@ -72,8 +71,7 @@ const studentTopics = async (req, res) => {
 const topic = async (req, res) => {
   try {
     const topic_id = req.params.id;
-    const refreshToken = req.cookies.refreshToken;
-    const user = jwt.decode(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+    const user = req.user;
   
     const topic = await Topic.findByPk(topic_id, {
       include: [
@@ -142,8 +140,7 @@ const topic = async (req, res) => {
 
 const getFavoriteTopics = async (req, res) => {
   try {
-    const refreshToken = req.cookies.refreshToken;
-    const user = jwt.decode(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+    const user = req.user;
     const student_id = user.id;
 
     const hasConfirmedRequest = await userHasConfirmedRequest(student_id);
@@ -179,8 +176,7 @@ const getFavoriteTopics = async (req, res) => {
 
 const addFavoriteTopic = async (req, res) => {
   try {
-    const refreshToken = req.cookies.refreshToken;
-    const user = jwt.decode(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+    const user = req.user;
     const student_id = user.id;
 
     const topic_id  = req.params.id;
@@ -247,8 +243,7 @@ const addFavoriteTopic = async (req, res) => {
 
 const removeFavoriteTopic = async (req, res) => {
   try {
-    const refreshToken = req.cookies.refreshToken;
-    const user = jwt.decode(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+    const user = req.user;
     const student_id = user.id;
     const topic = req.params.id;
 
@@ -279,8 +274,7 @@ const removeFavoriteTopic = async (req, res) => {
 
 const isTopicFavorite = async (req, res) => {
   try {
-    const refreshToken = req.cookies.refreshToken;
-    const user = jwt.decode(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+    const user = req.user;
     const student_id = user.id;
     const topic_id = req.params.id;
 
@@ -303,8 +297,7 @@ const isTopicFavorite = async (req, res) => {
 
 const getRequestTopics = async (req, res) => {
   try {
-    const refreshToken = req.cookies.refreshToken;
-    const user = jwt.decode(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+    const user = req.user;
     const student_id = user.id;
     
     const requests = await topicRequest.findAll({
@@ -336,8 +329,7 @@ const getRequestTopics = async (req, res) => {
 const getRequestTopic = async (req, res) => {
   try {
     const request_id = req.params.id;
-    const refreshToken = req.cookies.refreshToken;
-    const user = jwt.decode(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+    const user = req.user;
     const student_id = user.id;
 
     const request = await topicRequest.findByPk(request_id, {
@@ -378,8 +370,7 @@ const getRequestTopic = async (req, res) => {
 
 const isTopicRequested = async (req, res) => {
   try {
-    const refreshToken = req.cookies.refreshToken;
-    const user = jwt.decode(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+    const user = req.user;
     const student_id = user.id;
     const topic_id = req.params.id;
 
@@ -400,8 +391,7 @@ const isTopicRequested = async (req, res) => {
 
 const newRequest = async (req, res) => {
   try {
-    const refreshToken = req.cookies.refreshToken;
-    const user = jwt.decode(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+    const user = req.user;
     const student_id = user.id;
 
     const { topic_id, teacher_id, education_level } = req.body;
@@ -504,8 +494,7 @@ const newRequest = async (req, res) => {
 
 const confirmRequest = async (req, res) => {
   try {
-    const refreshToken = req.cookies.refreshToken;
-    const user = jwt.decode(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+    const user = req.user;
     const student_id = user.id;
     const request_id = req.params.id;
 
@@ -582,8 +571,7 @@ const confirmRequest = async (req, res) => {
 };
 
 const deleteRequest = async (req, res) => {
-  const refreshToken = req.cookies.refreshToken;
-  const user = jwt.decode(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+  const user = req.user;
   const student_id = user.id;
   const request_id = req.params.id;
 
@@ -609,8 +597,7 @@ const deleteRequest = async (req, res) => {
 
 const addComment = async (req, res) => {
   try {
-    const refreshToken = req.cookies.refreshToken;
-    const user = jwt.decode(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+    const user = req.user;
     const student_id = user.id;
     const request_id = req.params.id;
     let { commentMessage } = req.body;
@@ -657,8 +644,7 @@ const addComment = async (req, res) => {
 
 const topicSearchFilter = async (req, res) => {
   try {
-    const refreshToken = req.cookies.refreshToken;
-    const userDecoded = jwt.decode(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+    const userDecoded = req.user;
     const specialization_id = userDecoded.specialization_id;
     const education_level = userDecoded.education_level;
     const { query } = req.query;

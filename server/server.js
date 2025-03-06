@@ -1,12 +1,22 @@
 const express = require('express');
 const app = express();
-
 const cors = require('cors');
 
+const allowedOrigins = [
+    'http://localhost:3000', 
+    'http://localhost:8080'   
+];
+
 app.use(cors({
-    origin: 'http://localhost:3000',
-    methods: ['GET', 'POST', 'PUT', 'DELETE'], 
-    credentials: true, 
+    origin: function (origin, callback) {
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    credentials: true
 }));
 
 const bodyParser = require('body-parser');

@@ -15,8 +15,7 @@ const onlyTeachers = async (req, res, next) => {
 
 const teacherTopics = async (req, res) => {
   try{
-    const refreshToken = req.cookies.refreshToken;
-    const user = jwt.decode(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+    const user = req.user;
     console.log(user);
     const teacherId = user.id;
 
@@ -71,8 +70,7 @@ const teacherTopics = async (req, res) => {
 const teacherTopic = async (req, res) => {
   try{
     const topic_id = req.params.id;
-    const refreshToken = req.cookies.refreshToken;
-    const user = jwt.decode(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+    const user = req.user;
     
     const topic = await Topic.findByPk(topic_id, {
       include: [
@@ -145,8 +143,7 @@ const getSpecializations = async (req, res) => {
 
 const addTopic = async (req, res) => {
   try {
-    const refreshToken = req.cookies.refreshToken;
-    const user = jwt.decode(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+    const user = req.user;
     const teacherId = user.id;
 
     console.log('User:', user);
@@ -203,8 +200,7 @@ const addTopic = async (req, res) => {
 const editTopic = async (req, res) => {
   try {
     const topicId = req.params.id;
-    const refreshToken = req.cookies.refreshToken;
-    const user = jwt.decode(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+    const user = req.user;
 
     let { title, description, keywords, slots, education_level, specialization_ids } = req.body;
 
@@ -275,8 +271,7 @@ const editTopic = async (req, res) => {
 const deleteTopic = async (req, res) => {
   try{
     const topicId = req.params.id;
-    const refreshToken = req.cookies.refreshToken;
-    const user = jwt.decode(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+    const user = req.user;
   
     const topic = await Topic.findByPk(topicId);
 
@@ -301,8 +296,7 @@ const deleteTopic = async (req, res) => {
 //Student requests------------------------------------------------------------------------------------------------------
 const studentRequests = async (req, res) => {
   try{
-    const refreshToken = req.cookies.refreshToken;
-    const user = jwt.decode(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+    const user = req.user;
     const teacherId = user.id;
 
     const requests = await topicRequest.findAll({
@@ -336,8 +330,7 @@ const studentRequest = async (req, res) => {
   try{
     const requestId = req.params.id;
     const refreshToken = req.cookies.refreshToken;
-    const user = jwt.decode(refreshToken, process.env.REFRESH_TOKEN_SECRET);
-    const teacherId = user.id;
+    const user = req.user;
 
     const request = await topicRequest.findByPk(requestId,
       {
@@ -380,8 +373,7 @@ const studentRequest = async (req, res) => {
 const teacherResponse = async (req, res) => {
   try{
     const requestId = req.params.id;
-    const refreshToken = req.cookies.refreshToken;
-    const user = jwt.decode(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+    const user = req.user;
     const teacherId = user.id;
     let { status } = req.body;
 
@@ -420,8 +412,7 @@ const teacherResponse = async (req, res) => {
 
 const deleteRequest = async (req, res) => {
   try{
-    const refreshToken = req.cookies.refreshToken;
-    const user = jwt.decode(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+    const user = req.user;
     const requestId = req.params.id;
 
     const request = await topicRequest.findByPk(requestId);
@@ -446,8 +437,7 @@ const deleteRequest = async (req, res) => {
 
 const addComment = async (req, res) => {
   try {
-    const refreshToken = req.cookies.refreshToken;
-    const user = jwt.decode(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+    const user = req.user;
     const teacher_id = user.id;
     const request_id = req.params.id;
     let { commentMessage } = req.body;
@@ -494,8 +484,7 @@ const addComment = async (req, res) => {
 
 const getMyStudents = async (req, res) => {
   try{
-    const refreshToken = req.cookies.refreshToken;
-    const user = jwt.decode(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+    const user = req.user;
     const teacherId = user.id;
 
     const students = await myStudents.findAll({
@@ -529,8 +518,7 @@ const getMyStudents = async (req, res) => {
 // Requests
 const requestSearchFilter = async (req, res) => {
   try {
-    const refreshToken = req.cookies.refreshToken;
-    const user = jwt.decode(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+    const user = req.user;
     const { query, status } = req.query;
 
     let whereCondition = {
@@ -579,8 +567,7 @@ const requestSearchFilter = async (req, res) => {
 
 const topicSearchFilter = async (req, res) => {
   try {
-    const refreshToken = req.cookies.refreshToken;
-    const user = jwt.decode(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+    const user = req.user;
     const { query, education_level, slots } = req.query;
 
     let whereCondition = {
