@@ -270,7 +270,7 @@ const googleCallback = async (req, res) => {
       console.error("Error during Google callback:", error);
       res.status(500).send("Eroare la autentificarea cu Google");
     }
-  };
+};
 
 
 const findUserByToken = async (token) => {
