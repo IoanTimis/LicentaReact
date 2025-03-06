@@ -96,26 +96,27 @@ export default function StudentRequests() {
       const deletedRequest = requests.find((request) => request.id === requestId);
       dispatch(deleteRequest(requestId));
 
-      if (process.env.NEXT_PUBLIC_NODE_ENV !== "production") {
-        const to = deletedRequest.teacher.email;
-        const title = deletedRequest.topic.title;
-        const actionMakerEmail = localUser.email;
-        const action = "deleteRequest";
-        const role = "student";
-        const data = {
-          to,
-          title,
-          actionMakerEmail,
-          action,
-          language,
-          role
-        };
-        const emailData = BuildEmailData(data);
+      //Spam too much the teacher
+      // if (process.env.NEXT_PUBLIC_NODE_ENV !== "production") {
+      //   const to = deletedRequest.teacher.email;
+      //   const title = deletedRequest.topic.title;
+      //   const actionMakerEmail = localUser.email;
+      //   const action = "deleteRequest";
+      //   const role = "student";
+      //   const data = {
+      //     to,
+      //     title,
+      //     actionMakerEmail,
+      //     action,
+      //     language,
+      //     role
+      //   };
+      //   const emailData = BuildEmailData(data);
 
-        sendEmail(emailData)
-          .then(() => console.log("Email sent."))
-          .catch((error) => console.error("Error sending email:", error));
-      }
+      //   sendEmail(emailData)
+      //     .then(() => console.log("Email sent."))
+      //     .catch((error) => console.error("Error sending email:", error));
+      // }
 
       console.log("Request deleted.");
     } catch (error) {

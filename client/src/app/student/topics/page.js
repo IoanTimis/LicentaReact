@@ -42,7 +42,6 @@ export default function StudentTopics() {
     const fetchData = async () => {
       try {
         const response = await axiosInstance.get("/student/fetch/topics", { withCredentials: true });
-        console.log("Response:", response.data);
 
         setHasConfirmedRequest(response.data.hasConfirmedRequest);
         dispatch(setTopics(response.data.topics));

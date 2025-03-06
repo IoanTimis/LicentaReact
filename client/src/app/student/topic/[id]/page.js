@@ -39,7 +39,6 @@ export default function TopicDetailsPage() {
     const fetchTopicDetails = async () => {
       try {
         const response = await axiosInstance.get(`/student/fetch/topic/${id}`, { withCredentials: true });
-        console.log("Response:", response.data);
         setTopic(response.data.topic);
         setHasConfirmedRequest(response.data.hasConfirmedRequest);
 
@@ -54,8 +53,6 @@ export default function TopicDetailsPage() {
 
     fetchTopicDetails();
   }, [id]);
-
-  console.log("confirmed:", hasConfirmedRequest);
 
   const handleSubmit = async (e) => {
     e.preventDefault();

@@ -101,26 +101,27 @@ export default function RequestTopicDetails() {
       console.log("Request deleted successfully.");
       setIsRequestDeleted(true);
 
-      if(process.env.NODE_ENV === "production") {
-        const to = request.teacher.email;
-        const title = request.topic.title;
-        const actionMakerEmail = localUser.email;
-        const action = "deleteRequest";
-        const role = "student";
-        const data = {
-          to,
-          title,
-          actionMakerEmail,
-          action,
-          language,
-          role
-        }
+      //Spam too much the teacher
+      // if(process.env.NODE_ENV === "production") {
+      //   const to = request.teacher.email;
+      //   const title = request.topic.title;
+      //   const actionMakerEmail = localUser.email;
+      //   const action = "deleteRequest";
+      //   const role = "student";
+      //   const data = {
+      //     to,
+      //     title,
+      //     actionMakerEmail,
+      //     action,
+      //     language,
+      //     role
+      //   }
 
-        const emailData = BuildEmailData(data);
-        sendEmail(emailData)
-          .then(() => console.log("Email sent successfully."))
-          .catch((error) => console.error("Error sending email:", error));
-      }
+      //   const emailData = BuildEmailData(data);
+      //   sendEmail(emailData)
+      //     .then(() => console.log("Email sent successfully."))
+      //     .catch((error) => console.error("Error sending email:", error));
+      // }
 
     } catch (error) {
       console.error("Error deleting request:", error);
