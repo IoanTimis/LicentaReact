@@ -106,9 +106,9 @@ A modal interface is provided for teachers to **accept or reject** student reque
 
 ---
 
-### **Teacher My Students Page**
-Once a request is **accepted by the teacher** and **confirmed by the student**, the teacher gains access to additional information about the student on the **My Students** page.  
-Teachers can filter students by **education level (BSc/MSc)** and search them by **topic title, student name, first name, or email**.  
+### **Teacher My Students Page**  
+Once a request is **accepted by the teacher** and **confirmed by the student**, the teacher can view all students who have confirmed their topics on the **My Students** page.  
+Teachers can filter students by **education level (BSc/MSc)** and search by **topic title, student name, first name, or email**.  
 ![Teacher My Students Page](docs/images/teacherMyStudents.png)
 
 ---
@@ -151,7 +151,7 @@ They can:
 - **Filter requests by status**
 - **Search requests by teacher name, first name, topic keywords, or title**
 - **Confirm a request**, which will:
-  - **Delete all other pending requests**
+  - **Delete all other requests**
   - **Prevent the student from making new requests**
   - **Lock the confirmed request from being deleted by the student**
 - **Delete requests (if not confirmed yet)**  
@@ -166,6 +166,14 @@ On this page, students and teachers can:
 - **Use the comment section to communicate**
 - **Perform actions (accept/reject/confirm, if applicable)**  
 ![Student Request Dedicated Page](docs/images/studentRequestDedicatedPage.png)
+
+### **Student Topic Dedicated Page**  
+Both **teachers and students** can click on a topic to access its **dedicated page** for more details.  
+
+- **Students** can view additional information about the topic and submit a request.  
+- **Teachers** can review the topic details, edit its content, or delete it.  
+
+![Student Topic Dedicated Page](docs/images/topicDedicatedPage.png)
 
 
 
