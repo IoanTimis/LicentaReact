@@ -47,7 +47,7 @@ The landing page allows users to navigate to different sections of the platform 
 
 ### **Login Page**
 Authentication is available exclusively via Google OAuth. However, standard login remains enabled for testing purposes. If an organization is specified in Google OAuth settings, users must belong to that organization to log in.  
-![Login Page](docs/images/landingPage.png)
+![Login Page](docs/images/loginPage.png)
 
 ---
 
