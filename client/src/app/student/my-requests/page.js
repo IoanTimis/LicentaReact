@@ -58,7 +58,7 @@ export default function StudentRequests() {
       dispatch(setRequests([response.data.request]));
       setIsConfirmed(true);
 
-      if(process.env.NEXT_PUBLIC_NODE_ENV !== "production") {
+      if(process.env.NEXT_PUBLIC_NODE_ENV === "production") {
         const to = response.data.request.teacher.email;
         const title = response.data.request.topic.title;
         const actionMakerEmail = localUser.email;
@@ -97,7 +97,7 @@ export default function StudentRequests() {
       dispatch(deleteRequest(requestId));
 
       //Spam too much the teacher
-      // if (process.env.NEXT_PUBLIC_NODE_ENV !== "production") {
+      // if (process.env.NEXT_PUBLIC_NODE_ENV === "production") {
       //   const to = deletedRequest.teacher.email;
       //   const title = deletedRequest.topic.title;
       //   const actionMakerEmail = localUser.email;

@@ -91,7 +91,7 @@ export default function StudentRequests() {
 
       dispatch(updateRequest(updatedRequest));
 
-      if(process.env.NEXT_PUBLIC_NODE_ENV !== "production") {
+      if(process.env.NEXT_PUBLIC_NODE_ENV === "production") {
         const to = updatedRequest.student.email;
         const title = updatedRequest.topic.title;
         const actionMakerEmail = localUser.email;
@@ -131,7 +131,7 @@ export default function StudentRequests() {
 
       dispatch(deleteRequest(requestId));
 
-      if (process.env.NEXT_PUBLIC_NODE_ENV !== "production") {
+      if (process.env.NEXT_PUBLIC_NODE_ENV === "production") {
         const to = deletedRequest.student.email;
         const title = deletedRequest.topic.title;
         const actionMakerEmail = localUser.email;

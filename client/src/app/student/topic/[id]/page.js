@@ -76,7 +76,7 @@ export default function TopicDetailsPage() {
 
       console.log("Process: ",process.env.NEXT_PUBLIC_NODE_ENV);
 
-      if(process.env.NEXT_PUBLIC_NODE_ENV !== "production") {
+      if(process.env.NEXT_PUBLIC_NODE_ENV === "production") {
         const to = response.data.topic.user.email;
         const title = response.data.topic.title;
         const actionMakerEmail = localUser.email;

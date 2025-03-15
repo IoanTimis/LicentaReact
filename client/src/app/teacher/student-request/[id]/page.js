@@ -71,7 +71,7 @@ export default function TopicDetails() {
     try {
       await axiosInstance.delete(`/teacher/student-request/delete/${topicId}`, { withCredentials: true });
 
-      if (process.env.NEXT_PUBLIC_NODE_ENV !== "production") {
+      if (process.env.NEXT_PUBLIC_NODE_ENV === "production") {
         const to = request.student.email;
         const title = request.topic.title;
         const actionMakerEmail = localUser.email;
@@ -121,7 +121,7 @@ export default function TopicDetails() {
 
       setComments([...comments, addComment.data.comment]);
       
-      if(process.env.NEXT_PUBLIC_NODE_ENV !== "production") {
+      if(process.env.NEXT_PUBLIC_NODE_ENV === "production") {
         const to = request.student.email;
         const title = request.topic.title;
         const actionMakerEmail = localUser.email;
@@ -161,7 +161,7 @@ export default function TopicDetails() {
       setComments([...comments, response.data.comment]);
       setCommentMessage("");
 
-      if(process.env.NEXT_PUBLIC_NODE_ENV !== "production") {
+      if(process.env.NEXT_PUBLIC_NODE_ENV === "production") {
         const to = request.student.email;
         const title = request.topic.title;
         const actionMakerEmail = localUser.email;

@@ -30,7 +30,7 @@ const store = configureStore({
       serializableCheck: false,
       thunk,
     }),
-  devTools: process.env.NODE_ENV !== "production",
+  devTools: process.env.NODE_ENV === "production",
 });
 
 const persistor = persistStore(store);

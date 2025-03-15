@@ -167,6 +167,8 @@ On this page, students and teachers can:
 - **Perform actions (accept/reject/confirm, if applicable)**  
 ![Student Request Dedicated Page](docs/images/studentRequestDedicatedPage.png)
 
+---
+
 ### **Student Topic Dedicated Page**  
 Both **teachers and students** can click on a topic to access its **dedicated page** for more details.  
 
@@ -175,6 +177,23 @@ Both **teachers and students** can click on a topic to access its **dedicated pa
 
 ![Student Topic Dedicated Page](docs/images/topicDedicatedPage.png)
 
+---
+
+### **Automatic Emails**  
+Certain actions in the platform trigger **automatic email notifications**, ensuring smooth communication between students and teachers.  
+
+#### **When are emails sent?**  
+- A student **submits a request** for a topic.  
+- A teacher **deletes a request**.  
+- A new **comment is added** to a request.  
+
+#### **Multilingual Support**  
+- Emails are sent in **Romanian** or **English**, depending on the selected language in the platform.  
+
+#### **Important Configuration**  
+- For email functionality, **NODE_ENV must be set to "production"**.  
+
+![Emails Photo](docs/images/emailPhoto.png)
 
 
 

@@ -137,7 +137,7 @@ export default function RequestTopicDetails() {
       setComments([...comments, response.data.comment]);
       setCommentMessage("");
 
-      if(process.env.NEXT_PUBLIC_NODE_ENV !== "production") {
+      if(process.env.NEXT_PUBLIC_NODE_ENV === "production") {
         const to = request.student.email;
         const title = request.topic.title;
         const actionMakerEmail = localUser.email;
