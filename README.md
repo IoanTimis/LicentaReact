@@ -73,7 +73,7 @@ Once an admin has added a teacher’s email, they can log in using Google. If th
 If `ONLYTEACHERS=false` is set in the environment variables, students are allowed on the platform. However, in this state, teachers **cannot** add new topics.  
 This restriction exists because initially, only teachers should have full control over topics. Once students are onboarded, teachers are **limited to modifying only the number of available slots**.  
 Before allowing students, the system should be set to `ONLYTEACHERS=true`.  
-![Teacher Topics Page](docs/images/teacherTopicsPage.png)
+![Teacher Topics Page](docs/images/teacherTopicPage.png)
 
 ---
 
