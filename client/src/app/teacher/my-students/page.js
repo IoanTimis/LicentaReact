@@ -32,7 +32,7 @@ export default function MyStudents() {
       student.student.first_name.toLowerCase().includes(query.toLowerCase()) ||
       student.student.name.toLowerCase().includes(query.toLowerCase()) ||
       student.student.email.toLowerCase().includes(query.toLowerCase()) ||
-      student.topic.title.toLowerCase().includes(query.toLowerCase())
+      student.request.topic.title.toLowerCase().includes(query.toLowerCase())
     );
 
     setFilteredStudents(filtered);
@@ -40,7 +40,7 @@ export default function MyStudents() {
   };
 
   const handleFilterChange = (filter) => {
-    const filtered = filter.educationLevel ? students.filter((student) => student.topic.education_level === filter.educationLevel) : students
+    const filtered = filter.educationLevel ? students.filter((student) => student.request.topic.education_level === filter.educationLevel) : students
 
     setFilteredStudents(filtered);
     setNoMatch(filtered.length === 0);

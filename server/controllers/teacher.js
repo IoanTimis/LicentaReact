@@ -553,7 +553,7 @@ const requestSearchFilter = async (req, res) => {
         {
           model: Topic,
           as: "topic",
-          attributes: ["id", "title", "description","slots"]
+          attributes: ["id", "title", "keywords","slots","education_level"]
         },
       ],
     });
