@@ -77,7 +77,7 @@ export default function CompleteProfileTeacher() {
               htmlFor="title"
               className="block text-gray-700 font-medium mb-2"
             >
-              Titlu
+              {translate("Title")}
             </label>
             <input
               id="title"
@@ -92,7 +92,7 @@ export default function CompleteProfileTeacher() {
               htmlFor="type"
               className="block text-gray-700 font-medium mb-2"
             >
-              Tip
+              {translate("Type")}
             </label>
             <input
               id="type"
@@ -106,7 +106,7 @@ export default function CompleteProfileTeacher() {
             type="submit"
             className="w-full bg-blue-600 text-white font-medium py-2 rounded-md hover:bg-blue-700 transition"
           >
-            Trimite
+            {translate("Save")}
           </button>
         </form>
       )}

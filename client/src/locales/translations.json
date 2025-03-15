@@ -1,5 +1,10 @@
 {
     "_comment1-------------------": "Translations for general pages and general components",
+    "Choose faculty": "Alege facultatea",
+    "Choose specialization": "Alege specializarea",
+    "Choose education level": "Alege nivelul de educație",
+    "Education level": "Nivel de Educație",
+    "Save": "Salvează",
     "Only teachers can use the platform at the moment.": "Doar profesorii pot folosi platforma momentan.",
     "The message will be posted as comment on the request.": "Mesajul va fi postat ca și comentariu la cerere.",
     "You have selected the same specialization multiple times.": "Ai selectat aceeași specializare de mai multe ori.",

@@ -22,6 +22,8 @@ export default function StudentLayout({ children }) {
     try {
       const decoded = jwtDecode(accessToken);
 
+      console.log("Decoded token:", decoded);
+
       if (decoded.role !== "student") { 
         console.error("Invalid role:", decoded.role);
         alert("Acces interzis");

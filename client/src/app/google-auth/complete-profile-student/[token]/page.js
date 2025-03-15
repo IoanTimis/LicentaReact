@@ -102,14 +102,14 @@ export default function CompleteProfileStudent() {
         >
           <div>
             <label className="block text-gray-700 font-medium mb-2">
-              Alege facultatea
+              {translate("Choose faculty")}
             </label>
             <select
               className="w-full border-gray-300 text-gray-700 rounded-md p-2 focus:ring focus:ring-blue-500"
               name="faculty"
               onChange={handleFacultyChange}
             >
-              <option value="">Selectează facultatea</option>
+              <option value="">{translate("Choose faculty")}</option>
               {faculties.map((faculty) => (
                 <option key={faculty.id} value={faculty.id}>
                   {faculty.name}
@@ -120,13 +120,13 @@ export default function CompleteProfileStudent() {
 
           <div>
             <label className="block text-gray-700 font-medium mb-2">
-              Alege specializarea
+              {translate("Choose specialization")}
             </label>
             <select
               className="w-full border-gray-300 text-gray-700 rounded-md p-2 focus:ring focus:ring-blue-500"
               name="specialization"
             >
-              <option value="">Selectează specializarea</option>
+              <option value="">{translate("Choose specialization")}</option>
               {specializations.map((specialization) => (
                 <option key={specialization.id} value={specialization.id}>
                   {specialization.name}
@@ -137,7 +137,7 @@ export default function CompleteProfileStudent() {
 
           <div>
             <label className="block text-gray-700 font-medium mb-2">
-              Tipul de învățământ
+              {translate("Education level")}
             </label>
             <select
               className="w-full border-gray-300 text-gray-700 rounded-md p-2 focus:ring focus:ring-blue-500"
@@ -149,7 +149,7 @@ export default function CompleteProfileStudent() {
           </div>
 
           <div>
-            <label className="block text-gray-700 font-medium mb-2">Tip</label>
+            <label className="block text-gray-700 font-medium mb-2">{translate("Type")}</label>
             <input
               type="text"
               value="student"

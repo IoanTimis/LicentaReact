@@ -108,11 +108,11 @@ const topic = async (req, res) => {
 
     const facultyId = topic.specializations?.[0]?.faculty?.id;
 
-    if (facultyId !== user.faculty_id) {
+    if (Number(facultyId) !== Number(user.faculty_id)) {
       return res.status(403).json({ message: 'Forbidden, faculty do not match' });
     }
 
-    const matchSpecialization = topic.specializations.some(specialization => specialization.id === user.specialization_id);
+    const matchSpecialization = topic.specializations.some(specialization => Number(specialization.id) === Number(user.specialization_id));
 
     if (!topic.specializations || !matchSpecialization) {
       return res.status(403).json({ message: "Forbidden" });
@@ -206,7 +206,10 @@ const addFavoriteTopic = async (req, res) => {
 
     const facultyId = topic.specializations?.[0]?.faculty?.id; 
 
-    if (facultyId !== user.faculty_id) {
+    console.log("wqeqweqweqwqwe: ",facultyId, user.faculty_id);
+
+
+    if (Number(facultyId) !== Number(user.faculty_id)) {
       return res.status(403).json({ message: 'Forbidden, faculty do not match' });
     }
 
@@ -218,7 +221,8 @@ const addFavoriteTopic = async (req, res) => {
       return res.status(403).json({ message: 'Forbidden, education level do not match' });
     }
 
-    const matchSpecialization = topic.specializations.some(specialization => specialization.id === user.specialization_id);
+    const matchSpecialization = topic.specializations.some(specialization => Number(specialization.id) === Number(user.specialization_id));
+    
 
     if (!topic.specializations || !matchSpecialization) {
       return res.status(403).json({ message: "Forbidden" });
@@ -392,6 +396,7 @@ const isTopicRequested = async (req, res) => {
 const newRequest = async (req, res) => {
   try {
     const user = req.user;
+    console.log(user);
     const student_id = user.id;
 
     const { topic_id, teacher_id, education_level } = req.body;
@@ -448,6 +453,8 @@ const newRequest = async (req, res) => {
       ]
     });
 
+    console.log(topic_data.specializations);
+
     if (!topic_data) {
       return res.status(404).json({ message: 'Topic not found' });
     };
@@ -463,11 +470,14 @@ const newRequest = async (req, res) => {
 
     const facultyId = topic_data.specializations?.[0]?.faculty?.id;
 
-    if (facultyId !== student_data.faculty_id) {
+    if (Number(facultyId) !== Number(student_data.faculty_id)) {
       return res.status(403).json({ message: 'Forbidden, faculty do not match' });
     }
 
-    const matchSpecialization = topic_data.specializations.some(specialization => specialization.id === user.specialization_id);
+    const matchSpecialization = topic_data.specializations.some(specialization => 
+      Number(specialization.id) === Number(user.specialization_id)
+    );
+    
 
     if (!matchSpecialization) {
       return res.status(403).json({ message: "Forbidden, specialization do not" });
@@ -522,7 +532,7 @@ const confirmRequest = async (req, res) => {
 
     const req_student_id = request.student_id;
 
-    if (req_student_id !== student_id) {
+    if (Number(req_student_id) !== Number(student_id)) {
       return res.status(403).json({ message: 'Forbidden' });
     };
 
@@ -581,7 +591,7 @@ const deleteRequest = async (req, res) => {
       return res.status(404).json({ message: 'Request not found' });
     }
 
-    if (request.student_id !== student_id) {
+    if (Number(request.student_id) !== Number(student_id)) {
       return res.status(403).json({ message: 'Forbidden' });
     }
 
@@ -618,7 +628,7 @@ const addComment = async (req, res) => {
       return res.status(404).json({ message: 'Request not found' });
     }
 
-    if(request.student_id !== student_id){
+    if(Number(request.student_id) !== Number(student_id)){
       return res.status(403).json({ message: 'Forbidden, request not yours' });
     }
 
