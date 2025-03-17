@@ -8,6 +8,16 @@ This project is designed to digitalize and automate the process of selecting BSc
 - **Authentication:** Google OAuth with JWT security
 - **Database:** MySQL with Sequelize ORM
 
+### **Security Measures**  
+
+The platform implements multiple security layers to ensure data protection and prevent unauthorized actions:  
+
+- **Backend Middleware:** Ensures that users can only perform actions allowed for their role (admin, teacher, or student).  
+- **Frontend Middleware:** Restricts access to pages based on the user’s role, preventing unauthorized navigation.  
+- **Unauthorized Actions Prevention:** Every action, such as attempting to delete a request or topic that does not belong to the user, is validated at the backend level and blocked if unauthorized.  
+
+These security measures help maintain the integrity and reliability of the platform.
+
 ## Prerequisites
 Before running the project, ensure that you have the following installed:
 - [Node.js](https://nodejs.org/) (Recommended version: `18.x.x` or later)
