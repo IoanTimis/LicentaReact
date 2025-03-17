@@ -201,7 +201,7 @@ Certain actions in the platform trigger **automatic email notifications**, ensur
 
 #### **When are emails sent?**  
 - A student **submits a request** for a topic.  
-- A teacher **deletes a request**.  
+- A teacher **deletes or respond to a request**.  
 - A new **comment is added** to a request.  
 
 #### **Multilingual Support**  
