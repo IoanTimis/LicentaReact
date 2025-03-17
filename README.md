@@ -179,6 +179,13 @@ Both **teachers and students** can click on a topic to access its **dedicated pa
 
 ---
 
+### **Responsive Design**  
+The platform is fully responsive, ensuring an optimal user experience across all devices, including desktops, tablets, and mobile phones.
+
+![Responsive design img](docs/images/mobile.png)
+
+---
+
 ### **Automatic Emails**  
 Certain actions in the platform trigger **automatic email notifications**, ensuring smooth communication between students and teachers.  
 
