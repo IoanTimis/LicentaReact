@@ -37,7 +37,7 @@ These security measures help maintain the integrity and reliability of the platf
 
 ## Prerequisites
 Before running the project, ensure that you have the following installed:
-- [Node.js](https://nodejs.org/) (Recommended version: `18.x.x` or later)
+- [Node.js](https://nodejs.org/)
 - [MySQL](https://dev.mysql.com/downloads/)
 - A Google account for OAuth authentication
 
