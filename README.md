@@ -5,6 +5,7 @@ This project is designed to digitalize and automate the process of selecting BSc
 ## Technologies Used
 ### Frontend: Next.js
 - **Redux** – for global state management
+- **Redux Persist** – to persist Redux state across page reloads (used specifically for user data)
 - **Axios** – for making HTTP requests to the backend
 - **Nodemailer** – used for sending emails (handled in API routes)
 - **Tailwind CSS** – utility-first CSS framework for styling
