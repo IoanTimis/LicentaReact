@@ -3,13 +3,30 @@
 This project is designed to digitalize and automate the process of selecting BSc/MSc thesis topics for students and professors. It provides a structured and efficient approach to thesis management.
 
 ## Technologies Used
-- **Frontend:** Next.js
-- **Backend:** Node.js, Express.js
-- **Authentication:** Google OAuth with JWT security
-- **Database:** MySQL with Sequelize ORM
+Frontend: Next.js
+- **Redux** – for global state management
+- **Axios** – for making HTTP requests to the backend
+- **Nodemailer** – used for sending emails (handled in API routes)
+- **Tailwind CSS** – utility-first CSS framework for styling
+- **Heroicons** – for modern, scalable SVG icons
+## Backend: Node.js with Express.js
+- **Sequelize ORM** – for MySQL database modeling and interaction
+- **JWT (jsonwebtoken)** – for secure authentication via tokens
+- **Bcryptjs** – for hashing passwords securely
+- **Sanitize-HTML** – to prevent XSS and sanitize user input
+- **Dotenv** – for managing environment variables
+- **Cors** – for handling cross-origin resource sharing
+- **Cookie-parser** – for parsing and setting cookies
+## Authentication: Google OAuth 2.0 integrated with JWT
+- Users authenticate via their Google account
+- Roles and profile completion are managed based on email verification and system rules
+## Database: MySQL
+- Managed through Sequelize, supporting relationships between tables
+## Testing & Dev Tools:
+- **Cypress** – for end-to-end testing
+- **Nodemon** – for hot reloading during backend development
 
 ### **Security Measures**  
-
 The platform implements multiple security layers to ensure data protection and prevent unauthorized actions:  
 
 - **Backend Middleware:** Ensures that users can only perform actions allowed for their role (admin, teacher, or student).  
