@@ -1,5 +1,7 @@
 # Online BSc/MSc Thesis Selection Platform
 
+Note: This is a public demo of an earlier version of the platform and may not include the latest features or improvements.
+
 This project is designed to digitalize and automate the process of selecting BSc/MSc thesis topics for students and professors. It provides a structured and efficient approach to thesis management.
 
 ## Technologies Used
@@ -64,6 +66,9 @@ wait
 
 # Open the application in a browser. Replace with the port specified in your .env file
 http://localhost:[PORT]
+
+## Visit the Platform
+  https://licenta-frontend-opal.vercel.app/
 
 ## Walkthrough
 
