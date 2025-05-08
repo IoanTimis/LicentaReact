@@ -68,7 +68,7 @@ wait
 http://localhost:[PORT]
 
 ## Visit the Platform
-  https://licenta-frontend-opal.vercel.app/
+  https://licenta-frontend-opal.vercel.app/   !!!(Railroad free trial expired, might buy a subscription)
 
 ## Walkthrough
 
