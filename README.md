@@ -63,9 +63,11 @@ echo "Update the .env files in 'client' and 'server' directories before proceedi
 
 # Install dependencies
 ```bash
-(cd client && npm install) &
-(cd server && npm install) &
-wait
+cd client && npm install
+```
+
+```bash
+cd server && npm install
 ```
 
 # Start the project
