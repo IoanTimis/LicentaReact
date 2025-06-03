@@ -47,7 +47,7 @@ Before running the project, ensure that you have the following installed:
 # Clone the repository
 git clone --recurse-submodules https://github.com/IoanTimis/licenta-frontend.git
 
-cd repo
+Navigate to the root folder of the repository.
 
 # Configure environment variables
 cp client/sample.env client/.env
