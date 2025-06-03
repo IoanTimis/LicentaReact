@@ -45,7 +45,8 @@ Before running the project, ensure that you have the following installed:
 ## Installation and Setup
 
 # Clone the repository
-git clone ***
+git clone --recurse-submodules https://github.com/IoanTimis/licenta-frontend.git
+
 cd repo
 
 # Configure environment variables
