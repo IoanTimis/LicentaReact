@@ -106,7 +106,7 @@ To run Cypress tests, follow these steps:
 
 4. Ensure the `NODE_ENV` environment variable is set to `test` before running the tests.
 
-# Open the application in a browser. Replace with the port specified in your .env file
+## Open the application in a browser. Replace with the port specified in your .env file
 http://localhost:[PORT]
 
 ## Visit the Platform
