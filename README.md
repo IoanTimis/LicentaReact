@@ -78,8 +78,11 @@ mysql -u <username> -p < server/license.sql
 
 Start the backend and frontend:
 ```bash
-(cd server && npm start server.js) &
-(cd client && npm run dev)
+cd server && npm start server.js
+```
+
+```bash
+cd client && npm run dev
 ```
 
 ## Cypress Testing
