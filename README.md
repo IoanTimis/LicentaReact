@@ -45,25 +45,40 @@ Before running the project, ensure that you have the following installed:
 ## Installation and Setup
 
 # Clone the repository
+```bash
 git clone --recurse-submodules https://github.com/IoanTimis/licenta-frontend.git
+```
 
-Navigate to the root folder of the repository.
+Navigate to the root folder of the repository:
+```bash
+cd upLicense
+```
 
 # Configure environment variables
+```bash
 cp client/sample.env client/.env
 cp server/sample.env server/.env
 echo "Update the .env files in 'client' and 'server' directories before proceeding."
+```
 
 # Install dependencies
+```bash
 (cd client && npm install) &
 (cd server && npm install) &
 wait
+```
 
 # Start the project
-Run the SQL script to create the database, tables, and insert some initial data (server/license.sql).
+Run the SQL script to create the database, tables, and insert some initial data:
+```bash
+mysql -u <username> -p < server/license.sql
+```
 
+Start the backend and frontend:
+```bash
 (cd server && npm start server.js) &
 (cd client && npm run dev)
+```
 
 ## Cypress Testing
 
