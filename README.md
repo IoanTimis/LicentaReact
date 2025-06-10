@@ -1,6 +1,6 @@
 # Online BSc/MSc Thesis Selection Platform
 
-[🇷🇴 Romanian version](README-RO.md)
+[🇷🇴 Versiune în română / Romanian version](README-RO.md)
 
 This project is designed to digitalize and automate the process of selecting BSc/MSc thesis topics for students and professors. It provides a structured and efficient approach to thesis management.
 
