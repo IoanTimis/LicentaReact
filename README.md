@@ -1,5 +1,7 @@
 # Online BSc/MSc Thesis Selection Platform
 
+[🇷🇴 Romanian version](README-RO.md)
+
 This project is designed to digitalize and automate the process of selecting BSc/MSc thesis topics for students and professors. It provides a structured and efficient approach to thesis management.
 
 ## Technologies Used
@@ -46,12 +48,12 @@ Before running the project, ensure that you have the following installed:
 
 # Clone the repository
 ```bash
-git clone --recurse-submodules https://github.com/IoanTimis/licenta-frontend.git
+git clone --recurse-submodules https://github.com/IoanTimis/LicentaReact.git
 ```
 
 Navigate to the root folder of the repository:
 ```bash
-cd upLicense
+cd LicentaReact
 ```
 
 # Configure environment variables
