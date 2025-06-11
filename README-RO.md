@@ -62,8 +62,8 @@ cd LicentaReact
 
 ### Configurează variabilele de mediu
 ```bash
-cp client/sample.env client/.env
-cp server/sample.env server/.env
+cp client/sample.env client/.env.local
+cp server/sample.env server/.env.local
 echo "Actualizează fișierele .env din directoarele 'client' și 'server' înainte de a continua."
 ```
 

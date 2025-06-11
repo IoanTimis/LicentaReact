@@ -58,8 +58,8 @@ cd LicentaReact
 
 # Configure environment variables
 ```bash
-cp client/sample.env client/.env
-cp server/sample.env server/.env
+cp client/sample.env client/.env.local
+cp server/sample.env server/.env.local
 echo "Update the .env files in 'client' and 'server' directories before proceeding."
 ```
 
