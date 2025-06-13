@@ -173,6 +173,15 @@ Pentru acțiuni **distructive** (cum ar fi ștergerile), se afișează un modal 
 
 ---
 
+### **Modal Teme**
+
+Este oferită o interfață modală pentru profesori care le permite să **editeze sau să adauge** subiecte dacă flag-ul `teachers` este setat la `true`; în caz contrar, pot doar să actualizeze numărul de locuri și nu pot adăuga subiecte noi.  
+
+![Modal Teme](docs/images/TopicEditModalEn.png)
+
+---
+
+
 ### **Modal cerere**
 Interfață modal pentru profesori pentru **acceptarea sau respingerea** cererilor studenților.  
 ![Modal cerere](docs/images/requestModal.png)

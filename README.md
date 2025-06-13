@@ -119,13 +119,13 @@ Note: This is a public demo of an earlier version of the platform and may not in
 
 ### **Landing Page**
 The landing page allows users to navigate to different sections of the platform and select their preferred language (Romanian or English).  
-![Landing Page](docs/images/landingPage.png)
+![Landing Page](docs/images/landingPageEn.png)
 
 ---
 
 ### **Login Page**
 Authentication is available exclusively via Google OAuth. However, standard login remains enabled for testing purposes. If an organization is specified in Google OAuth settings, users must belong to that organization to log in.  
-![Login Page](docs/images/loginPage.png)
+![Login Page](docs/images/loginEn.png)
 
 ---
 
@@ -151,14 +151,14 @@ Once an admin has added a teacher’s email, they can log in using Google. If th
 If `ONLYTEACHERS=false` is set in the environment variables, students are allowed on the platform. However, in this state, teachers **cannot** add new topics.  
 This restriction exists because initially, only teachers should have full control over topics. Once students are onboarded, teachers are **limited to modifying only the number of available slots**.  
 Before allowing students, the system should be set to `ONLYTEACHERS=true`.  
-![Teacher Topics Page](docs/images/teacherTopicPage.png)
+![Teacher Topics Page](docs/images/TeacherThemesFalseEn.png)
 
 ---
 
 ### **Teacher Topics Page (OnlyTeachers Enabled)**
 When `ONLYTEACHERS=true`, **only teachers** can log in. They have complete control over topics, including the ability to create, update, and delete them.  
 Teachers can filter topics by **education level (BSc/MSc)** or **available slots** and search topics by **title and keywords**.  
-![Teacher Topics Page (OnlyTeachers Enabled)](docs/images/teacherTopicsPageTrue.png)
+![Teacher Topics Page (OnlyTeachers Enabled)](docs/images/TeacherThemesTrueEn.png)
 
 ---
 
@@ -167,34 +167,43 @@ Teachers can **accept, reject, or delete** student requests for topics.
 Whenever a teacher takes an action, an **automated email** is sent to the student with details about the request status.  
 If a request is **accepted or rejected**, the response will also be logged as a **comment on the request**.  
 Teachers can filter requests by **status** and search requests by **student name, first name, or topic title**.  
-![Teacher Requests Page](docs/images/teacherRequestPage.png)
+![Teacher Requests Page](docs/images/TeacherRequestsEn.png)
 
 ---
 
 ### **Confirmation Modal**
 For any **destructive actions** (such as deletions), a confirmation modal is displayed to prevent accidental actions.  
 **Note:** If a request is confirmed, only the **teacher** will have the authority to delete it.  
-![Confirmation Modal](docs/images/confirmModal.png)
+![Confirmation Modal](docs/images/confirmationModalEn.png)
 
 ---
 
+### **Topics Modal**
+
+A modal interface is provided for teachers to **edit or add** topics if the `teachers` flag is set to `true`; otherwise, they can only update the number of slots and cannot add new topics.  
+
+![Topic Modal](docs/images/TopicEditModalEn.png)
+
+---
+
+
 ### **Request Modal**
 A modal interface is provided for teachers to **accept or reject** student requests for a topic.  
-![Request Modal](docs/images/requestModal.png)
+![Request Modal](docs/images/ReqResponseModalEn.png)
 
 ---
 
 ### **Teacher My Students Page**  
 Once a request is **accepted by the teacher** and **confirmed by the student**, the teacher can view all students who have confirmed their topics on the **My Students** page.  
 Teachers can filter students by **education level (BSc/MSc)** and search by **topic title, student name, first name, or email**.  
-![Teacher My Students Page](docs/images/teacherMyStudents.png)
+![Teacher My Students Page](docs/images/TeacherMyStudentsEn.png)
 
 ---
 
 ### **Complete Profile - Student Page**
 Once the teacher setup is complete, the `ONLYTEACHERS` variable is set to **false**, allowing students to log in.  
 Upon logging in for the first time, students must **complete their profile** by providing necessary information.  
-![Complete Profile - Student Page](docs/images/completeProfileStudent.png)
+![Complete Profile - Student Page](docs/images/studentCompleteProfileEn.png)
 
 ---
 
@@ -209,7 +218,7 @@ Students can:
 - **Search topics** by **title, keywords, teacher name, or first name**
 - **Request a topic**
 - **Add/remove a topic from favorites**  
-![Student Topics Page](docs/images/studentTopicsPage.png)
+![Student Topics Page](docs/images/StudentTopicsEn.png)
 
 ---
 
@@ -219,7 +228,7 @@ They can:
 - **View all favorite topics**
 - **Request a topic**
 - **Remove a topic from favorites**  
-![Student Favorites Page](docs/images/studentFavoritePage.png)
+![Student Favorites Page](docs/images/StudentFavoriteEn.png)
 
 ---
 
@@ -233,7 +242,7 @@ They can:
   - **Prevent the student from making new requests**
   - **Lock the confirmed request from being deleted by the student}
 - **Delete requests (if not confirmed yet)**  
-![Student Requests Page](docs/images/studentRequestPage.png)
+![Student Requests Page](docs/images/studentRequestsEn.png)
 
 ---
 
@@ -243,7 +252,7 @@ On this page, students and teachers can:
 - **View additional request details**
 - **Use the comment section to communicate**
 - **Perform actions (accept/reject/confirm, if applicable)**  
-![Student Request Dedicated Page](docs/images/studentRequestDedicatedPage.png)
+![Student Request Dedicated Page](docs/images/ReqDedicatedPageEn.png)
 
 ---
 
@@ -253,7 +262,7 @@ Both **teachers and students** can click on a topic to access its **dedicated pa
 - **Students** can view additional information about the topic and submit a request.  
 - **Teachers** can review the topic details, edit its content, or delete it.  
 
-![Student Topic Dedicated Page](docs/images/topicDedicatedPage.png)
+![Student Topic Dedicated Page](docs/images/StudentTopicDedicatedPageEn.png)
 
 ---
 
@@ -278,7 +287,7 @@ Certain actions in the platform trigger **automatic email notifications**, ensur
 #### **Important Configuration**  
 - For email functionality, **NODE_ENV must be set to "production"**.  
 
-![Emails Photo](docs/images/emailPhoto.png)
+![Emails Photo](docs/images/EmailEn.png)
 
 
 
