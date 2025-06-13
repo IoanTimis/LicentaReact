@@ -119,13 +119,13 @@ Note: This is a public demo of an earlier version of the platform and may not in
 
 ### **Landing Page**
 The landing page allows users to navigate to different sections of the platform and select their preferred language (Romanian or English).  
-![Landing Page](docs/images/landingPageEn.png)
+![Landing Page](docs/images/LandingPageEn.png)
 
 ---
 
 ### **Login Page**
 Authentication is available exclusively via Google OAuth. However, standard login remains enabled for testing purposes. If an organization is specified in Google OAuth settings, users must belong to that organization to log in.  
-![Login Page](docs/images/loginEn.png)
+![Login Page](docs/images/LoginEn.png)
 
 ---
 
