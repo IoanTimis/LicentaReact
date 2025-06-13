@@ -28,6 +28,7 @@ This project is designed to digitalize and automate the process of selecting BSc
 ### Testing & Dev Tools:
 - **Cypress** – for end-to-end testing
 - **Nodemon** – for hot reloading during backend development
+- **Artillery** – for load testing and performance benchmarking of HTTP APIs and web applications  
 
 ### **Security Measures**  
 The platform implements multiple security layers to ensure data protection and prevent unauthorized actions:  
@@ -95,18 +96,36 @@ To run Cypress tests, follow these steps:
    ```bash
    cd server
    ```
+2. Ensure the `NODE_ENV` environment variable is set to `test` before running the tests.
 
-2. Open the Cypress interface:
+
+3. Open the Cypress interface:
    ```bash
    npx cypress open
    ```
 
-3. In the Cypress interface:
+4. In the Cypress interface:
    - Select **E2E Testing**.
    - Choose your preferred browser (e.g., Chrome).
    - You will see three test files. Select the file you want to test and view the results.
 
-4. Ensure the `NODE_ENV` environment variable is set to `test` before running the tests.
+## Artillery Testing
+
+1. Navigate to the `server` directory:
+
+   ```bash
+   cd server
+   ```
+2. Ensure the `NODE_ENV` environment variable is set to `test` before running the tests.
+
+3. Open the `load-test.yml` file and follow the instructions to replicate the existing tests, or define your own scenarios.
+
+4. Start testing:
+
+   ```bash
+   npx artillery run load-test.yml --output <outputFileName>.json
+   ```
+5. Review your results in `<outputFileName>.json`, or use Artillery Cloud to generate an HTML report as outlined on their website https://app.artillery.io/.
 
 ## Open the application in a browser. Replace with the port specified in your .env file
 http://localhost:[PORT]
