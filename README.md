@@ -289,6 +289,8 @@ Certain actions in the platform trigger **automatic email notifications**, ensur
 
 ![Emails Photo](docs/images/EmailEn.png)
 
+---
+
 
 
 

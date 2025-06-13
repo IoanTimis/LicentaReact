@@ -121,13 +121,13 @@ Notă: Aceasta este o demonstrație publică a unei versiuni anterioare a platfo
 
 ### **Pagina principală**
 Pagina principală permite utilizatorilor să navigheze către diferite secțiuni ale platformei și să selecteze limba preferată (română sau engleză).  
-![Pagina principală](docs/images/landingPage.png)
+![Pagina principală](docs/images/LandingPageRo.png)
 
 ---
 
 ### **Pagina de autentificare**
 Autentificarea este disponibilă exclusiv prin Google OAuth. Totuși, autentificarea standard rămâne activă în scop de testare. Dacă este specificată o organizație în setările Google OAuth, utilizatorii trebuie să aparțină acelei organizații pentru a se conecta.  
-![Pagina de autentificare](docs/images/loginPage.png)
+![Pagina de autentificare](docs/images/LoginRo.png)
 
 ---
 
@@ -145,88 +145,126 @@ Administratorii pot efectua operațiuni CRUD (Creare, Citire, Actualizare, Șter
 
 ### **Pagina profesorului**
 După ce un admin a adăugat email-ul unui profesor, acesta se poate autentifica prin Google. Dacă email-ul aparține unui profesor înregistrat, utilizatorul este redirecționat către pagina sa de start.  
-![Pagina profesorului](docs/images/teacherHomePage.png)
+![Pagina profesorului](docs/images/LandingTeacherRo.png)
 
 ---
 
 ### **Pagina temelor (OnlyTeachers dezactivat)**
-Dacă `ONLYTEACHERS=false`, studenții pot accesa platforma, dar profesorii **nu pot** adăuga teme noi.  
-![Pagini temelor studenți](docs/images/teacherTopicPage.png)
+Dacă `ONLYTEACHERS=false` este setat în variabilele de mediu, studenții pot accesa platforma. Totuși, în această stare, profesorii **nu pot** adăuga subiecte noi.  
+Această restricție există deoarece inițial doar profesorii ar trebui să aibă control complet asupra subiectelor. Odată ce studenții sunt înregistrați, profesorii sunt **limitați la modificarea doar a numărului de locuri disponibile**.  
+Înainte de a permite studenților accesul, sistemul trebuie să fie setat la `ONLYTEACHERS=true`.  
+![Pagina temelor (OnlyTeachers dezactivat)](docs/images/TeacherThemesFalseRo.png)
 
 ---
 
 ### **Pagina temelor (OnlyTeachers activat)**
-Când `ONLYTEACHERS=true`, **doar profesorii** se pot autentifica și au control complet asupra temelor (creare, actualizare, ștergere).  
-![Pagini temelor profesori](docs/images/teacherTopicsPageTrue.png)
+Când `ONLYTEACHERS=true`, **doar profesorii** se pot autentifica. Aceștia au control complet asupra subiectelor, inclusiv posibilitatea de a crea, actualiza și șterge.  
+Profesorii pot filtra subiectele după **nivel de studiu (BSc/MSc)** sau **numărul de locuri disponibile** și pot căuta subiecte după **titlu și cuvinte-cheie**.  
+![Pagina temelor (OnlyTeachers activat)](docs/images/TeacherThemesTrueRo.png)
 
 ---
 
-### **Pagina cererilor (Profesori)**
-Profesorii pot **accepta, respinge sau șterge** cererile studenților pentru teme.  
-![Cererile profesorilor](docs/images/teacherRequestPage.png)
+### **Pagina cererilor profesorilor**
+Profesorii pot **accepta, respinge sau șterge** cererile studenților pentru subiecte.  
+De fiecare dată când un profesor ia o acțiune, un **email automat** este trimis studentului cu detalii despre starea cererii.  
+Dacă o cerere este **acceptată sau respinsă**, răspunsul va fi înregistrat și ca **comentariu la cerere**.  
+Profesorii pot filtra cererile după **stare** și pot căuta cereri după **numele studentului, prenume sau titlul subiectului**.  
+![Pagina cererilor profesorilor](docs/images/TeacherRequestsRo.png)
 
 ---
 
 ### **Modal confirmare**
-Pentru acțiuni **distructive** (cum ar fi ștergerile), se afișează un modal de confirmare pentru a preveni acțiunile accidentale.  
-![Modal confirmare](docs/images/confirmModal.png)
+Pentru orice **acțiuni distructive** (cum ar fi ștergerile), se afișează un modal de confirmare pentru a preveni acțiunile accidentale.  
+**Notă:** Dacă o cerere este confirmată, doar **profesorul** va avea autoritatea de a o șterge.  
+![Modal confirmare](docs/images/ConfirmationModalRo.png)
 
 ---
 
 ### **Modal Teme**
 
-Este oferită o interfață modală pentru profesori care le permite să **editeze sau să adauge** subiecte dacă flag-ul `teachers` este setat la `true`; în caz contrar, pot doar să actualizeze numărul de locuri și nu pot adăuga subiecte noi.  
+Este oferită o interfață modală pentru profesori care le permite să **modifice sau să adauge** subiecte dacă flag-ul `onlyteachers` este setat la `true`; în caz contrar, pot doar să actualizeze numărul de locuri și nu pot adăuga teme noi.  
 
-![Modal Teme](docs/images/TopicEditModalEn.png)
+![Modal Teme](docs/images/TopicEditModalRo.png)
 
 ---
 
 
 ### **Modal cerere**
 Interfață modal pentru profesori pentru **acceptarea sau respingerea** cererilor studenților.  
-![Modal cerere](docs/images/requestModal.png)
+![Modal cerere](docs/images/ReqResponseModalRo.png)
 
 ---
 
-### **Pagina studenților**
-După ce o cerere este **acceptată de profesor** și **confirmată de student**, profesorul poate vizualiza toți studenții care și-au confirmat temele pe pagina **My Students**.  
-![Pagina studenților](docs/images/teacherMyStudents.png)
+### **Pagina studenții mei**
+După ce o cerere este **acceptată de profesor** și **confirmată de student**, profesorul poate vizualiza toți studenții care și-au confirmat temele pe pagina **Studenții mei**.  
+Profesorii pot filtra studenții după **nivel de studiu (BSc/MSc)** și pot căuta după **titlul temei, numele studentului, prenume sau email**.  
+![Pagina studenților mei](docs/images/TeacherMyStudentsRo.png)
 
 ---
 
 ### **Completare profil student**
-După configurarea profesorilor, variabila `ONLYTEACHERS` este setată la **false**, permițând studenților să se autentifice.  
-![Completare profil student](docs/images/completeProfileStudent.png)
+Odată ce configurarea profesorilor este completă, variabila `ONLYTEACHERS` este setată la **false**, permițând studenților să se autentifice.  
+La prima autentificare, studenții trebuie să **completeze profilul** furnizând informațiile necesare.  
+![Completare profil student](docs/images/StudentCompleteProfileRo.png)
 
 ---
 
-### **Teme studenți**
+### **Pagina temelor studenților**
 Pe această pagină, studenții pot vizualiza temele disponibile.  
-![Teme studenți](docs/images/studentTopicsPage.png)
+Implicit, temele sunt **filtrate automat** pentru a îndeplini următoarele criterii:
+- **Locuri > 0** (Sunt afișate doar temele cu locuri disponibile)  
+- **Potrivire cu nivelul de studiu al studentului (BSc/MSc)**  
+- **Potrivire cu facultatea și specializarea studentului**  
+
+Studenții pot:  
+- **Căuta teme** după **titlu, cuvinte-cheie, numele profesorului sau prenume**  
+- **Solicita o temă**  
+- **Adăuga/Elimina o temă din favorite**  
+![Pagina temelor studenților](docs/images/StudentTopicsRo.png)
 
 ---
 
-### **Favorite studenți**
-Studenții pot gestiona temele favorite pe această pagină.  
-![Favorite studenți](docs/images/studentFavoritePage.png)
+### **Pagina temelor favorite**
+Studenții își pot gestiona temele favorite de pe această pagină.  
+Aceștia pot:
+- **Vizualiza toate temele favorite**
+- **Solicita o temă**
+- **Elimina o temă din favorite**  
+![Pagina temelor favorite](docs/images/StudentFavoriteRo.png)
 
 ---
 
-### **Cererile studenților**
-Studenții pot urmări cererile pentru teme pe această pagină.  
-![Cererile studenților](docs/images/studentRequestPage.png)
+### **Pagina cererilor studenților**
+Studenții își pot urmări cererile pentru teme pe această pagină.  
+Aceștia pot:
+- **Filtra cererile după stare**
+- **Căuta cereri după numele profesorului, prenume, cuvinte-cheie ale temei sau titlu**
+- **Confirmă o cerere**, ceea ce va:
+  - **Șterge toate celelalte cereri**
+  - **Împiedica studentul să mai trimită alte cereri**
+  - **Bloca cererea confirmată pentru a nu putea fi ștearsă de student**
+- **Șterge cererile (dacă nu au fost încă confirmate)**  
+![Pagina cererilor studenților](docs/images/StudentRequestsRo.png)
 
 ---
 
-### **Detaliu cerere**
-Atât **profesorii cât și studenții** pot accesa detaliile unei cereri.  
-![Detaliu cerere](docs/images/studentRequestDedicatedPage.png)
+### **Pagina dedicată cererii**
+Atât **profesorii, cât și studenții** pot face clic pe o cerere pentru a accesa pagina **dedicată** a acesteia pentru mai multe detalii.  
+Pe această pagină, studenții și profesorii pot:
+- **Vizualiza detalii suplimentare ale cererii**
+- **Utiliza secțiunea de comentarii pentru comunicare**
+- **Efectua acțiuni (acceptă/respinge/confirmă, după caz)**  
+![Pagina dedicată cererii](docs/images/ReqDedicatedPageRo.png)
 
 ---
 
-### **Detaliu temă**
-Atât **profesorii cât și studenții** pot accesa detaliile unei teme.  
-![Detaliu temă](docs/images/topicDedicatedPage.png)
+### **Pagina dedicată temei**  
+Atât **profesorii, cât și studenții** pot face clic pe o temă pentru a accesa pagina **dedicată** a acesteia pentru mai multe detalii.  
+
+- **Studenții** pot vizualiza informații suplimentare despre temă și pot trimite o cerere.  
+- **Profesorii** pot revizui detaliile temei, o pot edita sau șterge.  
+
+![Pagina dedicată temei](docs/images/StudentTopicDedicatedPageRo.png)
 
 ---
 
@@ -236,6 +274,21 @@ Platforma este complet responsive, asigurând o experiență optimă pe toate di
 
 ---
 
-### **Emailuri automate**
-Anumite acțiuni pe platformă declanșează **notificări automate prin email**, asigurând o comunicare fluidă între studenți și profesori.  
-![Emailuri automate](docs/images/emailPhoto.png)
+### **Emailuri automate**  
+Anumite acțiuni în platformă declanșează **notificări automate prin email**, asigurând o comunicare fluidă între studenți și profesori.  
+
+#### **Când sunt trimise emailurile?**  
+- Un student **trimite o cerere** pentru o temă.  
+- Un profesor **șterge sau răspunde** la o cerere.  
+- Un **comentariu nou este adăugat** la o cerere.  
+
+#### **Suport multilingv**  
+- Emailurile sunt trimise în **română** sau **engleză**, în funcție de limba selectată pe platformă.  
+
+#### **Configurare importantă**  
+- Pentru funcționalitatea emailurilor, **NODE_ENV trebuie setat la "production"**.  
+
+![Emailuri automate](docs/images/EmailRo.png)
+
+---
+
