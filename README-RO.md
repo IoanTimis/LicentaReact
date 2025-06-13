@@ -32,6 +32,7 @@ Acest proiect este conceput pentru a digitaliza și automatiza procesul de selec
 ### Testare și instrumente de dezvoltare:
 - **Cypress** – pentru testare end-to-end
 - **Nodemon** – pentru reîncărcare automată în timpul dezvoltării backend-ului
+- **Artillery** – pentru testarea încărcării și evaluarea performanței API-urilor HTTP și a aplicațiilor web
 
 ### **Măsuri de securitate**
 Platforma implementează mai multe straturi de securitate pentru a asigura protecția datelor și prevenirea acțiunilor neautorizate:
@@ -106,6 +107,27 @@ Pentru a rula testele Cypress, urmează pașii:
    - Alege browser-ul preferat (de ex. Chrome).
    - Vei vedea trei fișiere de test. Selectează fișierul dorit și vizualizează rezultatele.
 4. Asigură-te că variabila de mediu `NODE_ENV` este setată la `test` înainte de rularea testelor.
+
+
+## Testare Artillery
+
+1. Navighează la directorul `server`:
+
+   ```bash
+   cd server
+   ```
+
+2. Asigură-te că variabila de mediu `NODE_ENV` este setată la `test` înainte de rularea testelor.
+
+3. Deschide fișierul `load-test.yml` și urmează instrucțiunile pentru a replica testele existente sau definește propriile scenarii.
+
+4. Pornește testarea:
+
+   ```bash
+   npx artillery run load-test.yml --output <numeFisierRezultat>.json
+   ```
+
+5. Verifică rezultatele în `<numeFisierRezultat>.json`, sau folosește Artillery Cloud pentru a genera un raport HTML conform instrucțiunilor de pe site-ul lor [https://app.artillery.io/](https://app.artillery.io/).
 
 ## Acces în browser
 Deschide aplicația la adresa (înlocuiește cu portul specificat în fișierul .env):

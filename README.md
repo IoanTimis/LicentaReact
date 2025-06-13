@@ -125,7 +125,7 @@ To run Cypress tests, follow these steps:
    ```bash
    npx artillery run load-test.yml --output <outputFileName>.json
    ```
-5. Review your results in `<outputFileName>.json`, or use Artillery Cloud to generate an HTML report as outlined on their website https://app.artillery.io/.
+5. Review your results in `<outputFileName>.json`, or use Artillery Cloud to generate an HTML report as outlined on their website [https://app.artillery.io/](https://app.artillery.io/).
 
 ## Open the application in a browser. Replace with the port specified in your .env file
 http://localhost:[PORT]
