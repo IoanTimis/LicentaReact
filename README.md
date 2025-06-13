@@ -143,7 +143,7 @@ Administrators can perform full CRUD operations (Create, Read, Update, Delete) o
 
 ### **Teacher Home Page**
 Once an admin has added a teacher’s email, they can log in using Google. If the email belongs to a registered teacher, they will be redirected to the teacher’s home page.  
-![Teacher Home Page](docs/images/teacherHomePage.png)
+![Teacher Home Page](docs/images/LandingTeacherEn.png)
 
 ---
 
@@ -174,7 +174,7 @@ Teachers can filter requests by **status** and search requests by **student name
 ### **Confirmation Modal**
 For any **destructive actions** (such as deletions), a confirmation modal is displayed to prevent accidental actions.  
 **Note:** If a request is confirmed, only the **teacher** will have the authority to delete it.  
-![Confirmation Modal](docs/images/confirmationModalEn.png)
+![Confirmation Modal](docs/images/ConfirmationModalEn.png)
 
 ---
 
@@ -203,7 +203,7 @@ Teachers can filter students by **education level (BSc/MSc)** and search by **to
 ### **Complete Profile - Student Page**
 Once the teacher setup is complete, the `ONLYTEACHERS` variable is set to **false**, allowing students to log in.  
 Upon logging in for the first time, students must **complete their profile** by providing necessary information.  
-![Complete Profile - Student Page](docs/images/studentCompleteProfileEn.png)
+![Complete Profile - Student Page](docs/images/StudentCompleteProfileEn.png)
 
 ---
 
@@ -242,7 +242,7 @@ They can:
   - **Prevent the student from making new requests**
   - **Lock the confirmed request from being deleted by the student}
 - **Delete requests (if not confirmed yet)**  
-![Student Requests Page](docs/images/studentRequestsEn.png)
+![Student Requests Page](docs/images/StudentRequestsEn.png)
 
 ---
 
