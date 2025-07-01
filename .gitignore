@@ -5,6 +5,7 @@ npm-debug.log*
 # Logs
 logs/
 *.log
+*.mkv
 yarn-debug.log*
 yarn-error.log*
 
