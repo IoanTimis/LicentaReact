@@ -138,6 +138,14 @@ http://localhost:[PORT]
 ## Vizitează platforma
 https://licenta-frontend-opal.vercel.app/ (abonament expirat)
 
+## Prezentare Video
+
+Pentru o imagine rapidă asupra principalelor funcționalități și a experienței de utilizare a platformei, poți urmări un scurt videoclip de 2 minute cu prezentarea aplicației:
+
+[▶️ Vezi prezentarea (2:20 min)](https://drive.google.com/file/d/17haiZJVJkVFZ1tsb_OifT8brmUtX6-TA/view?usp=drive_link)
+
+Acest video demonstrează funcționalitățile de bază, fluxurile de utilizator și principalele elemente de interfață ale platformei online pentru selecția temelor de licență și disertație (BSc/MSc).
+
 ## Prezentare generală
 Notă: Aceasta este o demonstrație publică a unei versiuni anterioare a platformei și poate să nu includă cele mai recente funcționalități sau îmbunătățiri. Capturile de ecran de mai jos sunt dintr-o versiune anterioară.
 

@@ -133,6 +133,14 @@ http://localhost:[PORT]
 ## Visit the Platform
 https://licenta-frontend-opal.vercel.app/  (subscription expired)
 
+## Video Walkthrough
+
+For a quick overview of the platform's main features and user experience, you can watch a concise 2-minute video walkthrough of the application:
+
+[▶️ Watch the walkthrough (2:20 min)](https://drive.google.com/file/d/17haiZJVJkVFZ1tsb_OifT8brmUtX6-TA/view?usp=drive_link)
+
+This video demonstrates the core functionalities, user flows, and interface highlights of the Online BSc/MSc Thesis Selection Platform.
+
 ## Walkthrough
 Note: This is a public demo of an earlier version of the platform and may not include the latest features or improvements. The walkthrough below uses images from a previous version of the application.
 
