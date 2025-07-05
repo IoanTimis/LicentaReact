@@ -1,6 +1,8 @@
 # Node.js dependencies
 node_modules/
-npm-debug.log*
+npm-debug.log*/
+
+/video
 
 # Logs
 logs/
